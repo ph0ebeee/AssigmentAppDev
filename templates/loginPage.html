@@ -1,0 +1,26 @@
+{%extends "base.html" %}
+{% block title %} Library Loan System - Login {% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+<!--login page where customers and staff input their email and password-->
+<div class="loginPage_Container">
+    <!--Form for users to create an account-->
+    <form method="post">
+        <div class="form-group">
+            {{ render_field(form.email, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.password, class="form-control") }}
+        </div>
+        <br />
+        <p>Forgot your password?<a class="nav-link" href="/ForgetPassword">here</a></p>
+        <p>Not a member? Click<a class="nav-link" href="/Signup">here</a>to sign up</p>
+        <input type="submit" value="login" class="btn btn-primary" />
+    </form><br>
+    <b>or</b><br>
+    <!--google API that allows customers to sign in with google-->
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+</div>
+{% endblock %}
+<!--data validation to determine whether it is customer or staff user-->
