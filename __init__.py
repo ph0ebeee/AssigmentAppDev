@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 import paypalrestsdk
-from templates.chatbot.chat import get_response
+#from templates.chatbot.chat import get_response
 
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 
