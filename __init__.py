@@ -1,5 +1,7 @@
 from flask import Flask, render_template, jsonify, request
 import paypalrestsdk
+from templates.chatbot.chat import get_response
+
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 
 
@@ -9,6 +11,14 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template('home.html')
+
+
+#@app.route("/predict", methods=['POST'])
+#def predict():
+ #   text = request.get_json().get("message")
+  #  response = get_response(text)
+   # message = {"answer": response}
+    #return jsonify(message)
 
 
 paypalrestsdk.configure({

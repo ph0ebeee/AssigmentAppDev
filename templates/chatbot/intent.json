@@ -1,0 +1,93 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi",
+        "Hey",
+        "How are you",
+        "Is anyone there?",
+        "Hello",
+        "Good day"
+      ],
+      "responses": [
+        "Hi thank you for contacting us! How can we assist you?"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["Bye", "See you later", "Goodbye"],
+      "responses": [
+        "See you later, thanks for visiting",
+        "Have a nice day",
+        "Bye! Come back again soon."
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["Thanks", "Thank you", "That's helpful", "Thank's a lot!"],
+      "responses": ["Happy to help!", "Any time!", "My pleasure"]
+    },
+    {
+      "tag": "items",
+      "patterns": [
+        "Which items do you have?",
+        "What kinds of items are there?",
+        "What do you sell?"
+      ],
+      "responses": [
+        "We sell Grains and Cooking ingredients, Frozen, Household, Health and Beauty, Dairy Products, Meat and Seafood, Fruit and Vegetables, Drinks and Alcohol. You can refer to our categories found in the shop tab",
+        "We have Grains and Cooking ingredients, Frozen, Household, Health and Beauty, Dairy Products, Meat and Seafood, Fruit and Vegetables, Drinks and Alcohol. You can refer to our categories found in the shop tab"
+      ]
+    },
+    {
+      "tag": "payments",
+      "patterns": [
+        "Do you take credit cards?",
+        "Do you accept Mastercard?",
+        "Can I pay with Paypal?",
+        "Are you cash only?"
+      ],
+      "responses": [
+        "We accept VISA, Mastercard and Paypal",
+        "We accept most major credit cards, and Paypal"
+      ]
+    },
+    {
+      "tag": "delivery",
+      "patterns": [
+        "How long does delivery take?",
+        "How long does shipping take?",
+        "When do I get my delivery?"
+      ],
+      "responses": [
+        "Delivery takes 1-4 days",
+        "Shipping takes 1-4 days"
+      ]
+    },
+    {
+      "tag": "funny",
+      "patterns": [
+        "Tell me a joke!",
+        "Tell me something funny!",
+        "Do you know a joke?"
+      ],
+      "responses": [
+        "I saw a man at the supermarket today, throw all the milk, butter, cream and yogurt off the selves, in a rage.....how dairy..",
+        "Police are appealing to the man who stole all the soap from the supermarket.. to come clean"
+      ]
+    },
+
+    {
+      "tag": "vouchers",
+      "patterns": [
+        "How do I redeem my vouchers",
+        "How do I claim my vouchers"
+      ],
+      "responses": [
+        "You can redeem your vouchers by going to your profile's voucher page. You can claim vouchers by playing our games or return our reusable bags during delivery ",
+        "Police are appealing to the man who stole all the soap from the supermarket.. to come clean"
+      ]
+    }
+  ]
+}
