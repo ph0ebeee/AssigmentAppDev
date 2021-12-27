@@ -12,6 +12,17 @@ app = Flask(__name__)
 def home():
     return render_template('home.html')
 
+@app.route('/Login', methods=['GET', 'POST'])
+def login():
+    return render_template('loginPage.html')
+
+@app.route('/Signup')
+def Signup():
+    return render_template('signupPage.html')
+
+@app.route('/ForgetPassword')
+def ForgetPassword():
+    return render_template('forgetPassword.html')
 
 #@app.route("/predict", methods=['POST'])
 #def predict():

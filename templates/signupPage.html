@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Library Loan System - Sign Up67890-/*-{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+<h1 class="display-4">Create User</h1>
+
+<!--Form for users to create an account-->
+<form method="POST" action="">
+    <div class="form-group">
+        {{ render_field(form.first_name, class="signupForm") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.last_name, class="signupForm") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.username, class="signupForm") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.gender, class="signupForm") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.email, class="signupForm") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.password, class="signupForm") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.streetname, class="signupForm") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.postalcode, class="signupForm") }}
+    </div>
+    <br />
+    <input type="submit" value="Submit" class="btn btn-primary" />
+</form>
+<!--Data validation for user's input
+    1. Send the data to somewhere
+    2. Check if there is an existing inputs in the database
+    3. Feedback/Output to respective website once successful, if not, message in the box"username taken yadayada" JS-->
+{% endblock %}
