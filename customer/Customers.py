@@ -1,4 +1,4 @@
-import Users
+from users import Users 
 import pyodbc
 
 class Customers(Users.Users):

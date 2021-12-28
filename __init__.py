@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 import paypalrestsdk
+from signup import signupForms
 #from templates.chatbot.chat import get_response
 
 #from templates.Forms import CreateUserForm,CreateCustomerForm
@@ -14,11 +15,17 @@ def home():
 
 @app.route('/Login', methods=['GET', 'POST'])
 def login():
-    return render_template('loginPage.html')
+    loginPage = loginPage(request.form)
+    if request.method == 'POST' and loginPage.validate():
+        return redirect(url_for('home'))
+    return render_template('loginPage.html', form=loginPage)
 
-@app.route('/Signup')
-def Signup():
-    return render_template('signupPage.html')
+@app.route('/Signup',methods=['GET','POST'])
+def signUp():
+    signupPage = signupPage(request.form)
+    if request.method == 'POST' and signupPage.validate():
+        return redirect(url_for('home'))
+    return render_template('signupPage.html', form=signupPage)
 
 @app.route('/ForgetPassword')
 def ForgetPassword():
