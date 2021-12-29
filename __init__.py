@@ -20,10 +20,11 @@ def login():
         return redirect(url_for('home'))
     return render_template('usersLogin/loginPage.html', form=loginPage)
 
+
 @app.route('/Signup',methods=['GET','POST'])
 def signUp():
-    signUpPage = signupForm(csrf_enabled=False)
-    signupPage = signupPage(request.form)
+    signup = signupForm(csrf_enabled=False)
+    signup = signup(request.form)
     if request.method == 'POST' and signupPage.validate():
         return redirect(url_for('home'))
     return render_template('signupPage.html', form=signupPage)

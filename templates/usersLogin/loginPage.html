@@ -1,27 +1,41 @@
 {%extends "base.html" %}
-{% block title %} Library Loan System - Login {% endblock %}
+{% block title %} 
+Library Loan System - Login 
+{% endblock %}
 
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
-<!--login page where customers and staff input their email and password-->
+<!-- Link to CSS for the loginPage.html -->
+<link rel="stylesheet" href="{{ url_for('static', filename='loginPage.css')}}">
+<!-- This is to specify the client ID i have created for this website's sign in google API'-->
 <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
-<div class="loginPage_Container">
-    <!--Form for users to create an account-->
-    <form method="post">
-        <div class="form-group">
-            {{ render_field(form.email, class="form-control") }}
+<!-- Login page where customers and staff input their email and password -->
+<div class="d-flex align-content-center justify-content-center" style="background-color: #DDD5C2">
+    <div class="card my-5 shadow" style="width:700px">
+        <h3 class="card-title card-header bg-custom navbar-dark mb-3 text-center" style="background-color: #FBF8F2 ">
+            Login
+        </h3>
+        <div class="card-body">
+            <!--Form for users to create an account-->
+            <form method="post" action="~/Home/Login">
+                <div class="form-group">
+                    {{ render_field(form.email, class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.password, class="form-control") }}
+                </div>
+                <br>
+                <p>Forgot your password? <a href="/ForgetPassword">here</a></p>
+                <p>Not a member? Click<a href="/Signup">here</a>to sign up</p>
+                <input type="submit" value="login" class="submitBtn btn-primary justify-content-end" />
+            </form><br>
+            <div class="g_signinapi">
+                <b>or</b><br>
+                <!--google API that allows customers to sign in with google-->
+                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            </div>
         </div>
-        <div class="form-group">
-            {{ render_field(form.password, class="form-control") }}
-        </div>
-        <br />
-        <p>Forgot your password?<a class="nav-link" href="/ForgetPassword">here</a></p>
-        <p>Not a member? Click<a class="nav-link" href="/Signup">here</a>to sign up</p>
-        <input type="submit" value="login" class="btn btn-primary" />
-    </form><br>
-    <b>or</b><br>
-    <!--google API that allows customers to sign in with google-->
-    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    </div>
 </div>
 {% endblock %}
-<!--data validation to determine whether it is customer or staff user-->
+
