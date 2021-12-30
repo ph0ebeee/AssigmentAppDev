@@ -6,3 +6,33 @@ conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                       'Database=EcoDen;'
                       'Trusted_Connection=yes;')
 
+#function to validate whether email input by user has recorded in the database
+def validate_login_email():
+    emailList = []
+    form = loginForm(csrf_enabled=False)
+    user_email = form.email
+    cursor = conn.cursor()
+    cursor.execute('SELECT EmailAddr from Staff')
+
+    cursor_data = cursor.fetchall()
+
+    cursor1 = conn.cursor()
+    cursor1.execute('SELECT EmailAddr from Customer')
+
+    cursor_data1 = cursor1.fetchall()
+
+    for i in cursor_data:
+        emailList.append(i)
+
+    for i in cursor_data1:
+        emailList.append(i)
+
+    for i in emailList:
+        print(i)
+
+    for i in emailList:
+        if user_email == i:
+           
+        else:
+            print("no")
+            break

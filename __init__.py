@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, request, url_for
 import paypalrestsdk
-from forms import forms
+from forms import forms, 
 #from templates.chatbot.chat import get_response
 
 #from templates.Forms import CreateUserForm,CreateCustomerForm
@@ -12,22 +12,19 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template('home.html')
-
-def imageCarousel():
-    return render_template('')
-     
+    
 @app.route('/Login', methods=['GET', 'POST'])
+#route for login form to be seen on loginPage.html
 def login():
     loginPage = forms.loginForm(csrf_enabled=False)
     if request.method == 'POST' and loginPage.validate():
-        return redirect(url_for('home'))
+        return redirect(url_for('###'))
     return render_template('usersLogin/loginPage.html', form=loginPage)
 
 
 @app.route('/Signup',methods=['GET','POST'])
 def signUp():
-    signup = signupForm(csrf_enabled=False)
-    signup = signup(request.form)
+    signupPage = forms.signupForm(csrf_enabled=False)
     if request.method == 'POST' and signupPage.validate():
         return redirect(url_for('home'))
     return render_template('signupPage.html', form=signupPage)
