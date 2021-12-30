@@ -13,6 +13,9 @@ app = Flask(__name__)
 def home():
     return render_template('home.html')
 
+def imageCarousel():
+    return render_template('')
+     
 @app.route('/Login', methods=['GET', 'POST'])
 def login():
     loginPage = forms.loginForm(csrf_enabled=False)

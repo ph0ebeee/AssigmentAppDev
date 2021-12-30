@@ -5,34 +5,32 @@ Library Loan System - Login
 
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
-<!-- Link to CSS for the loginPage.html -->
-<link rel="stylesheet" href="{{ url_for('static', filename='loginPage.css')}}">
 <!-- This is to specify the client ID i have created for this website's sign in google API'-->
 <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
 <!-- Login page where customers and staff input their email and password -->
-<div class="d-flex align-content-center justify-content-center" style="background-color: #DDD5C2">
+<div class="d-flex align-content-center justify-content-center" style="background-color: #FBF8F2; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #DDD5C2;">
     <div class="card my-5 shadow" style="width:700px">
-        <h3 class="card-title card-header bg-custom navbar-dark mb-3 text-center" style="background-color: #FBF8F2 ">
+        <h3 class="card-title card-header bg-custom navbar-dark mb-3 text-center" style="background-color: #BDB5A0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: floralwhite;">
             Login
         </h3>
         <div class="card-body">
             <!--Form for users to create an account-->
-            <form method="post" action="~/Home/Login">
+            <form method="post" action="~/Home/Login" style="background-color: white;" >
                 <div class="form-group">
                     {{ render_field(form.email, class="form-control") }}
                 </div>
+                <br />
                 <div class="form-group">
                     {{ render_field(form.password, class="form-control") }}
                 </div>
-                <br>
-                <p>Forgot your password? <a href="/ForgetPassword">here</a></p>
-                <p>Not a member? Click<a href="/Signup">here</a>to sign up</p>
-                <input type="submit" value="login" class="submitBtn btn-primary justify-content-end" />
+                <p class="card-body" style="font-size:12px;">Forgot your password? Click <a href="/ForgetPassword" style="color:#F5BA76;">here</a></p>
+                <p class="card-body" style="font-size:12px; display: inline-block;">Not a member? Click <a href="/Signup" style="color:#F5BA76;">here</a> to sign up</p>
+                <input type="submit" value="login" class="submitBtn btn-primary" style="border-color:#F5BA76; justify-content: end; display: inline-block; background-color: #F5BA76; color: floralwhite;" />
             </form><br>
-            <div class="g_signinapi">
+            <div class="g_signinapi" style="justify-content:center; text-align:center;">
                 <b>or</b><br>
                 <!--google API that allows customers to sign in with google-->
-                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                <div class="g-signin2" data-onsuccess="onSignIn" style="justify-content:center; "></div>
             </div>
         </div>
     </div>
