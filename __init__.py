@@ -1,6 +1,6 @@
-from flask import Flask, render_template, jsonify, request, url_for
+from flask import Flask, render_template, jsonify, request, url_for, redirect
 import paypalrestsdk
-import loginForm(Form) 
+from forms import forms
 #from templates.chatbot.chat import get_response
 
 #from templates.Forms import CreateUserForm,CreateCustomerForm
