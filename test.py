@@ -1,3 +1,4 @@
+# dont delete this file, its needed for trial and error when i am doing my loginValidation - Viona
 import pyodbc
 
 conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
