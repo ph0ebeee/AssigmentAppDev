@@ -1,6 +1,6 @@
 {%extends "base.html" %}
-{% block title %} 
-Library Loan System - Login 
+{% block title %}
+Library Loan System - Login
 {% endblock %}
 
 {% block content %}
@@ -23,7 +23,7 @@ Library Loan System - Login
                 <div class="form-group">
                     {{ render_field(form.password, class="form-control") }}
                 </div><br />
-                <input type="submit" value="login" class="submitBtn btn-primary" 
+                <input type="submit" value="login" class="submitBtn btn-primary"
                        style="border-color:#F5BA76; text-align:right; align-items:flex-end; display: flex; background-color: #F5BA76; color: floralwhite;" />
             </form>
             <p style="font-size:12px; text-align:left; display:inline;">
@@ -32,9 +32,12 @@ Library Loan System - Login
             </p>
             <b style="text-align:center;">or</b>
             <!--google API that allows customers to sign in with google-->
-            <div style="align-content:center; align-items:center;" class="g-signin2" data-onsuccess="onSignIn" ></div>
+            <div style="align-content:center; align-items:center;" class="g-signin2" data-onsuccess="onSignIn"></div>
         </div>
     </div>
 </div>
+{% endblock %}
+{% block content %}
+{% from "includes/_footer.html" import render_field %}
 {% endblock %}
 

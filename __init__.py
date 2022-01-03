@@ -19,6 +19,7 @@ def login():
     loginPage = forms.loginForm(csrf_enabled=False)
     if request.method == 'POST' and loginPage.validate():
         return redirect(url_for('###'))
+        #use JS to change the layout of the navbar according to Cust or Staff account
     return render_template('usersLogin/loginPage.html', form=loginPage)
 
 
@@ -26,7 +27,8 @@ def login():
 def signUp():
     signupPage = forms.signupForm(csrf_enabled=False)
     if request.method == 'POST' and signupPage.validate():
-        return redirect(url_for('home'))
+        return redirect(url_for('###'))
+        #use JS to change the layout of the navbar according to Cust or Staff account
     return render_template('signupPage.html', form=signupPage)
 
 @app.route('/ForgetPassword')
