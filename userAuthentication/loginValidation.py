@@ -1,6 +1,6 @@
 #import database from sql server
 import pyodbc
-from forms.py import loginForm
+from forms.forms import loginForm
 
 conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                       'Server=(localdb)\MSSQLLocalDB;'
