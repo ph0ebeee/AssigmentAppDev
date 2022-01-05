@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('staff.html')
     
 @app.route('/Login', methods=['GET', 'POST'])
 #route for login form to be seen on loginPage.html
