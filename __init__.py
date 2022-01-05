@@ -1,14 +1,15 @@
 <<<<<<< HEAD
-from flask import Flask, render_template, jsonify, request, url_for
+
+from flask import Flask, render_template, jsonify, request, url_for, redirect
+
 =======
 from flask import Flask, render_template, jsonify, request, url_for, redirect
->>>>>>> d038c02bf44086ea106847133cc26da16b654075
+>>>>>>> 16f73f3575cdd6199165b14315382620a693d813
 import paypalrestsdk
 from werkzeug.utils import redirect
-
 from forms import forms
-#from templates.chatbot.chat import get_response
 
+#from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 from forms.forms import signupForm
 
@@ -17,7 +18,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('staff.html')
     
 @app.route('/Login', methods=['GET', 'POST'])
 #route for login form to be seen on loginPage.html
@@ -41,12 +42,19 @@ def signUp():
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
+
 #@app.route("/predict", methods=['POST'])
 #def predict():
  #   text = request.get_json().get("message")
   #  response = get_response(text)
    # message = {"answer": response}
     #return jsonify(message)
+
+@app.route("/ShoppingCart",methods = ["GET"])
+def shopping_cart():
+    return render_template('/shopping cart/shopping_cart.html')
+
+
 
 
 paypalrestsdk.configure({
