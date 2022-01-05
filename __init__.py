@@ -1,10 +1,12 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, url_for
 import paypalrestsdk
+from werkzeug.utils import redirect
+
 from forms import forms
 #from templates.chatbot.chat import get_response
 
 #from templates.Forms import CreateUserForm,CreateCustomerForm
-
+from forms.forms import signupForm
 
 app = Flask(__name__)
 
@@ -19,6 +21,7 @@ def login():
     if request.method == 'POST' and loginPage.validate():
         return redirect(url_for('home'))
     return render_template('usersLogin/loginPage.html', form=loginPage)
+
 
 @app.route('/Signup',methods=['GET','POST'])
 def signUp():
