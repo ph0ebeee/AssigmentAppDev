@@ -1,9 +1,12 @@
+<<<<<<< HEAD
 
 from flask import Flask, render_template, jsonify, request, url_for, redirect
 
+=======
+from flask import Flask, render_template, jsonify, request, url_for, redirect
+>>>>>>> 16f73f3575cdd6199165b14315382620a693d813
 import paypalrestsdk
 from werkzeug.utils import redirect
-
 from forms import forms
 
 #from templates.chatbot.chat import get_response
@@ -15,7 +18,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('staff.html')
     
 @app.route('/Login', methods=['GET', 'POST'])
 #route for login form to be seen on loginPage.html
