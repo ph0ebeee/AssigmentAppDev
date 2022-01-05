@@ -1,15 +1,12 @@
-<<<<<<< HEAD
 
 from flask import Flask, render_template, jsonify, request, url_for, redirect
 
-=======
-from flask import Flask, render_template, jsonify, request, url_for, redirect
->>>>>>> 16f73f3575cdd6199165b14315382620a693d813
+
 import paypalrestsdk
 from werkzeug.utils import redirect
 from forms import forms
 
-#from templates.chatbot.chat import get_response
+# from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 from forms.forms import signupForm
 
@@ -18,7 +15,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('staff.html')
+    return render_template('home.html')
     
 @app.route('/Login', methods=['GET', 'POST'])
 #route for login form to be seen on loginPage.html
@@ -43,13 +40,13 @@ def ForgetPassword():
     return render_template('forgetPassword.html')
 
 
-#@app.route("/predict", methods=['POST'])
-#def predict():
- #   text = request.get_json().get("message")
-  #  response = get_response(text)
-   # message = {"answer": response}
-    #return jsonify(message)
-
+# @app.route("/Chatbot", methods=['POST'])
+# def chatbot():
+#     text = request.get_json().get("message")
+#     response = get_response(text)
+#     message = {"answer": response}
+#     return jsonify(message)
+#
 @app.route("/ShoppingCart",methods = ["GET"])
 def shopping_cart():
     return render_template('/shopping cart/shopping_cart.html')
@@ -111,21 +108,21 @@ def execute():
     return jsonify({'success' : success})
 
 
-#@app.route('/contactUs', methods=['GET', 'POST'])
-#def feedback():
- #   feedback = CreateUserForm(request.form)
-  #  if request.method == 'POST' and feedback.validate():
-   #     users_dict = {}
-    #    db = shelve.open('user.db', 'c')
-
-     #   try:
-      #      users_dict = db['Users']
-       # except:
-        #    print("Error in retrieving Users from user.db.")
-
-        #user = User.User(feedback.name.data, feedback.response.data)
-        #users_dict[user.get_user_id()] = user
-        #db['Users'] = users_dict
+# @app.route('/contactUs', methods=['GET', 'POST'])
+# def feedback():
+#     feedback = CreateUserForm(request.form)
+#     if request.method == 'POST' and feedback.validate():
+#         users_dict = {}
+#         db = shelve.open('user.db', 'c')
+#
+#         try:
+#             users_dict = db['Users']
+#         except:
+#             print("Error in retrieving Users from user.db.")
+#
+#         user = User.User(feedback.name.data, feedback.response.data)
+#         users_dict[user.get_user_id()] = user
+#         db['Users'] = users_dict
 
 
 
