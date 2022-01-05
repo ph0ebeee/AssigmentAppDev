@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from flask import Flask, render_template, jsonify, request, url_for
+=======
+from flask import Flask, render_template, jsonify, request, url_for, redirect
+>>>>>>> d038c02bf44086ea106847133cc26da16b654075
 import paypalrestsdk
 from werkzeug.utils import redirect
 
@@ -14,21 +18,23 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template('home.html')
-
+    
 @app.route('/Login', methods=['GET', 'POST'])
+#route for login form to be seen on loginPage.html
 def login():
     loginPage = forms.loginForm(csrf_enabled=False)
     if request.method == 'POST' and loginPage.validate():
-        return redirect(url_for('home'))
+        return redirect(url_for('###'))
+        #use JS to change the layout of the navbar according to Cust or Staff account
     return render_template('usersLogin/loginPage.html', form=loginPage)
 
 
 @app.route('/Signup',methods=['GET','POST'])
 def signUp():
-    signUpPage = signupForm(csrf_enabled=False)
-    signupPage = signupPage(request.form)
+    signupPage = forms.signupForm(csrf_enabled=False)
     if request.method == 'POST' and signupPage.validate():
-        return redirect(url_for('home'))
+        return redirect(url_for('###'))
+        #use JS to change the layout of the navbar according to Cust or Staff account
     return render_template('signupPage.html', form=signupPage)
 
 @app.route('/ForgetPassword')
