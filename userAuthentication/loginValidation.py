@@ -42,6 +42,8 @@ def validate_login_particulars():
     #validation
     for i in staffEmail_Password:
         if user_email == i and user_password == staffEmail_Password[i]:
+           cursor2 = conn.cursor()
+           cursor2.execute('SELECT * From ')
            return redirect(url_for('staffHome')) #fix this redirection !!!!!!!!!!!!
         else:
            #ask user to re-input their particulars !!!!!!!!!!!!!!!!

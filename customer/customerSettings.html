@@ -1,0 +1,32 @@
+{% import customerSettings.py %}
+{%extends "base.html" %}
+{% block title %}
+Library Loan System - customerSettings
+{% endblock %}
+
+{% block content %}
+{% include 'includes/_navbar.html' %}
+<nav class:"customerSettings">
+    <img src="" />
+    username<br />
+        <ul>
+            <li><a class="dropdown-item" href="#">Account</a></li><br />
+            <li><a class="dropdown-item" href="/customerPurchase">Purchase</a></li><br />
+            <li><a class="dropdown-item" href="/customerVouchers">Vouchers</a></li><br />
+            <li><a class="dropdown-item" href="/customerFAQ">FAQ</a></li><br />
+            <li><a class="dropdown-item" href="customerMembership">Membership</a></li><br />
+            <li><a class="dropdown-item" href="/logout">Log out</a></li><br />
+        </ul>
+</nav>
+<div>
+    <h2>Account</h2>
+    <div class:"customerParticulars">
+        <p>Username: {%  %}</p>
+        <p>Email: </p>
+        <p>Password: </p>
+        <p>Phone number: </p>
+        <p>Mailing address: </p>
+        
+        
+    </div>
+</div>
