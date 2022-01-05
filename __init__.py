@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-
 from flask import Flask, render_template, jsonify, request, url_for, redirect
 
-=======
-from flask import Flask, render_template, jsonify, request, url_for, redirect
->>>>>>> 16f73f3575cdd6199165b14315382620a693d813
 import paypalrestsdk
 from werkzeug.utils import redirect
 from forms import forms
