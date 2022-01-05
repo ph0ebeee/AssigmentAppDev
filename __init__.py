@@ -1,10 +1,11 @@
 from flask import Flask, render_template, jsonify, request, url_for, redirect
 import paypalrestsdk
+from werkzeug.utils import redirect
 from forms import forms
 #from templates.chatbot.chat import get_response
 
 #from templates.Forms import CreateUserForm,CreateCustomerForm
-
+from forms.forms import signupForm
 
 app = Flask(__name__)
 
@@ -19,6 +20,7 @@ def login():
     loginPage = forms.loginForm(csrf_enabled=False)
     if request.method == 'POST' and loginPage.validate():
         return redirect(url_for('###'))
+        #use JS to change the layout of the navbar according to Cust or Staff account
     return render_template('usersLogin/loginPage.html', form=loginPage)
 
 
@@ -26,7 +28,8 @@ def login():
 def signUp():
     signupPage = forms.signupForm(csrf_enabled=False)
     if request.method == 'POST' and signupPage.validate():
-        return redirect(url_for('home'))
+        return redirect(url_for('###'))
+        #use JS to change the layout of the navbar according to Cust or Staff account
     return render_template('signupPage.html', form=signupPage)
 
 @app.route('/ForgetPassword')
