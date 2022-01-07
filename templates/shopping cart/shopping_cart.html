@@ -19,11 +19,15 @@ Library Loan System - HomeDen
 					{% set item_price = session['cart_item'][key]['total_price'] %}
 					<div id="shopping-cart">
 						<div class="txt-heading">Products</div>
-						  <div id="mySidenav" class="sidenav">
 							<section class="container content-section">
-							  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 								<h2 class="section-header">YOUR CART</h2>
 								<div class="cart-items">
+									<span class="item name">${title}</span><br>
+									<span class="item price">{{ price }}</span><br>
+									<div class="cart-quantity cart-column">
+										<input class="cart-quantity-input" type="number" value="1">
+										<button class="btn btn-danger" type="button">REMOVE</button>
+									</div>`
 								</div>
 								<div class="cart-total">
 									<strong class="cart-total-title">Total</strong>
@@ -33,15 +37,6 @@ Library Loan System - HomeDen
 								<button class="btn btn-primary btn-purchase" type="button" >CHECKOUT</button>
 							</section>
 						  </div>
-					</div>
-                        <div class="cart-item cart-column">
-                        <span class="item name">${title}</span><br>
-                        </div>
-                        <span class="item price">{{ price }}</span><br>
-                        <div class="cart-quantity cart-column">
-                            <input class="cart-quantity-input" type="number" value="1">
-                            <button class="btn btn-danger" type="button">REMOVE</button>
-                        </div>`
 
 				{% endfor %}
 				<div>
@@ -52,5 +47,4 @@ Library Loan System - HomeDen
 			<div class="no-records">Your Cart is Empty!</div>
 		{% endif %}
 {% endblock %}
-
 </body>

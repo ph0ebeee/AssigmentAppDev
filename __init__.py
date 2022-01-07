@@ -39,6 +39,8 @@ def ForgetPassword():
     return render_template('forgetPassword.html')
 
 
+# chatbot done by Phoebe
+
 # @app.route("/Chatbot", methods=['POST'])
 # def chatbot():
 #     text = request.get_json().get("message")
@@ -47,63 +49,17 @@ def ForgetPassword():
 #     return jsonify(message)
 #
 
-
-
-
-paypalrestsdk.configure({
-  "mode": "sandbox", # sandbox or live
-  "client_id": "AfRIwzrYKNDDjzhwa6wx4MAuoKf-7j0t76lAYyH-OEAC_XwtpxZmWX_VQ7M4INH10LUrIsESHWDFcUmm",
-  "client_secret": "ELm9nAnFFJV46yrWD8GqCwqSViSw8wda7DGGBJnxmMe2v7mCVDHp88HwLRzhj_3ehT73-ZdUx2jfOr_O" })
-
-@app.route('/checkout')
-def index():
-    return render_template('paypal.html')
-
-@app.route('/payment', methods=['POST'])
+# payment via paypal done by Phoebe
+@app.route('/Payment', methods=['POST'])
 def payment():
-
-    payment = paypalrestsdk.Payment({
-        "intent": "sale",
-        "payer": {
-            "payment_method": "paypal"},
-        "redirect_urls": {
-            "return_url": "http://localhost:3000/payment/execute",
-            "cancel_url": "http://localhost:3000/"},
-        "transactions": [{
-            "item_list": {
-                "items": [{
-                    "name": "testitem",
-                    "sku": "12345",
-                    "price": "500.00",
-                    "currency": "USD",
-                    "quantity": 1}]},
-            "amount": {
-                "total": "500.00",
-                "currency": "USD"},
-            "description": "This is the payment transaction description."}]})
-
-    if payment.create():
-        print('Payment success!')
-    else:
-        print(payment.error)
-
-    return jsonify({'paymentID' : payment.id})
-
-@app.route('/execute', methods=['POST'])
-def execute():
-    success = False
-
-    payment = paypalrestsdk.Payment.find(request.form['paymentID'])
-
-    if payment.execute({'payer_id' : request.form['payerID']}):
-        print('Execute success!')
-        success = True
-    else:
-        print(payment.error)
-
-    return jsonify({'success' : success})
+    return render_template('paypal_standard.html')
 
 
+@app.route('/Payment/Success', methods = ['POST'])
+def success_payment():
+    return render_template('success_payment.html')
+
+# shopping cart by Phoebe
 @app.route("/ShoppingCart",methods = ["GET"])
 def shopping_cart():
     return render_template('shopping cart/shopping_cart.html')
@@ -121,6 +77,7 @@ def add_product():
     cursor_data = cursor.fetchall()
     for i in cursor_data:
         cart_product_name.update( {i[0]:i[1]} )
+
 
 @app.route('/deleteProduct', methods = ['POST'])
 def delete_product():
