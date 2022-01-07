@@ -1,18 +1,3 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures optimal rendering on mobile devices -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <!-- Optimal Internet Explorer compatibility -->
-  </head>
-
-  <body>
-    <!-- Include the PayPal JavaScript SDK; replace "test" with your own sandbox Business account app client ID -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AfRIwzrYKNDDjzhwa6wx4MAuoKf-7j0t76lAYyH-OEAC_XwtpxZmWX_VQ7M4INH10LUrIsESHWDFcUmm&currency=SGD"></script>
-
-    <!-- Set up a container element for the button -->
-    <div id="paypal-button-container"></div>
-
-    <script>
       paypal.Buttons({
 
         // Sets up the transaction when a payment button is clicked
@@ -56,14 +41,5 @@
             // Or go to another URL:  actions.redirect('thank_you.html');
           });
         }
-
-      capturePayment: function(data,actions){
-        return fetch ('/v2/checkout/orders/'data.orderID'/capture',{
-        method: 'post'
-        })
-      }
       }).render('#paypal-button-container');
 
-    </script>
-  </body>
-</html>
