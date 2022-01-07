@@ -1,6 +1,6 @@
 
 from flask import Flask, render_template, jsonify, request, url_for, redirect
-
+import pyodbc
 import paypalrestsdk
 from werkzeug.utils import redirect
 from forms import forms
@@ -46,9 +46,6 @@ def ForgetPassword():
 #     message = {"answer": response}
 #     return jsonify(message)
 #
-@app.route("/ShoppingCart",methods = ["GET"])
-def shopping_cart():
-    return render_template('/shopping cart/shopping_cart.html')
 
 
 
@@ -105,6 +102,33 @@ def execute():
         print(payment.error)
 
     return jsonify({'success' : success})
+
+
+@app.route("/ShoppingCart",methods = ["GET"])
+def shopping_cart():
+    return render_template('shopping cart/shopping_cart.html')
+
+
+@app.route('/ShoppingCart', methods = ['POST'])
+def add_product():
+    cart_product_name = {}
+    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                      'Server=(localdb)\MSSQLLocalDB;'
+                      'Database=EcoDen;'
+                      'Trusted_Connection=yes;')
+    cursor = conn.cursor()
+    cursor.execute('SELECT ProductName from Product')
+    cursor_data = cursor.fetchall()
+    for i in cursor_data:
+        cart_product_name.update( {i[0]:i[1]} )
+
+@app.route('/deleteProduct', methods = ['POST'])
+def delete_product():
+    all_total_price = 0
+    all_total_quantity = 0
+
+
+
 
 
 # @app.route('/contactUs', methods=['GET', 'POST'])

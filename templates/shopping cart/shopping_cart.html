@@ -3,35 +3,38 @@
 Library Loan System - HomeDen
 {% endblock %}
 
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Shopping Cart</title>
 </head>
 <body>
-	<div>
-		{% with messages = get_flashed_messages() %}
-		  {% if messages %}
-			<ul class=flashes>
-			{% for message in messages %}
-			  <li>{{ message }}</li>
-			{% endfor %}
-			</ul>
-		  {% endif %}
-		{% endwith %}
-	</div>
+{% block content %}
 
-	<div id="shopping-cart">
-		<div class="txt-heading">Products</div>
-		{% if 'cart_item' in session %}
-			<a id="btnEmpty" href="{{ url_for('.empty_cart') }}">Empty Cart</a>
+
         <h1> Products </h1>
+		{% if 'cart_item' in session %}
 				{% for key, val in session['cart_item'].items() %}
 					{% set quantity = session['cart_item'][key]['quantity'] %}
 					{% set price = session['cart_item'][key]['price'] %}
 					{% set item_price = session['cart_item'][key]['total_price'] %}
+					<div id="shopping-cart">
+						<div class="txt-heading">Products</div>
+						  <div id="mySidenav" class="sidenav">
+							<section class="container content-section">
+							  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+								<h2 class="section-header">YOUR CART</h2>
+								<div class="cart-items">
+								</div>
+								<div class="cart-total">
+									<strong class="cart-total-title">Total</strong>
+									<span class="cart-total-price">SGD$0</span>
+								</div>
+								<button class = "btn-voucher" type = "button">VOUCHERS</button>
+								<button class="btn btn-primary btn-purchase" type="button" >CHECKOUT</button>
+							</section>
+						  </div>
+					</div>
                         <div class="cart-item cart-column">
-                        <img class="item image" src="/static/images/{{ session['cart_item'][key]['image']" width="50%" height="60%"><br>{{ session['cart_item'][key]['name'] }}
                         <span class="item name">${title}</span><br>
                         </div>
                         <span class="item price">{{ price }}</span><br>
@@ -45,8 +48,9 @@ Library Loan System - HomeDen
 					<p>colspan="2" align="right">Total: </p>
 					<p> align="right" colspan="2"><strong>₹ {{ session['all_total_price'] }}</strong></p>
 				</div>
-		{% else: %}
-			<div class="no-records">Your Cart is Empty</div>
+		{% else %}
+			<div class="no-records">Your Cart is Empty!</div>
 		{% endif %}
-	</div>
+{% endblock %}
+
 </body>
