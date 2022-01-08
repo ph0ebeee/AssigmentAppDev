@@ -1,5 +1,8 @@
 class Users:
+    count_id = 0
+
     def __init__(self, first_name, last_name, email, password, username, gender, membership, orders):
+        Users.count_id += 1
         self.__first_name = first_name
         self.__last_name = last_name
         self.__email = email
@@ -56,3 +59,18 @@ class Users:
 
     def set_orders(self, orders):
         self.__orders = orders
+
+
+def query():
+    pass
+    #idk
+
+
+def query():
+    pass
+    #idk
+
+
+def query():
+    pass
+    #idk
