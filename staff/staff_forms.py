@@ -4,7 +4,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 #from users import Users
-#from userAuthentication import signupValidation
+from userAuthentication import signupValidation
 import pyodbc
 #from flask import url_for
 #from werkzeug.utils import redirect
