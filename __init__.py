@@ -1,9 +1,11 @@
 
 from flask import Flask, render_template, jsonify, request, url_for, redirect
 import pyodbc
+import shelve
 import paypalrestsdk
 from werkzeug.utils import redirect
 from forms import forms
+from templates.paypal.receipt import Receipt
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
@@ -57,17 +59,29 @@ def payment():
 
 @app.route('/Payment/Success', methods = ['POST'])
 def success_payment():
+    receipt_details = {}
+    db = shelve.open['receipt.db','c']
+    try:
+        receipt_details = db['Receipt']
+    except:
+        print("Error in opening Receipt from receipt.db")
+        receipt = Receipt.Receipt(transaction.id.trans_id,transaction.update_time.trans_time,transaction.amount.value.trans_value)
+        receipt_details[receipt.get_trans_id()] = receipt
+        db['Receipt'] = receipt_details
+        db.close
     return render_template('success_payment.html')
 
 # shopping cart by Phoebe
-@app.route("/ShoppingCart",methods = ["GET"])
-def shopping_cart():
-    return render_template('shopping cart/shopping_cart.html')
-
-
 @app.route('/ShoppingCart', methods = ['POST'])
 def add_product():
-    cart_product_name = {}
+    cart_product = {}
+    db = shelve.open(cart_product)
+
+    try:
+        cart_product = db['Products']
+    except:
+        print("Error in retrieving Products from products.db")
+
     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                       'Server=(localdb)\MSSQLLocalDB;'
                       'Database=EcoDen;'
@@ -76,13 +90,14 @@ def add_product():
     cursor.execute('SELECT ProductName from Product')
     cursor_data = cursor.fetchall()
     for i in cursor_data:
-        cart_product_name.update( {i[0]:i[1]} )
+        cart_product.update( {i[0]:i[1]} )
 
-
-@app.route('/deleteProduct', methods = ['POST'])
+@app.route('/ProductDelete', methods = ['POST'])
 def delete_product():
-    all_total_price = 0
-    all_total_quantity = 0
+    pass
+
+
+
 
 
 
