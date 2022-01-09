@@ -7,8 +7,10 @@ import paypalrestsdk
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
 from forms import forms
-from flask_bcrypt import Bcrypt
-from flask_login import UserMixin, current_user, login_user, logout_user, login_required, login_manager, LoginManager
+#from flask_bcrypt import Bcrypt
+#from flask_login import UserMixin, current_user, login_user, logout_user, login_required, login_manager, LoginManager
+from forms.forms import loginForm
+from userAuthentication.loginValidation import *
 
 from staff.staff_forms import UpdateAccountForm
 from users import Users
@@ -33,17 +35,26 @@ def load_user(user_id):
 def home():
     return render_template('home.html')
 
-    
+#route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
-#route for login form to be seen on loginPage.html
 def login():
     loginPage = forms.loginForm(csrf_enabled=False)
-    if request.method == 'POST' and loginPage.validate():
-        return redirect(url_for('###'))
+    if request.method == 'POST' and loginPage.validate() == True :
+        validateCustLogin = validate_cust_login()
+        validateStaffLogin = validate_staff_login()
         #use JS to change the layout of the navbar according to Cust or Staff account
-    return render_template('usersLogin/loginPage.html', form=loginPage)
+        if validateCustLogin==True:
+            custDetails = validated_Cust_Details()
+            return render_template('customer/customerSettings.html', custDetails = custDetails)  # change to customer page
+        elif validateStaffLogin == True:
+            staffDetails = validated_Staff_Details()
+            return render_template('usersLogin/loginPage.html', staffDetails = staffDetails)  # change to staff page
+        else:
+            return render_template('usersLogin/loginPage.html', form=loginPage)
+    else:
+        return render_template('usersLogin/loginPage.html', form=loginPage)
 
-
+#route for sign up form to be seen on loginPage.html  - viona
 @app.route('/Signup',methods=['GET','POST'])
 def signUp():
     signupPage = forms.signupForm(csrf_enabled=False)
