@@ -84,18 +84,18 @@ def payment():
     return render_template('paypal_standard.html')
 
 @app.route('/Payment/Success', methods = ['POST'])
+def retrieve_database_receipt():
+    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                          'Server=(localdb)\MSSQLLocalDB;'
+                          'Database=EcoDen;'
+                          'Trusted_Connection=yes;')
+    cursor = conn.cursor()
+    cursor.execute('SELECT trans_num,time,total from transactionTable')
+    cursor_data = cursor.fetchall()
+    return cursor_data
 def success_payment():
-    receipt_details = {}
-    db = shelve.open['receipt.db','c']
-    try:
-        receipt_details = db['Receipt']
-    except:
-        print("Error in opening Receipt from receipt.db")
-        # receipt = Receipt.Receipt(transaction.id.trans_id,transaction.update_time.trans_time,transaction.amount.value.trans_value)
-        # receipt_details[receipt.get_trans_id()] = receipt
-        # db['Receipt'] = receipt_details
-        # db.close
-    return render_template('success_payment.html')
+    to_send= retrieve_database_receipt()
+    return render_template("success_payment", to_send=to_send)
 
 
 # shopping cart by Phoebe
