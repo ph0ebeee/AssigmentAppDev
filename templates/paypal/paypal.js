@@ -16,10 +16,6 @@
           return actions.order.capture().then(function(orderData) {
             var transaction = orderData.purchase_units[0].payments.captures[0];
                 var document = document.getElementById('paypal-button-container');
-                  document.getElementById("trans_num").innerText = transaction.id;
-                  document.getElementById("time").innerText = transaction.update_time;
-                  document.getELementById("total").innerText = transaction.amount.value
-
 
               //var receipt_details = `
                 //<div>

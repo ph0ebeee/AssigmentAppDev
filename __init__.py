@@ -65,10 +65,10 @@ def success_payment():
         receipt_details = db['Receipt']
     except:
         print("Error in opening Receipt from receipt.db")
-        receipt = Receipt.Receipt(transaction.id.trans_id,transaction.update_time.trans_time,transaction.amount.value.trans_value)
-        receipt_details[receipt.get_trans_id()] = receipt
-        db['Receipt'] = receipt_details
-        db.close
+        # receipt = Receipt.Receipt(transaction.id.trans_id,transaction.update_time.trans_time,transaction.amount.value.trans_value)
+        # receipt_details[receipt.get_trans_id()] = receipt
+        # db['Receipt'] = receipt_details
+        # db.close
     return render_template('success_payment.html')
 
 # shopping cart by Phoebe
