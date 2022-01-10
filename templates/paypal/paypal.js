@@ -14,19 +14,20 @@
         // Finalize the transaction after payer approval
         onApprove: function(data, actions) {
           return actions.order.capture().then(function(orderData) {
-              var transaction = orderData.purchase_units[0].payments.captures[0];
-              var receipt_details = `
-                <div>
-                    <h1>PAYMENT SUCCESSFUL</h1>
-                    <p> Transaction number:${transaction.id}</p>
-                    <p>Time:${transaction.update_time}</p>
-                    <p>Total:${transaction.value}</p>
-                    <p> Thank you for purchasing with us! We hope to see you again</p>
-                </div>`
-                transaction.innerHTML = receipt_details;
+            var transaction = orderData.purchase_units[0].payments.captures[0];
+                var document = document.getElementById('paypal-button-container');
 
-              //location.replace('success_payment.html')
+              //var receipt_details = `
+                //<div>
+                  //  <h1>PAYMENT SUCCESSFUL</h1>
+                    //<p> Transaction number:${transaction.id}</p>
+                    //<p>Time:${transaction.update_time}</p>
+                    //<>p>Total:${transaction.value}</p>
+                    //<p> Thank you for purchasing with us! We hope to see you again</p>
+                //</div>`
+                //transaction.innerHTML = receipt_details;
 
+              location.replace('success_payment.html')
 
 
             // Successful capture! For dev/demo purposes:
@@ -41,5 +42,7 @@
             // Or go to another URL:  actions.redirect('thank_you.html');
           });
         }
+
+
       }).render('#paypal-button-container');
 

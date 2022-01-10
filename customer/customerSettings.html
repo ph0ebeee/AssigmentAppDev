@@ -1,4 +1,3 @@
-{% import customerSettings.py %}
 {%extends "base.html" %}
 {% block title %}
 Library Loan System - customerSettings
@@ -6,27 +5,49 @@ Library Loan System - customerSettings
 
 {% block content %}
 {% include 'includes/_navbar.html' %}
-<nav class:"customerSettings">
-    <img src="" />
-    username<br />
-        <ul>
-            <li><a class="dropdown-item" href="#">Account</a></li><br />
-            <li><a class="dropdown-item" href="/customerPurchase">Purchase</a></li><br />
-            <li><a class="dropdown-item" href="/customerVouchers">Vouchers</a></li><br />
-            <li><a class="dropdown-item" href="/customerFAQ">FAQ</a></li><br />
-            <li><a class="dropdown-item" href="customerMembership">Membership</a></li><br />
-            <li><a class="dropdown-item" href="/logout">Log out</a></li><br />
-        </ul>
-</nav>
-<div>
+{% <!-- import user data--> %}
+<style>
+    #customerSettings_sidenav {
+        height: 100%;
+        width: 200px;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #FBF8F2;
+        overflow-x: hidden;
+        padding-top: 20px;
+        color: black;
+    }
+
+    #customerSettings_sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: underline;
+        font-size: 25px;
+        display: block;
+        transition: 0.3s;
+    }
+
+</style>
+<div class:"customerSettings_sidenav">
+    <img src="user_profilePicture.jpg" style="border-radius:50%; display:inline-block"/><p>username</p>
+        <a class="dropdown-item" href="#">Account</a>
+        <a class="dropdown-item" href="/customerPurchase">Purchase</a>
+        <a class="dropdown-item" href="/customerVouchers">Vouchers</a>
+        <a class="dropdown-item" href="/customerFAQ">FAQ</a>
+        <a class="dropdown-item" href="/customerMembership">Membership</a>
+        <a class="dropdown-item" href="/logout">Log out</a>
+</div>
+<div class="mainContent">
     <h2>Account</h2>
     <div class:"customerParticulars">
-        <p>Username: {%  %}</p>
-        <p>Email: </p>
-        <p>Password: </p>
-        <p>Phone number: </p>
-        <p>Mailing address: </p>
-        
-        
+        <p>Username: {%custDetails[1]%}</p>
+        <p>Membership Points: {%custDetails[2]%}</p>
+        <p>Email: {%custDetails[3]%}</p>
+        <p>Password: {%custDetails[4]%}</p>
+        <p>Phone number: {%custDetails[5]%}</p>
+        <p>Shipping address: {%custDetails[6]%}</p>
+        <p>Postal Code: {%custDetails[7]%}</p>
     </div>
 </div>
+{% endblock %}

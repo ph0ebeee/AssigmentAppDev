@@ -3,6 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures optimal rendering on mobile devices -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <!-- Optimal Internet Explorer compatibility -->
+    <script src = "paypal.js" async></script>
   </head>
 
   <body>
@@ -11,7 +12,6 @@
 
     <!-- Set up a container element for the button -->
     <div id="paypal-button-container"></div>
-
     <script>
       paypal.Buttons({
 
@@ -29,16 +29,21 @@
         // Finalize the transaction after payer approval
         onApprove: function(data, actions) {
           return actions.order.capture().then(function(orderData) {
-              var transaction = orderData.purchase_units[0].payments.captures[0];
-              var receipt_details = `
-                <div>
-                    <h1>PAYMENT SUCCESSFUL</h1>
-                    <p> Transaction number:${transaction.id}</p>
-                    <p>Time:${transaction.update_time}</p>
-                    <p>Total:${transaction.value}</p>
-                    <p> Thank you for purchasing with us! We hope to see you again</p>
-                </div>`
-                transaction.innerHTML = receipt_details;
+            var transaction = orderData.purchase_units[0].payments.captures[0];
+              trans_num = transaction.id
+              time = transaction.update_time
+              total = transaction.amount.value
+              $.ajax{{
+                type: "POST"
+                url:'{{ url_for('Success.send_receipt_info')}}'
+                data:{
+                  trans_num = trans_num
+                  time = time
+                  total = total
+                };
+
+
+
 
               //location.replace('success_payment.html')
 
@@ -57,11 +62,7 @@
           });
         }
 
-      capturePayment: function(data,actions){
-        return fetch ('/v2/checkout/orders/'data.orderID'/capture',{
-        method: 'post'
-        })
-      }
+
       }).render('#paypal-button-container');
 
     </script>

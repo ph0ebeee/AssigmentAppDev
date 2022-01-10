@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Successful Payment</title>
@@ -8,15 +6,13 @@
         text-align: center;
         }
     </style>
-    <script src = "paypal.js" async></script>
 </head>
-<body>
-<div>
-    <h1>PAYMENT SUCCESSFUL</h1>
-    <p> Transaction number:</p>
-    <p>Time:</p>
-    <p>Total:</p>
-    <p> Thank you for purchasing with us! We hope to see you again</p>
-</div>
-</body>
-</html>
+{%for transactionTable in to_send%}
+    <div class="receipt">
+        <h1>PAYMENT SUCCESSFUL</h1>
+        <p id ="trans_num"> Order ID:{{transactionTable[1]}}</p>
+        <p id = "time">Time:{{transactionTable[2]}}</p>
+        <p id = "total">Total:{{transactionTable[3]}}</p>
+        <p> Thank you for purchasing with us! We hope to see you again</p>
+    </div>
+{%endfor%}
