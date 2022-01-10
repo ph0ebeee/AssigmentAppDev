@@ -83,7 +83,9 @@ def ForgetPassword():
 def payment():
     return render_template('paypal_standard.html')
 
-@app.route('/Payment/Success', methods = ['POST'])
+@app.route('/Success', methods = ['POST'])
+def send_receipt_info():
+    pass
 def retrieve_database_receipt():
     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                           'Server=(localdb)\MSSQLLocalDB;'
