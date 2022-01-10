@@ -4,13 +4,17 @@ from flask import Flask, render_template, jsonify, request, url_for, redirect, f
 import pyodbc
 import shelve
 import paypalrestsdk
+from flask_login import current_user, login_required
+
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
 from forms import forms
 from flask_bcrypt import Bcrypt
 from forms.forms import loginForm
 from templates.staff import staff_forms
+from templates.staff.staffcust import orders
 from userAuthentication.loginValidation import *
+
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
@@ -21,7 +25,7 @@ bcrypt = Bcrypt(app)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('staff.html')
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -233,7 +237,6 @@ def success_payment():
 #         users_dict[user.get_user_id()] = user
 #         db['Users'] = users_dict
 
-# anna
 #@app.route('/logout')
 #def logout():
  #   logout_user()
@@ -247,5 +250,25 @@ def staffaccount():
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/staff_account.html', form=UpdateStaff)
 
+@app.route('/customerManagement', methods=['GET', 'POST'])
+def customerManagement():
+    to_send= orders()
+    return render_template("staff/staff_cust.html", to_send=to_send)
+
+@app.route('/acceptedOrder')
+def acceptedOrder():
+    return render_template('staff/accepted.html')
+
+@app.route('/declinedOrder')
+def declinedOrder():
+    return render_template('staff/declined.html')
+
+@app.route('/updateusername', methods=['GET', 'POST'])
+def updateusername():
+    UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
+    if request.method == 'POST' and UpdateStaff.validate():
+        return redirect(url_for('###'))
+        #use JS to change the layout of the navbar according Staff account
+    return render_template('staff/updateUsername.html', form=UpdateStaff)
 if __name__ == '__main__':
     app.run()
