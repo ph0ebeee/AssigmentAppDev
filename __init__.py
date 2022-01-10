@@ -7,15 +7,10 @@ import paypalrestsdk
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
 from forms import forms
-#from flask_bcrypt import Bcrypt
-#from flask_login import UserMixin, current_user, login_user, logout_user, login_required, login_manager, LoginManager
+from flask_bcrypt import Bcrypt
 from forms.forms import loginForm
+from templates.staff import staff_forms
 from userAuthentication.loginValidation import *
-
-from staff.staff_forms import UpdateAccountForm
-from users import Users
-#import os
-#import secrets
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
@@ -23,13 +18,6 @@ from forms.forms import signupForm
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-app.secret_key = 'secretkey'
-login_manager.login_view = 'login'
-login_manager = LoginManager(app)
-
-@login_manager.user_loader
-def load_user(user_id):
-    return Users.query.get(int(user_id))
 
 @app.route('/')
 def home():
@@ -251,40 +239,13 @@ def success_payment():
  #   logout_user()
  #   return render_template('home.html')
 
-#random idea anna
-#def save_picture(form_picture):
-#    random_hex = secrets.token_hex(8)
-#    _, f_ext = os.path.splitext(form_picture.filename)
-#    picture_path = os.path.join(app.root_path, 'Assets/images', picture_fn)
-#
-#    output_size = (125,125)
-#    i = Image.open(form_picture)
-#    i.thumbnail(output_size)
- #   i.save(picture_path)
-
- #   return picture_fn
-
-# staff settings anna
-@app.route("/staffaccount", methods=['GET', 'POST'])
-@login_required
+@app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
-    form = UpdateAccountForm()
-    if form.validate_on_submit():
-        if form.picture.data:
-            #picture_file = save_picture(form.picture.data)
-            #current_user.image_file = picture_file
-            current_user.username = form.username.data
-            current_user.email = form.email.data
-            #db.session.commit()
-            flash('Your account has been updated!', 'success')
-            return redirect(url_for('staffaccount'))
-    elif request.method == 'GET':
-            form.username.data = current_user.username
-            form.email.data = current_user.email
-    #image_file = url_for('Assets', filename='images/' + current_user.image_file)
-    return render_template('staff_account.html')
-                           #title='Account',
-                           #image_file=image_file, form=form)
+    UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
+    if request.method == 'POST' and UpdateStaff.validate():
+        return redirect(url_for('###'))
+        #use JS to change the layout of the navbar according Staff account
+    return render_template('staff/staff_account.html', form=UpdateStaff)
 
 if __name__ == '__main__':
     app.run()
