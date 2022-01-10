@@ -17,12 +17,7 @@ def validate_login_particulars():
     staffEmail_Password = {}
     customerEmail_Password = {}
 
-    #code to execute SQL code for Staff email
-    cursor = conn.cursor()
-    cursor.execute('SELECT EmailAddr,Password from Staff')
 
-    #code to fetch result of the SQL code output for Staff's email
-    cursor_data = cursor.fetchall()
 
     #change the Staff data format in dictionary form
     for i in cursor_data:

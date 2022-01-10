@@ -38,6 +38,9 @@ def signUp():
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
+@app.route('/AboutUs')
+def AboutUs():
+    return render_template('about us/aboutUs.html')
 
 # chatbot done by Phoebe
 
@@ -60,11 +63,6 @@ def success_payment():
     return render_template('success_payment.html')
 
 # shopping cart by Phoebe
-@app.route("/ShoppingCart",methods = ["GET"])
-def shopping_cart():
-    return render_template('shopping cart/shopping_cart.html')
-
-
 @app.route('/ShoppingCart', methods = ['POST'])
 def add_product():
     cart_product_name = {}
@@ -87,7 +85,6 @@ def delete_product():
 
 
 
-
 # @app.route('/contactUs', methods=['GET', 'POST'])
 # def feedback():
 #     feedback = CreateUserForm(request.form)
@@ -103,10 +100,6 @@ def delete_product():
 #         user = User.User(feedback.name.data, feedback.response.data)
 #         users_dict[user.get_user_id()] = user
 #         db['Users'] = users_dict
-
-
-
-
 
 if __name__ == '__main__':
     app.run()
