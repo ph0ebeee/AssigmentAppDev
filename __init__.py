@@ -5,7 +5,6 @@ import pyodbc
 import shelve
 import paypalrestsdk
 from flask_login import current_user, login_required
-
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
 from forms import forms
@@ -14,7 +13,6 @@ from forms.forms import loginForm
 from templates.staff import staff_forms
 from templates.staff.staffcust import orders
 from userAuthentication.loginValidation import *
-
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
@@ -25,7 +23,7 @@ bcrypt = Bcrypt(app)
 
 @app.route('/')
 def home():
-    return render_template('staff.html')
+    return render_template('home.html')
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -59,6 +57,9 @@ def signUp():
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
+@app.route('/AboutUs')
+def AboutUs():
+    return render_template('about us/aboutUs.html')
 
 # chatbot done by Phoebe
 
@@ -77,7 +78,19 @@ def payment():
 
 @app.route('/Success', methods = ['POST'])
 def send_receipt_info():
-    pass
+    jsdata = request.form['javascript_data']
+    return jsdata
+
+@app.route('/Payment/Success', methods = ['POST'])
+def success_payment():
+    return render_template('success_payment.html')
+
+# shopping cart by Phoebe
+@app.route('/ShoppingCart', methods = ['POST'])
+def add_product():
+    cart_product_name = {}
+
+@app.route('/SuccessReceipt', methods =['GET'])
 def retrieve_database_receipt():
     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                           'Server=(localdb)\MSSQLLocalDB;'
@@ -87,6 +100,7 @@ def retrieve_database_receipt():
     cursor.execute('SELECT trans_num,time,total from transactionTable')
     cursor_data = cursor.fetchall()
     return cursor_data
+
 def success_payment():
     to_send= retrieve_database_receipt()
     return render_template("success_payment", to_send=to_send)
@@ -237,6 +251,7 @@ def success_payment():
 #         users_dict[user.get_user_id()] = user
 #         db['Users'] = users_dict
 
+# anna
 #@app.route('/logout')
 #def logout():
  #   logout_user()
@@ -270,5 +285,6 @@ def updateusername():
         return redirect(url_for('###'))
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/updateUsername.html', form=UpdateStaff)
+
 if __name__ == '__main__':
     app.run()
