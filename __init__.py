@@ -8,7 +8,9 @@ from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
 from forms import forms
 from flask_bcrypt import Bcrypt
+from forms.forms import loginForm
 from templates.staff import staff_forms
+from userAuthentication.loginValidation import *
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
@@ -21,17 +23,26 @@ bcrypt = Bcrypt(app)
 def home():
     return render_template('home.html')
 
-    
+#route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
-#route for login form to be seen on loginPage.html
 def login():
     loginPage = forms.loginForm(csrf_enabled=False)
-    if request.method == 'POST' and loginPage.validate():
-        return redirect(url_for('###'))
+    if request.method == 'POST' and loginPage.validate() == True :
+        validateCustLogin = validate_cust_login()
+        validateStaffLogin = validate_staff_login()
         #use JS to change the layout of the navbar according to Cust or Staff account
-    return render_template('usersLogin/loginPage.html', form=loginPage)
+        if validateCustLogin==True:
+            custDetails = validated_Cust_Details()
+            return render_template('customer/customerSettings.html', custDetails = custDetails)  # change to customer page
+        elif validateStaffLogin == True:
+            staffDetails = validated_Staff_Details()
+            return render_template('usersLogin/loginPage.html', staffDetails = staffDetails)  # change to staff page
+        else:
+            return render_template('usersLogin/loginPage.html', form=loginPage)
+    else:
+        return render_template('usersLogin/loginPage.html', form=loginPage)
 
-
+#route for sign up form to be seen on loginPage.html  - viona
 @app.route('/Signup',methods=['GET','POST'])
 def signUp():
     signupPage = forms.signupForm(csrf_enabled=False)
@@ -61,49 +72,148 @@ def payment():
     return render_template('paypal_standard.html')
 
 @app.route('/Payment/Success', methods = ['POST'])
+def retrieve_database_receipt():
+    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                          'Server=(localdb)\MSSQLLocalDB;'
+                          'Database=EcoDen;'
+                          'Trusted_Connection=yes;')
+    cursor = conn.cursor()
+    cursor.execute('SELECT trans_num,time,total from transactionTable')
+    cursor_data = cursor.fetchall()
+    return cursor_data
 def success_payment():
-    receipt_details = {}
-    db = shelve.open['receipt.db','c']
-    try:
-        receipt_details = db['Receipt']
-    except:
-        print("Error in opening Receipt from receipt.db")
-        # receipt = Receipt.Receipt(transaction.id.trans_id,transaction.update_time.trans_time,transaction.amount.value.trans_value)
-        # receipt_details[receipt.get_trans_id()] = receipt
-        # db['Receipt'] = receipt_details
-        # db.close
-    return render_template('success_payment.html')
+    to_send= retrieve_database_receipt()
+    return render_template("success_payment", to_send=to_send)
 
 
 # shopping cart by Phoebe
-@app.route("/ShoppingCart",methods = ["GET"])
-def shopping_cart():
-    return render_template('shopping cart/shopping_cart.html')
+# @app.route("/ShoppingCart",methods = ["GET"])
+# def shopping_cart():
+#     return render_template('shopping cart/shopping_cart.html')
+#
 
+# @app.route('/ShoppingCart', methods = ['POST'])
+# def add_product():
+#     cart_product = {}
+#     db = shelve.open(cart_product)
+#
+#     try:
+#         cart_product = db['Products']
+#     except:
+#         print("Error in retrieving Products from products.db")
+#
+#     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+#                       'Server=(localdb)\MSSQLLocalDB;'
+#                       'Database=EcoDen;'
+#                       'Trusted_Connection=yes;')
+#     cursor = conn.cursor()
+#     cursor.execute('SELECT ProductName from Product')
+#     cursor_data = cursor.fetchall()
+#     for i in cursor_data:
+#         cart_product.update( {i[0]:i[1]} )
+#
+# @app.route('/deleteProduct', methods = ['POST'])
+# def delete_product():
+#     pass
 
-@app.route('/ShoppingCart', methods = ['POST'])
-def add_product():
-    cart_product = {}
-    db = shelve.open(cart_product)
-
-    try:
-        cart_product = db['Products']
-    except:
-        print("Error in retrieving Products from products.db")
-
-    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
-                      'Server=(localdb)\MSSQLLocalDB;'
-                      'Database=EcoDen;'
-                      'Trusted_Connection=yes;')
-    cursor = conn.cursor()
-    cursor.execute('SELECT ProductName from Product')
-    cursor_data = cursor.fetchall()
-    for i in cursor_data:
-        cart_product.update( {i[0]:i[1]} )
-
-@app.route('/deleteProduct', methods = ['POST'])
-def delete_product():
-    pass
+# @app.route('/add', methods=['POST'])
+# def add_product_to_cart():
+# 	try:
+#             conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+#                               'Server=(localdb)\MSSQLLocalDB;'
+#                               'Database=EcoDen;'
+#                               'Trusted_Connection=yes;')
+#             cart_product = {}
+#             cursor = conn.cursor()
+#             cursor.execute('SELECT ProductName from Product')
+#             cursor_data = cursor.fetchone()
+#             for i in cursor_data:
+#                 cart_product.update({i[0]:i[1]}) #change the array to the suitable variable
+#                 all_total_price = 0
+#                 all_total_quantity = 0
+#
+#                 for key, value in session['cart_item'].items():
+#                     if cursor_data['code'] == key:
+#                         #session.modified = True
+#                         #if session['cart_item'][key]['quantity'] is not None:
+#                         #	session['cart_item'][key]['quantity'] = 0
+#                         old_quantity = ['cart_item'][key]['quantity']
+#                         total_quantity = old_quantity + _quantity
+#                         ['cart_item'][key]['quantity'] = total_quantity
+#                         ['cart_item'][key]['total_price'] = total_quantity * cursor_data['price']
+# 				else:
+# 					['cart_item'] = array_merge(session['cart_item'], itemArray)
+#
+# 				for key, value in session['cart_item'].items():
+# 					individual_quantity = int(session['cart_item'][key]['quantity'])
+# 					individual_price = float(session['cart_item'][key]['total_price'])
+# 					all_total_quantity = all_total_quantity + individual_quantity
+# 					all_total_price = all_total_price + individual_price
+# 			else:
+# 				session['cart_item'] = itemArray
+# 				all_total_quantity = all_total_quantity + _quantity
+# 				all_total_price = all_total_price + _quantity * cursor_data['price']
+#
+# 			session['all_total_quantity'] = all_total_quantity
+# 			session['all_total_price'] = all_total_price
+#
+# 			return redirect(url_for('.products'))
+# 		else:
+# 			return 'Error while adding item to cart'
+#     finally:
+#         pass
+#
+# @app.route('/')
+# def products():
+# 	try:
+#             conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+#                               'Server=(localdb)\MSSQLLocalDB;'
+#                               'Database=EcoDen;'
+#                               'Trusted_Connection=yes;')
+#             cart_product = {}
+#             cursor = conn.cursor()
+#             cursor.execute('SELECT ProductName from Product')
+#             cursor_data = cursor.fetchall()
+#             for i in cursor_data:
+#                 cart_product.update({i[0]:i[1]}) #change the array to the suitable variable
+#             return render_template('products.html', products=cursor_data)
+# 	finally:
+# 		cursor.close()
+# 		conn.close()
+#
+#
+# @app.route('/delete')
+# def delete_product():
+# 	try:
+# 		all_total_price = 0
+# 		all_total_quantity = 0
+#                 for key, value in ['cart_item'].items():
+#                     individual_quantity = int(['cart_item'][key]['quantity'])
+#                     individual_price = float(['cart_item'][key]['total_price'])
+#                     all_total_quantity = all_total_quantity + individual_quantity
+#                     all_total_price = all_total_price + individual_price
+#
+# 		# if all_total_quantity == 0:
+# 		# 	session.clear()
+# 		# else:
+# 		# 	session['all_total_quantity'] = all_total_quantity             WORK ON THESE!!!
+# 		# 	session['all_total_price'] = all_total_price
+#
+# 		# return redirect('/')
+# 		return redirect(url_for('.products'))
+#     finally:
+#         pass
+#
+# def array_merge( first_array , second_array ):
+# 	if isinstance( first_array , list ) and isinstance( second_array , list ):
+# 		return first_array + second_array
+# 	elif isinstance( first_array , dict ) and isinstance( second_array , dict ):
+# 		return dict( list( first_array.items() ) + list( second_array.items() ) )
+# 	elif isinstance( first_array , set ) and isinstance( second_array , set ):
+# 		return first_array.union( second_array )
+# 	return False
+#
+#
 
 # @app.route('/contactUs', methods=['GET', 'POST'])
 # def feedback():
@@ -127,13 +237,12 @@ def delete_product():
  #   logout_user()
  #   return render_template('home.html')
 
-
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
     UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
     if request.method == 'POST' and UpdateStaff.validate():
         return redirect(url_for('###'))
-        #use JS to change the layout of the navbar according to Cust or Staff account
+        #use JS to change the layout of the navbar according Staff account
     return render_template('staff/staff_account.html', form=UpdateStaff)
 
 if __name__ == '__main__':
