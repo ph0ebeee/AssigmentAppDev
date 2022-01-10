@@ -1,6 +1,10 @@
-from flask import Flask, render_template, request, url_for, flash
+from dns import transaction
+from flask import Flask, render_template, jsonify, request, url_for, redirect
+from flask import Flask, render_template, jsonify, request, url_for, redirect, flash
 import pyodbc
 import shelve
+import paypalrestsdk
+from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
 from forms import forms
 from flask_bcrypt import Bcrypt
@@ -8,6 +12,7 @@ from templates.staff import staff_forms
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
+from forms.forms import signupForm
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -39,9 +44,6 @@ def signUp():
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
-@app.route('/AboutUs')
-def AboutUs():
-    return render_template('about us/aboutUs.html')
 
 # chatbot done by Phoebe
 
@@ -125,6 +127,7 @@ def delete_product():
  #   logout_user()
  #   return render_template('home.html')
 
+
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
     UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
@@ -132,7 +135,6 @@ def staffaccount():
         return redirect(url_for('###'))
         #use JS to change the layout of the navbar according to Cust or Staff account
     return render_template('staff/staff_account.html', form=UpdateStaff)
-
 
 if __name__ == '__main__':
     app.run()
