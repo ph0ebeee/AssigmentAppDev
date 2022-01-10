@@ -7,7 +7,7 @@ import paypalrestsdk
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
 from forms import forms
-from flask_bcrypt import Bcrypt
+#from flask_bcrypt import Bcrypt
 from forms.forms import loginForm
 from templates.staff import staff_forms
 from userAuthentication.loginValidation import *
@@ -17,7 +17,7 @@ from userAuthentication.loginValidation import *
 from forms.forms import signupForm
 
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
+#bcrypt = Bcrypt(app)
 
 @app.route('/')
 def home():
@@ -73,7 +73,10 @@ def payment():
 
 @app.route('/Success', methods = ['POST'])
 def send_receipt_info():
-    pass
+    jsdata = request.form['javascript_data']
+    return jsdata
+
+@app.route('/SuccessReceipt', methods =['GET'])
 def retrieve_database_receipt():
     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                           'Server=(localdb)\MSSQLLocalDB;'
