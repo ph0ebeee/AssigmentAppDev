@@ -4,8 +4,8 @@ from flask import Flask, render_template, jsonify, request, url_for, redirect, f
 import pyodbc
 import shelve
 import paypalrestsdk
-from flask_login import current_user, login_required
-
+import tkinter
+from tkinter import messagebox
 from products.SQLtoPython import products
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
@@ -25,7 +25,7 @@ bcrypt = Bcrypt(app)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('staff.html')
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -103,9 +103,9 @@ def success_payment():
     return render_template('success_payment.html')
 
 # shopping cart by Phoebe
-@app.route('/ShoppingCart', methods = ['POST'])
-def add_product():
-    cart_product_name = {}
+#@app.route('/ShoppingCart', methods = ['POST'])
+#def add_product():
+    #cart_product_name = {}
 
 @app.route('/SuccessReceipt', methods =['GET'])
 def retrieve_database_receipt():
@@ -285,11 +285,17 @@ def delete_items(id):
 #         db['Users'] = users_dict
 
 
-# anna
-#@app.route('/logout')
-#def logout():
- #   logout_user()
- #   return render_template('home.html')
+# anna's staff logout
+@app.route('/logout')
+def logout():
+    # This code is to hide the main tkinter window
+    root = tkinter.Tk()
+    root.withdraw()
+    # Message Box
+    messagebox.showinfo("Title", "Message")
+    root.destroy()
+
+    return render_template('home.html')
 
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
@@ -323,6 +329,10 @@ def updateusername():
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/updateUsername.html', form=UpdateStaff)
 
+
+@app.route('/game2')
+def game2():
+    return render_template('game2/game2.html')
 
 if __name__ == '__main__':
     app.run()

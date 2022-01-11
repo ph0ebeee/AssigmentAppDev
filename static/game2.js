@@ -1,10 +1,10 @@
 class AudioController {
     constructor() {
-        this.bgMusic = new Audio('Assets/audio/bgsound.mp3');
-        this.flipSound = new Audio('Assets/audio/flip.wav');
-        this.matchSound = new Audio('Assets/audio/match.wav');
-        this.victorySound = new Audio('Assets/audio/victory.wav');
-        this.gameOverSound = new Audio('Assets/audio/gameover.wav');
+        this.bgMusic = new Audio('static/Assets/audio/bgsound.mp3');
+        this.flipSound = new Audio('static/Assets/audio/flip.wav');
+        this.matchSound = new Audio('static/Assets/audio/match.wav');
+        this.victorySound = new Audio('static/Assets/audio/victory.wav');
+        this.gameOverSound = new Audio('static/Assets/audio/gameover.wav');
         this.bgMusic.volume = 0.5;
         this.bgMusic.loop = true;
     }
@@ -161,3 +161,4 @@ function ready() {
         });
     });
 }
+
