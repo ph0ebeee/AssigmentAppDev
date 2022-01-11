@@ -23,7 +23,7 @@ bcrypt = Bcrypt(app)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('staff.html')
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -270,13 +270,15 @@ def customerManagement():
     to_send= orders()
     return render_template("staff/staff_cust.html", to_send=to_send)
 
-@app.route('/acceptedOrder')
+@app.route('/acceptedOrder', methods=['GET', 'POST'])
 def acceptedOrder():
-    return render_template('staff/accepted.html')
+    to_send= orders()
+    return render_template('staff/accepted.html', to_send=to_send)
 
-@app.route('/declinedOrder')
+@app.route('/declinedOrder', methods=['GET', 'POST'])
 def declinedOrder():
-    return render_template('staff/declined.html')
+    to_send= orders()
+    return render_template('staff/declined.html', to_send=to_send)
 
 @app.route('/updateusername', methods=['GET', 'POST'])
 def updateusername():
