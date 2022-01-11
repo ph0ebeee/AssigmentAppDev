@@ -100,7 +100,6 @@ def send_receipt_info():
 #Retrieve from sql to print receipt - Phoebe
 @app.route('/Payment/Success', methods = ['POST'])
 def success_payment():
-<<<<<<< HEAD
     return render_template('success_payment.html')
 
 # shopping cart by Phoebe
@@ -111,8 +110,6 @@ def add_product():
 @app.route('/SuccessReceipt', methods =['GET'])
 def retrieve_database_receipt():
 
-=======
->>>>>>> 8baca69e02125c6a801083e072cf41a51ef610b6
     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                           'Server=(localdb)\MSSQLLocalDB;'
                           'Database=EcoDen;'
@@ -272,8 +269,6 @@ def delete_items(id):
 # 	return False
 #
 #
-=======
->>>>>>> 8baca69e02125c6a801083e072cf41a51ef610b6
 
 # @app.route('/contactUs', methods=['GET', 'POST'])
 # def feedback():
