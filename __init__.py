@@ -5,6 +5,8 @@ import pyodbc
 import shelve
 import paypalrestsdk
 from flask_login import current_user, login_required
+
+from products.SQLtoPython import products
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
 from forms import forms
@@ -57,9 +59,24 @@ def signUp():
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
-@app.route('/AboutUs')
+@app.route('/AboutUs')   # added but havent push
 def AboutUs():
     return render_template('about us/aboutUs.html')
+
+@app.route('/DiscountedItems', methods=['GET', 'POST'])   # added but havent push
+def DiscountedItems():
+    to_send = products()
+    return render_template('products/discountedItems.html', to_send=to_send)
+
+@app.route('/TopSellingItems', methods=['GET', 'POST'])   # added but havent push
+def TopSellingItems():
+    to_send = products()
+    return render_template('products/topSellingItems.html', to_send=to_send)
+
+@app.route('/NewlyRestockedItems', methods=['GET', 'POST'])   # added but havent push
+def NewlyRestockedItems():
+    to_send = products()
+    return render_template('products/newlyRestockedItems.html', to_send=to_send)
 
 # chatbot done by Phoebe
 
@@ -69,7 +86,6 @@ def AboutUs():
 #     response = get_response(text)
 #     message = {"answer": response}
 #     return jsonify(message)
-#
 
 # payment via paypal done by Phoebe
 @app.route('/Payment', methods=['POST'])
@@ -81,6 +97,7 @@ def send_receipt_info():
     jsdata = request.form['javascript_data']
     return jsdata
 
+#Retrieve from sql to print receipt - Phoebe
 @app.route('/Payment/Success', methods = ['POST'])
 def success_payment():
     return render_template('success_payment.html')
@@ -92,25 +109,43 @@ def add_product():
 
 @app.route('/SuccessReceipt', methods =['GET'])
 def retrieve_database_receipt():
+
     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                           'Server=(localdb)\MSSQLLocalDB;'
                           'Database=EcoDen;'
                           'Trusted_Connection=yes;')
+    receipt_details ={}
     cursor = conn.cursor()
-    cursor.execute('SELECT trans_num,time,total from transactionTable')
+    cursor.execute('SELECT OrderID,POSDate,Totalprice from CustOrder')
     cursor_data = cursor.fetchall()
-    return cursor_data
+    for i in cursor_data:
+        receipt_details.update({i[0],i[1],i[2]})     # need to add the i[2]
 
-def success_payment():
-    to_send= retrieve_database_receipt()
-    return render_template("success_payment", to_send=to_send)
+
 
 
 # shopping cart by Phoebe
-# @app.route("/ShoppingCart",methods = ["GET"])
-# def shopping_cart():
-#     return render_template('shopping cart/shopping_cart.html')
-#
+@app.route('/ShoppingCart', methods = ['POST'])
+def add_product():
+    cart_product_name = {}
+
+@app.route('/DeleteItems/<int:id>',methods =['POST'])                 #change the int:id
+def delete_items(id):
+    delete_items = {}
+    db = shelve.open('cart_product.db', 'w')
+    delete_items = db['Items']
+
+    delete_items.pop(id)
+
+    db['Items'] = delete_items
+    db.close()
+
+    return redirect(url_for('#'))  #figure out what is meant to be at the hashtag
+
+
+
+
+<<<<<<< HEAD
 
 # @app.route('/ShoppingCart', methods = ['POST'])
 # def add_product():
@@ -251,6 +286,7 @@ def success_payment():
 #         users_dict[user.get_user_id()] = user
 #         db['Users'] = users_dict
 
+
 # anna
 #@app.route('/logout')
 #def logout():
@@ -264,6 +300,7 @@ def staffaccount():
         return redirect(url_for('###'))
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/staff_account.html', form=UpdateStaff)
+
 
 @app.route('/customerManagement', methods=['GET', 'POST'])
 def customerManagement():
@@ -287,6 +324,7 @@ def updateusername():
         return redirect(url_for('###'))
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/updateUsername.html', form=UpdateStaff)
+
 
 if __name__ == '__main__':
     app.run()

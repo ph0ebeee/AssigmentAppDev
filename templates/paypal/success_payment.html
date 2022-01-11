@@ -1,18 +1,20 @@
-<head>
-    <meta charset="UTF-8">
-    <title>Successful Payment</title>
-    <style>
-        div{
-        text-align: center;
-        }
-    </style>
-</head>
-{%for transactionTable in to_send%}
+{% extends "base.html" %}
+{% block title %}
+Library Loan System - HomeDen
+{% endblock %}
+
+<style>
+    div{
+    text-align: center;
+    }
+</style>
+
+{% block content %}
     <div class="receipt">
         <h1>PAYMENT SUCCESSFUL</h1>
-        <p id ="trans_num"> Order ID:{{transactionTable[1]}}</p>
-        <p id = "time">Time:{{transactionTable[2]}}</p>
-        <p id = "total">Total:{{transactionTable[3]}}</p>
+        <p id ="trans_num"> Order ID:{%CustOrder[1]%}</p>
+        <p id = "time">Time:{%CustOrder[2]%}</p>
+        <p id = "total">Total:{%CustOrder[3]%}</p>
         <p> Thank you for purchasing with us! We hope to see you again</p>
     </div>
-{%endfor%}
+{%endblock%}

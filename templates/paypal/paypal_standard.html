@@ -30,17 +30,17 @@
         onApprove: function(data, actions) {
           return actions.order.capture().then(function(orderData) {
             var transaction = orderData.purchase_units[0].payments.captures[0];
-              trans_num = transaction.id
-              time = transaction.update_time
-              total = transaction.amount.value
-              $.ajax{{
-                type: "POST"
-                url:'{{ url_for('Success.send_receipt_info')}}'
-                data:{
-                  trans_num = trans_num
-                  time = time
-                  total = total
-                };
+<!--              trans_num = transaction.id-->
+<!--              time = transaction.update_time-->
+<!--              total = transaction.amount.value-->
+<!--              $.ajax{{-->
+<!--                type: "POST"-->
+<!--                url:'{{ url_for('Success.send_receipt_info')}}'-->
+<!--                data:{-->
+<!--                  trans_num = trans_num-->
+<!--                  time = time-->
+<!--                  total = total-->
+<!--                };-->
 
 
 
