@@ -1,13 +1,9 @@
 #Viona 211285T
 #import database from sql server
 import pyodbc
-<<<<<<< HEAD
-=======
 #import customer.Customers
 from flask import url_for
 from werkzeug.utils import redirect
->>>>>>> 5931283829a2b5414df722c4f0221a494c4fa99e
-
 from forms.forms import loginForm
 
 #connect SQL to python
