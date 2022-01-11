@@ -4,12 +4,16 @@ from flask import Flask, render_template, jsonify, request, url_for, redirect, f
 import pyodbc
 import shelve
 import paypalrestsdk
+from flask_login import current_user, login_required
+
+from products.SQLtoPython import products
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
 from forms import forms
-#from flask_bcrypt import Bcrypt
+from flask_bcrypt import Bcrypt
 from forms.forms import loginForm
 from templates.staff import staff_forms
+from templates.staff.staffcust import orders
 from userAuthentication.loginValidation import *
 
 # from templates.chatbot.chat import get_response
@@ -17,7 +21,7 @@ from userAuthentication.loginValidation import *
 from forms.forms import signupForm
 
 app = Flask(__name__)
-#bcrypt = Bcrypt(app)
+bcrypt = Bcrypt(app)
 
 @app.route('/')
 def home():
@@ -55,9 +59,24 @@ def signUp():
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
-@app.route('/AboutUs')
+@app.route('/AboutUs')   # added but havent push
 def AboutUs():
     return render_template('about us/aboutUs.html')
+
+@app.route('/DiscountedItems', methods=['GET', 'POST'])   # added but havent push
+def DiscountedItems():
+    to_send = products()
+    return render_template('products/discountedItems.html', to_send=to_send)
+
+@app.route('/TopSellingItems', methods=['GET', 'POST'])   # added but havent push
+def TopSellingItems():
+    to_send = products()
+    return render_template('products/topSellingItems.html', to_send=to_send)
+
+@app.route('/NewlyRestockedItems', methods=['GET', 'POST'])   # added but havent push
+def NewlyRestockedItems():
+    to_send = products()
+    return render_template('products/newlyRestockedItems.html', to_send=to_send)
 
 # chatbot done by Phoebe
 
@@ -79,7 +98,6 @@ def send_receipt_info():
     jsdata = request.form['javascript_data']
     return jsdata
 
-
 @app.route('/Payment/Success', methods = ['POST'])
 def success_payment():
     return render_template('success_payment.html')
@@ -100,6 +118,7 @@ def retrieve_database_receipt():
     cursor.execute('SELECT trans_num,time,total from transactionTable')
     cursor_data = cursor.fetchall()
     return cursor_data
+
 def success_payment():
     to_send= retrieve_database_receipt()
     return render_template("success_payment", to_send=to_send)
@@ -265,6 +284,28 @@ def staffaccount():
         return redirect(url_for('###'))
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/staff_account.html', form=UpdateStaff)
+
+
+@app.route('/customerManagement', methods=['GET', 'POST'])
+def customerManagement():
+    to_send= orders()
+    return render_template("staff/staff_cust.html", to_send=to_send)
+
+@app.route('/acceptedOrder')
+def acceptedOrder():
+    return render_template('staff/accepted.html')
+
+@app.route('/declinedOrder')
+def declinedOrder():
+    return render_template('staff/declined.html')
+
+@app.route('/updateusername', methods=['GET', 'POST'])
+def updateusername():
+    UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
+    if request.method == 'POST' and UpdateStaff.validate():
+        return redirect(url_for('###'))
+        #use JS to change the layout of the navbar according Staff account
+    return render_template('staff/updateUsername.html', form=UpdateStaff)
 
 
 if __name__ == '__main__':

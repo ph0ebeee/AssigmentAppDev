@@ -21,8 +21,6 @@ def validate_cust_login():
     user_password = form.password
     customerEmail_Password = {}
 
-<<<<<<< HEAD
-=======
     #code to execute SQL code for Customer's email    
     cursor = conn.cursor()
     cursor.execute('SELECT EmailAddr,Password from Customer')
@@ -73,7 +71,6 @@ def validate_staff_login():
     #code to execute SQL code for Staff email
     cursor = conn.cursor()
     cursor.execute('SELECT EmailAddr,Password from Staff')
->>>>>>> e473bdc275dc420dc333911e365451df999a8ed3
 
 
     #change the Staff data format in dictionary form

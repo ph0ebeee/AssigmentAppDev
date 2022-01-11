@@ -1,0 +1,27 @@
+{%extends "base_s.html" %}
+{% block title %}
+Library Loan System - AcceptedOrder
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid h-100">
+        <div class="row h-100">
+            <div class="col-2" id="green">
+                    <a class="dropdown-item" href="/customerManagement">Orders</a>
+                    <a class="dropdown-item" href="#">Accepted</a>
+                    <a class="dropdown-item" href="/declinedOrder">Declined</a>
+            </div>
+            <!--Contains the main content
+                    of the webpage-->
+            <div class="col-10" style="text-align: justify;">
+                <h1>Accepted</h1>
+                {%for i in to_send%}
+                <p> {{i[0]}}</p>
+                {%endfor%}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock %}
