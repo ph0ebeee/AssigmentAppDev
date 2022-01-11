@@ -86,7 +86,6 @@ def NewlyRestockedItems():
 #     response = get_response(text)
 #     message = {"answer": response}
 #     return jsonify(message)
-#
 
 # payment via paypal done by Phoebe
 @app.route('/Payment', methods=['POST'])
@@ -98,8 +97,10 @@ def send_receipt_info():
     jsdata = request.form['javascript_data']
     return jsdata
 
+#Retrieve from sql to print receipt - Phoebe
 @app.route('/Payment/Success', methods = ['POST'])
 def success_payment():
+<<<<<<< HEAD
     return render_template('success_payment.html')
 
 # shopping cart by Phoebe
@@ -110,26 +111,44 @@ def add_product():
 @app.route('/SuccessReceipt', methods =['GET'])
 def retrieve_database_receipt():
 
+=======
+>>>>>>> 8baca69e02125c6a801083e072cf41a51ef610b6
     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                           'Server=(localdb)\MSSQLLocalDB;'
                           'Database=EcoDen;'
                           'Trusted_Connection=yes;')
+    receipt_details ={}
     cursor = conn.cursor()
-    cursor.execute('SELECT trans_num,time,total from transactionTable')
+    cursor.execute('SELECT OrderID,POSDate,Totalprice from CustOrder')
     cursor_data = cursor.fetchall()
-    return cursor_data
+    for i in cursor_data:
+        receipt_details.update({i[0],i[1],i[2]})     # need to add the i[2]
 
-def success_payment():
-    to_send= retrieve_database_receipt()
-    return render_template("success_payment", to_send=to_send)
+
 
 
 # shopping cart by Phoebe
-# @app.route("/ShoppingCart",methods = ["GET"])
-# def shopping_cart():
-#     return render_template('shopping cart/shopping_cart.html')
-#
+@app.route('/ShoppingCart', methods = ['POST'])
+def add_product():
+    cart_product_name = {}
 
+@app.route('/DeleteItems/<int:id>',methods =['POST'])                 #change the int:id
+def delete_items(id):
+    delete_items = {}
+    db = shelve.open('cart_product.db', 'w')
+    delete_items = db['Items']
+
+    delete_items.pop(id)
+
+    db['Items'] = delete_items
+    db.close()
+
+    return redirect(url_for('#'))  #figure out what is meant to be at the hashtag
+
+
+
+
+<<<<<<< HEAD
 
 # @app.route('/ShoppingCart', methods = ['POST'])
 # def add_product():
@@ -253,6 +272,8 @@ def success_payment():
 # 	return False
 #
 #
+=======
+>>>>>>> 8baca69e02125c6a801083e072cf41a51ef610b6
 
 # @app.route('/contactUs', methods=['GET', 'POST'])
 # def feedback():
