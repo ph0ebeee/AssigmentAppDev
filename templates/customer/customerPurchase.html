@@ -1,0 +1,52 @@
+{%extends "base.html" %}
+{% block title %}
+Library Loan System - customerSettings
+{% endblock %}
+
+{% block content %}
+<style>
+    #customerSettings_sidenav {
+        height: 100%;
+        width: 200px;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #FBF8F2;
+        overflow-x: hidden;
+        padding-top: 20px;
+        color: black;
+    }
+
+        #customerSettings_sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: underline;
+            font-size: 25px;
+            display: block;
+            transition: 0.3s;
+        }
+</style>
+<div class:"customerSettings_sidenav">
+    <img src="user_profilePicture.jpg" style="border-radius:50%; display:inline-block" /><p>username</p>
+    <a class="dropdown-item" href="#">Account</a>
+    <a class="dropdown-item" href="./templates/customer/customerPurchase">Purchase</a>
+    <a class="dropdown-item" href="/customerVouchers">Vouchers</a>
+    <a class="dropdown-item" href="/customerFAQ">FAQ</a>
+    <a class="dropdown-item" href="/customerMembership">Membership</a>
+    <a class="dropdown-item" href="/logout">Log out</a>
+</div>
+<div class="mainContent">
+    <h2>Account</h2>
+    <div class:"customerParticulars">
+        {% for i in custDetails %}
+        <p>Username: {{i[1]}}</p>
+        <p>Membership Points: {{i[2]}}</p>
+        <p>Email: {{i[3]}}</p>
+        <p>Password: {{i[4]}}</p>
+        <p>Phone number: {{i[5]}}</p>
+        <p>Shipping address: {{i[6]}}</p>
+        <p>Postal Code: {{i[7]}}</p>
+        {%endfor%}
+    </div>
+</div>
+{% endblock %}

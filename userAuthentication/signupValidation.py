@@ -29,16 +29,6 @@ def validate_signUp_email():
     for i in cursor_data1:
         emailList.append(i)
 
-    for i in emailList:
-        print(i)
-
-    for i in emailList:
-        if user_email == i:
-            print("email is already registered ")
-        else:
-            print("no")
-            break
-
 validate_signUp_email()
 #retrieve every single email in database and store it in a list
 #use for loop to check if the email user entered for login matches the email addresses in the database

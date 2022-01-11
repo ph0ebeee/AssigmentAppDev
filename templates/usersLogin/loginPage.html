@@ -15,7 +15,7 @@ Library Loan System - Login
         </h3>
         <div class="card-body">
             <!--Form for users to create an account-->
-            <form method="post" action="~/Home/Login" style="background-color: white;" class='loginForm'>
+            <form method="post" action="/LoginValidate" style="background-color: white;" class='loginForm'>
                 <div class="form-group">
                     {{ render_field(form.email, class="form-control") }}
                 </div>
@@ -36,8 +36,6 @@ Library Loan System - Login
         </div>
     </div>
 </div>
-{% endblock %}
-{% block content %}
 {% from "includes/_footer.html" import render_field %}
 {% endblock %}
 
