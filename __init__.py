@@ -79,7 +79,7 @@ def send_receipt_info():
     jsdata = request.form['javascript_data']
     return jsdata
 
-<<<<<<< HEAD
+
 @app.route('/Payment/Success', methods = ['POST'])
 def success_payment():
     return render_template('success_payment.html')
@@ -88,10 +88,10 @@ def success_payment():
 @app.route('/ShoppingCart', methods = ['POST'])
 def add_product():
     cart_product_name = {}
-=======
+
 @app.route('/SuccessReceipt', methods =['GET'])
 def retrieve_database_receipt():
->>>>>>> e473bdc275dc420dc333911e365451df999a8ed3
+
     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                           'Server=(localdb)\MSSQLLocalDB;'
                           'Database=EcoDen;'
@@ -111,8 +111,7 @@ def success_payment():
 #     return render_template('shopping cart/shopping_cart.html')
 #
 
-<<<<<<< HEAD
-=======
+
 # @app.route('/ShoppingCart', methods = ['POST'])
 # def add_product():
 #     cart_product = {}
@@ -236,7 +235,6 @@ def success_payment():
 #
 #
 
->>>>>>> e473bdc275dc420dc333911e365451df999a8ed3
 # @app.route('/contactUs', methods=['GET', 'POST'])
 # def feedback():
 #     feedback = CreateUserForm(request.form)
@@ -253,8 +251,7 @@ def success_payment():
 #         users_dict[user.get_user_id()] = user
 #         db['Users'] = users_dict
 
-<<<<<<< HEAD
-=======
+
 # anna
 #@app.route('/logout')
 #def logout():
@@ -269,6 +266,6 @@ def staffaccount():
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/staff_account.html', form=UpdateStaff)
 
->>>>>>> e473bdc275dc420dc333911e365451df999a8ed3
+
 if __name__ == '__main__':
     app.run()
