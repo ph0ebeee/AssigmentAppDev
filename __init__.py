@@ -4,7 +4,7 @@ from flask import Flask, render_template, jsonify, request, url_for, redirect, f
 import pyodbc
 import shelve
 import paypalrestsdk
-from flask_login import current_user, login_required
+#from flask_login import current_user, login_required
 
 from products.SQLtoPython import products
 from templates.paypal.receipt import Receipt
@@ -125,9 +125,9 @@ def retrieve_database_receipt():
 
 
 # shopping cart by Phoebe
-@app.route('/ShoppingCart', methods = ['POST'])
-def add_product():
-    cart_product_name = {}
+# @app.route('/ShoppingCart', methods = ['POST'])
+# def add_product():
+#     cart_product_name = {}
 
 @app.route('/DeleteItems/<int:id>',methods =['POST'])                 #change the int:id
 def delete_items(id):
