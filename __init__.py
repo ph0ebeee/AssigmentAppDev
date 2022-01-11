@@ -145,8 +145,6 @@ def delete_items(id):
 
 
 
-<<<<<<< HEAD
-
 # @app.route('/ShoppingCart', methods = ['POST'])
 # def add_product():
 #     cart_product = {}
