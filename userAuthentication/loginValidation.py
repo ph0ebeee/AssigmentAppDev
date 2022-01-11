@@ -21,7 +21,7 @@ def validate_cust_login():
     user_password = form.password
     customerEmail_Password = {}
 
-    #code to execute SQL code for Customer's email    
+    #code to execute SQL code for Customer's email & password
     cursor = conn.cursor()
     cursor.execute('SELECT EmailAddr,Password from Customer')
 
