@@ -1,6 +1,6 @@
 from dns import transaction
-from flask import Flask, render_template, jsonify, request, url_for, redirect
-from flask import Flask, render_template, jsonify, request, url_for, redirect, flash
+from flask import Flask, render_template, jsonify, request, url_for, redirect, flash, session
+from flask_session import Session
 import pyodbc
 import shelve
 import paypalrestsdk
@@ -15,12 +15,16 @@ from forms.forms import loginForm
 from templates.staff import staff_forms
 from templates.staff.staffcust import orders
 from userAuthentication.loginValidation import *
+from script import *
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 from forms.forms import signupForm
 
 app = Flask(__name__,template_folder="./templates")
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 #bcrypt = Bcrypt(app)
 
 @app.route('/')
@@ -42,6 +46,7 @@ def loginValidate():
         #use JS to change the layout of the navbar according to Cust or Staff account
         if validateCustLogin==True:
             custDetails = validated_Cust_Details(form.email.data,form.password.data)
+            session['custID'] = (custDetails[0][0])
             return render_template('customer/customerSettings.html', custDetails = custDetails)  # change to customer page
         elif validateStaffLogin == True:
             staffDetails = validated_Staff_Details(form.email.data,form.password.data)
@@ -49,9 +54,10 @@ def loginValidate():
         else:
             return render_template('usersLogin/loginPage.html', form=loginPage)
 
-#@app.route('/CustomerPurchase', methods=['GET', 'POST'])
-#def ViewCustPurchase():
-
+@app.route('/CustomerPurchase', methods=['GET', 'POST'])
+def ViewCustPurchase():
+    custPurchaseList = CustomerPurchase(session["custID"])
+    return render_template('customer/customerPurchase.html', custPurchaseList = custPurchaseList)
 
 #route for sign up form to be seen on loginPage.html  - viona
 @app.route('/Signup',methods=['GET','POST'])
