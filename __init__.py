@@ -1,6 +1,6 @@
 from dns import transaction
 from flask import Flask, render_template, jsonify, request, url_for, redirect, flash, session
-from flask_session import Session
+# from flask_session import Session
 import pyodbc
 import shelve
 import paypalrestsdk
