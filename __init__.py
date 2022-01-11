@@ -47,6 +47,8 @@ def loginValidate():
         if validateCustLogin==True:
             custDetails = validated_Cust_Details(form.email.data,form.password.data)
             session['custID'] = (custDetails[0][0])
+            session['custName'] = (custDetails[0][1])
+            session['role'] = 'Customer'
             return render_template('customer/customerSettings.html', custDetails = custDetails)  # change to customer page
         elif validateStaffLogin == True:
             staffDetails = validated_Staff_Details(form.email.data,form.password.data)
@@ -297,13 +299,11 @@ def delete_items(id):
 #         users_dict[user.get_user_id()] = user
 #         db['Users'] = users_dict
 
-
+@app.route('/logout')
+def logout():
+    session.clear()
+    return render_template('home.html')
 # anna
-#@app.route('/logout')
-#def logout():
- #   logout_user()
- #   return render_template('home.html')
-
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
     UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
