@@ -83,27 +83,39 @@ def send_receipt_info():
 
 @app.route('/Payment/Success', methods = ['POST'])
 def success_payment():
-    return render_template('success_payment.html')
+    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                          'Server=(localdb)\MSSQLLocalDB;'
+                          'Database=EcoDen;'
+                          'Trusted_Connection=yes;')
+    receipt_details ={}
+    cursor = conn.cursor()
+    cursor.execute('SELECT OrderID,POSDate,Totalprice from CustOrder')
+    cursor_data = cursor.fetchall()
+    for i in cursor_data:
+        receipt_details.update({i[0],i[1],i[2]})     # need to add the i[2]
+
+
+
 
 # shopping cart by Phoebe
 @app.route('/ShoppingCart', methods = ['POST'])
 def add_product():
     cart_product_name = {}
 
-@app.route('/SuccessReceipt', methods =['GET'])
-def retrieve_database_receipt():
-    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
-                          'Server=(localdb)\MSSQLLocalDB;'
-                          'Database=EcoDen;'
-                          'Trusted_Connection=yes;')
-    cursor = conn.cursor()
-    cursor.execute('SELECT trans_num,time,total from transactionTable')
-    cursor_data = cursor.fetchall()
-    return cursor_data
+@app.route('/DeleteItems/<int:id>',methods =['POST'])                 #change the int:id
+def delete_items(id):
+    delete_items = {}
+    db = shelve.open('cart_product.db', 'w')
+    delete_items = db['Items']
 
-def success_payment():
-    to_send= retrieve_database_receipt()
-    return render_template("success_payment", to_send=to_send)
+    delete_items.pop(id)
+
+    db['Items'] = delete_items
+    db.close()
+
+    return redirect(url_for('#'))  #figure out what is meant to be at the hashtag
+
+
 
 
 # shopping cart by Phoebe
@@ -232,8 +244,6 @@ def success_payment():
 # 	elif isinstance( first_array , set ) and isinstance( second_array , set ):
 # 		return first_array.union( second_array )
 # 	return False
-#
-#
 
 # @app.route('/contactUs', methods=['GET', 'POST'])
 # def feedback():
