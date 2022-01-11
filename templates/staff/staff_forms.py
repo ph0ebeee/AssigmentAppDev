@@ -1,9 +1,14 @@
 
+<<<<<<< HEAD
 # from flask_wtf import FlaskForm
 # from flask_wtf.file import FileField, FileAllowed
+=======
+#from flask_wtf import FlaskForm
+#from flask_wtf.file import FileField, FileAllowed
+>>>>>>> 64ed00f960f83a13a25ea53c1b9c124f2819042b
 #from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+#from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 #from users import Users
 from userAuthentication import signupValidation
 import pyodbc
