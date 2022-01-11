@@ -4,8 +4,6 @@ Library Loan System - customerSettings
 {% endblock %}
 
 {% block content %}
-{% include 'includes/_navbar.html' %}
-{% <!-- import user data--> %}
 <style>
     #customerSettings_sidenav {
         height: 100%;
@@ -32,7 +30,7 @@ Library Loan System - customerSettings
 <div class:"customerSettings_sidenav">
     <img src="user_profilePicture.jpg" style="border-radius:50%; display:inline-block"/><p>username</p>
         <a class="dropdown-item" href="#">Account</a>
-        <a class="dropdown-item" href="/customerPurchase">Purchase</a>
+        <a class="dropdown-item" href="/CustomerPurchase">Purchase</a>
         <a class="dropdown-item" href="/customerVouchers">Vouchers</a>
         <a class="dropdown-item" href="/customerFAQ">FAQ</a>
         <a class="dropdown-item" href="/customerMembership">Membership</a>
@@ -41,13 +39,15 @@ Library Loan System - customerSettings
 <div class="mainContent">
     <h2>Account</h2>
     <div class:"customerParticulars">
-        <p>Username: {%custDetails[1]%}</p>
-        <p>Membership Points: {%custDetails[2]%}</p>
-        <p>Email: {%custDetails[3]%}</p>
-        <p>Password: {%custDetails[4]%}</p>
-        <p>Phone number: {%custDetails[5]%}</p>
-        <p>Shipping address: {%custDetails[6]%}</p>
-        <p>Postal Code: {%custDetails[7]%}</p>
+        {% for i in custDetails %}
+        <p>Username: {{i[1]}}</p>
+        <p>Membership Points: {{i[2]}}</p>
+        <p>Email: {{i[3]}}</p>
+        <p>Password: {{i[4]}}</p>
+        <p>Phone number: {{i[5]}}</p>
+        <p>Shipping address: {{i[6]}}</p>
+        <p>Postal Code: {{i[7]}}</p>
+        {%endfor%}
     </div>
 </div>
 {% endblock %}

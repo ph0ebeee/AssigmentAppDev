@@ -1,27 +1,36 @@
 from dns import transaction
-from flask import Flask, render_template, jsonify, request, url_for, redirect
-from flask import Flask, render_template, jsonify, request, url_for, redirect, flash
+from flask import Flask, render_template, jsonify, request, url_for, redirect, flash, session
+# from flask_session import Session
 import pyodbc
 import shelve
 import paypalrestsdk
+<<<<<<< HEAD
 import tkinter
 from tkinter import messagebox
+=======
+#from flask_login import current_user, login_required
+
+>>>>>>> 5931283829a2b5414df722c4f0221a494c4fa99e
 from products.SQLtoPython import products
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
 from forms import forms
-from flask_bcrypt import Bcrypt
+#from flask_bcrypt import Bcrypt
 from forms.forms import loginForm
 from templates.staff import staff_forms
 from templates.staff.staffcust import orders
 from userAuthentication.loginValidation import *
+from script import *
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 from forms.forms import signupForm
 
-app = Flask(__name__)
-bcrypt = Bcrypt(app)
+app = Flask(__name__,template_folder="./templates")
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+#bcrypt = Bcrypt(app)
 
 @app.route('/')
 def home():
@@ -30,21 +39,32 @@ def home():
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
 def login():
-    loginPage = forms.loginForm(csrf_enabled=False)
-    if request.method == 'POST' and loginPage.validate() == True :
-        validateCustLogin = validate_cust_login()
-        validateStaffLogin = validate_staff_login()
+    loginPage = loginForm()
+    return render_template('usersLogin/loginPage.html', form=loginPage)
+
+@app.route('/LoginValidate', methods=['GET', 'POST'])
+def loginValidate():
+    if request.method == 'POST':
+        form = loginForm(request.form)
+        validateCustLogin = validate_cust_login(form.email.data,form.password.data)
+        validateStaffLogin = validate_staff_login(form.email.data,form.password.data)
         #use JS to change the layout of the navbar according to Cust or Staff account
         if validateCustLogin==True:
-            custDetails = validated_Cust_Details()
+            custDetails = validated_Cust_Details(form.email.data,form.password.data)
+            session['custID'] = (custDetails[0][0])
+            session['custName'] = (custDetails[0][1])
+            session['role'] = 'Customer'
             return render_template('customer/customerSettings.html', custDetails = custDetails)  # change to customer page
         elif validateStaffLogin == True:
-            staffDetails = validated_Staff_Details()
+            staffDetails = validated_Staff_Details(form.email.data,form.password.data)
             return render_template('usersLogin/loginPage.html', staffDetails = staffDetails)  # change to staff page
         else:
             return render_template('usersLogin/loginPage.html', form=loginPage)
-    else:
-        return render_template('usersLogin/loginPage.html', form=loginPage)
+
+@app.route('/CustomerPurchase', methods=['GET', 'POST'])
+def ViewCustPurchase():
+    custPurchaseList = CustomerPurchase(session["custID"])
+    return render_template('customer/customerPurchase.html', custPurchaseList = custPurchaseList)
 
 #route for sign up form to be seen on loginPage.html  - viona
 @app.route('/Signup',methods=['GET','POST'])
@@ -125,9 +145,15 @@ def retrieve_database_receipt():
 
 
 # shopping cart by Phoebe
-@app.route('/ShoppingCart', methods = ['POST'])
-def add_product():
-    cart_product_name = {}
+
+# @app.route('/ShoppingCart', methods = ['POST'])
+# def add_product():
+#     cart_product_name = {}
+
+#@app.route('/ShoppingCart', methods = ['POST'])
+#def add_product():
+#    cart_product_name = {}
+
 
 @app.route('/DeleteItems/<int:id>',methods =['POST'])                 #change the int:id
 def delete_items(id):
@@ -284,6 +310,7 @@ def delete_items(id):
 #         users_dict[user.get_user_id()] = user
 #         db['Users'] = users_dict
 
+<<<<<<< HEAD
 
 # anna's staff logout
 @app.route('/logout')
@@ -297,6 +324,13 @@ def logout():
 
     return render_template('home.html')
 
+=======
+@app.route('/logout')
+def logout():
+    session.clear()
+    return render_template('home.html')
+# anna
+>>>>>>> 5931283829a2b5414df722c4f0221a494c4fa99e
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
     UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
