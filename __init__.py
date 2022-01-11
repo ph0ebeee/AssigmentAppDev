@@ -4,13 +4,10 @@ from flask import Flask, render_template, jsonify, request, url_for, redirect, f
 import pyodbc
 import shelve
 import paypalrestsdk
-<<<<<<< HEAD
 import tkinter
 from tkinter import messagebox
-=======
-#from flask_login import current_user, login_required
 
->>>>>>> 5931283829a2b5414df722c4f0221a494c4fa99e
+from requests import Session
 from products.SQLtoPython import products
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
@@ -310,8 +307,6 @@ def delete_items(id):
 #         users_dict[user.get_user_id()] = user
 #         db['Users'] = users_dict
 
-<<<<<<< HEAD
-
 # anna's staff logout
 @app.route('/logout')
 def logout():
@@ -324,13 +319,12 @@ def logout():
 
     return render_template('home.html')
 
-=======
 @app.route('/logout')
 def logout():
     session.clear()
     return render_template('home.html')
 # anna
->>>>>>> 5931283829a2b5414df722c4f0221a494c4fa99e
+
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
     UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
