@@ -72,8 +72,6 @@ def validate_staff_login():
     cursor = conn.cursor()
     cursor.execute('SELECT EmailAddr,Password from Staff')
 
-    #code to fetch result of the SQL code output for Staff's email
-    cursor_data = cursor.fetchall()
 
     #change the Staff data format in dictionary form
     for i in cursor_data:

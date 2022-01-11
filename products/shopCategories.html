@@ -1,32 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+{%extends "base.html" %}
+{% block title %} Library Loan System - Contact Us {% endblock %}}
+
+{% block content %}
 <head>
-    <meta charset="UTF-8">
-    <title>Shop - Categories</title>
     <link rel="stylesheet" type="text/css" href="shopCategories.css"/>
 </head>
 <body>
-    <div class="header">
-        <h1 class="title">Home-Den</h1>
-        <nav>
-            <ul>
-                <li><span class="home"><a href="home.html">Home</a></span></li>
-                <div class="shop">
-                    <li><span class="shop"><a href="shopCategories.html">Shop</a></span></li>
-                </div>
-                <div class="hide"> <!-- need to use css, check comp ss -->
-                    <ul>
-                        <li>Categories</li>
-                        <a href="discountedItems.html"><li>Discounted Items</li></a>
-                        <a href="topSellingItems.html"><li>Top Selling Items</li></a>
-                        <a href="newlyRestockedItems.html"><li>Newly Restocked Items</li></a>
-                    </ul>
-                </div>
-                <li><span class="about"><a href="aboutUs.html">About</a></span></li>
-                <li><span class="contact us"><a href="contactUs.html">Contact us</a></span></li>
-            </ul>
-        </nav>
-    </div>
 
     <div class="categories">
         <h3>Categories</h3>
@@ -49,4 +28,4 @@
         </div>
     </div>
 </body>
-</html>
+{% endblock %}
