@@ -37,6 +37,7 @@ def login():
     loginPage = loginForm()
     return render_template('usersLogin/loginPage.html', form=loginPage)
 
+#validate users login details to respective customer / staff page
 @app.route('/LoginValidate', methods=['GET', 'POST'])
 def loginValidate():
     if request.method == 'POST':
@@ -48,20 +49,28 @@ def loginValidate():
             custDetails = validated_Cust_Details(form.email.data,form.password.data)
             session['custID'] = (custDetails[0][0])
             session['custName'] = (custDetails[0][1])
+            session['emailAddr'] = (custDetails[0][3])
             session['role'] = 'Customer'
-            return render_template('customer/customerSettings.html', custDetails = custDetails)  # change to customer page
+            return render_template('customer/customerPage.html') # change to customer page
         elif validateStaffLogin == True:
             staffDetails = validated_Staff_Details(form.email.data,form.password.data)
             return render_template('usersLogin/loginPage.html', staffDetails = staffDetails)  # change to staff page
         else:
             return render_template('usersLogin/loginPage.html', form=loginPage)
 
+#route to go customer's settings 
+@app.route('/CustomerSettings', methods=['GET', 'POST'])
+def ViewCustSettings():
+    cust_details = CustDetails(session['custID'])
+    return render_template('customer/customerSettings.html', cust_details = cust_details)
+
+#route to go purchase history in customer's settings
 @app.route('/CustomerPurchase', methods=['GET', 'POST'])
 def ViewCustPurchase():
     custPurchaseList = CustomerPurchase(session["custID"])
     return render_template('customer/customerPurchase.html', custPurchaseList = custPurchaseList)
 
-#route for sign up form to be seen on loginPage.html  - viona
+#route for sign up form to be seen on loginPage.html viona: TBC
 @app.route('/Signup',methods=['GET','POST'])
 def signUp():
     signupPage = forms.signupForm(csrf_enabled=False)
@@ -70,7 +79,7 @@ def signUp():
         #use JS to change the layout of the navbar according to Cust or Staff account
     return render_template('signupPage.html', form=signupPage)
 
-@app.route('/ForgetPassword')
+@app.route('/ForgetPassword') #viona: TBC
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
