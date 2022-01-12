@@ -4,7 +4,6 @@ import pyodbc
 #import customer.Customers
 from flask import url_for
 from werkzeug.utils import redirect
-
 from forms.forms import loginForm
 
 #connect SQL to python

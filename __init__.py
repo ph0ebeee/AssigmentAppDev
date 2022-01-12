@@ -1,11 +1,13 @@
 from dns import transaction
 from flask import Flask, render_template, jsonify, request, url_for, redirect, flash, session
-from flask_session import Session
+# from flask_session import Session
 import pyodbc
 import shelve
 import paypalrestsdk
-#from flask_login import current_user, login_required
+import tkinter
+from tkinter import messagebox
 
+from requests import Session
 from products.SQLtoPython import products
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
@@ -29,7 +31,7 @@ Session(app)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('staff.html')
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -127,9 +129,9 @@ def success_payment():
     return render_template('success_payment.html')
 
 # shopping cart by Phoebe
-@app.route('/ShoppingCart', methods = ['POST'])
-def add_product():
-    cart_product_name = {}
+#@app.route('/ShoppingCart', methods = ['POST'])
+#def add_product():
+    #cart_product_name = {}
 
 @app.route('/SuccessReceipt', methods =['GET'])
 def retrieve_database_receipt():
@@ -149,9 +151,15 @@ def retrieve_database_receipt():
 
 
 # shopping cart by Phoebe
+
+# @app.route('/ShoppingCart', methods = ['POST'])
+# def add_product():
+#     cart_product_name = {}
+
 #@app.route('/ShoppingCart', methods = ['POST'])
 #def add_product():
 #    cart_product_name = {}
+
 
 @app.route('/DeleteItems/<int:id>',methods =['POST'])                 #change the int:id
 def delete_items(id):
@@ -308,11 +316,24 @@ def delete_items(id):
 #         users_dict[user.get_user_id()] = user
 #         db['Users'] = users_dict
 
+# anna's staff logout
+@app.route('/logout')
+def logout():
+    # This code is to hide the main tkinter window
+    root = tkinter.Tk()
+    root.withdraw()
+    # Message Box
+    messagebox.showinfo("Title", "Message")
+    root.destroy()
+
+    return render_template('home.html')
+
 @app.route('/logout')
 def logout():
     session.clear()
     return render_template('home.html')
 # anna
+
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
     UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
@@ -345,6 +366,10 @@ def updateusername():
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/updateUsername.html', form=UpdateStaff)
 
+
+@app.route('/game2')
+def game2():
+    return render_template('game2/game2.html')
 
 if __name__ == '__main__':
     app.run()
