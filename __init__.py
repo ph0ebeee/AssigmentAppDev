@@ -31,11 +31,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 @app.route('/')
 def home():
-<<<<<<< HEAD
-    return render_template('templates/paypal/success_payment.html')
-=======
-    return render_template('staff.html')
->>>>>>> a8c8e1dd4b97423c53861f5c7e5ea6d57c1b84a4
+    return render_template('home.html')
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -126,7 +122,6 @@ def NewlyRestockedItems():
 #Retrieve from sql to print receipt - Phoebe
 
 # shopping cart by Phoebe
-<<<<<<< HEAD
 @app.route('/ShoppingCart/<int:id>', methods = ['POST'])
 def update_items(id):
     cart_product= {}
@@ -150,11 +145,10 @@ def delete_items(id):
 
     return redirect(url_for('ShoppingCart'))
 
-=======
+
 #@app.route('/ShoppingCart', methods = ['POST'])
 #def add_product():
     #cart_product_name = {}
->>>>>>> a8c8e1dd4b97423c53861f5c7e5ea6d57c1b84a4
 
 @app.route('/SuccessReceipt', methods =['GET'])
 def retrieve_database_receipt():
@@ -185,11 +179,10 @@ def receipt_display():
 # @app.route('/ShoppingCart', methods = ['POST'])
 # def add_product():
 #     cart_product_name = {}
-<<<<<<< HEAD
+
 #@app.route('/ShoppingCart', methods = ['POST'])
 #def add_product():
 #    cart_product_name = {}
-=======
 
 #@app.route('/ShoppingCart', methods = ['POST'])
 #def add_product():
@@ -206,7 +199,6 @@ def delete_items(id):
 
     db['Items'] = delete_items
     db.close()
->>>>>>> a8c8e1dd4b97423c53861f5c7e5ea6d57c1b84a4
 
 
 
