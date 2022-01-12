@@ -10,11 +10,13 @@ Library Loan System - HomeDen
 </style>
 
 {% block content %}
+{%for i in to_send%}
     <div class="receipt">
         <h1>PAYMENT SUCCESSFUL</h1>
-        <p id ="trans_num"> Order ID:{%CustOrder[1]%}</p>
-        <p id = "time">Time:{%CustOrder[2]%}</p>
-        <p id = "total">Total:{%CustOrder[3]%}</p>
+        <p id ="trans_num"> Order ID:{{i[1]}}</p>
+        <p id = "time">Time:{{i[2]}}</p>
+        <p id = "total">Total:{{i[3]}}</p>
         <p> Thank you for purchasing with us! We hope to see you again</p>
     </div>
+{%endfor%}
 {%endblock%}

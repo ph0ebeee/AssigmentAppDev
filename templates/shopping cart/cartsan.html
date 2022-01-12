@@ -12,14 +12,8 @@ Library Loan System - HomeDen
 
 
         <h1> Products </h1>
-		{% if 'cart_item' in session %}
-				{% for key, val in session['cart_item'].items() %}
-					{% set quantity = session['cart_item'][key]['quantity'] %}
-					{% set price = session['cart_item'][key]['price'] %}
-					{% set item_price = session['cart_item'][key]['total_price'] %}
 					<div id="shopping-cart">
 						<div class="txt-heading">Products</div>
-							<section class="container content-section">
 								<h2 class="section-header">YOUR CART</h2>
 								<div class="cart-items">
 									<span class="item name">${title}</span><br>
@@ -41,13 +35,5 @@ Library Loan System - HomeDen
 							</section>
 						  </div>
 
-				{% endfor %}
-				<div>
-					<p>colspan="2" align="right">Total: </p>
-					<p> align="right" colspan="2"><strong>₹ {{ session['all_total_price'] }}</strong></p>
-				</div>
-		{% else %}
-			<div class="no-records">Your Cart is Empty!</div>
-		{% endif %}
 {% endblock %}
 </body>
