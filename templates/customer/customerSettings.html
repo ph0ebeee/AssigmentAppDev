@@ -4,31 +4,10 @@ Library Loan System - customerSettings
 {% endblock %}
 
 {% block content %}
-<style>
-    #customerSettings_sidenav {
-        height: 100%;
-        width: 200px;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        background-color: #FBF8F2;
-        overflow-x: hidden;
-        padding-top: 20px;
-        color: black;
-    }
 
-    #customerSettings_sidenav a {
-        padding: 8px 8px 8px 32px;
-        text-decoration: underline;
-        font-size: 25px;
-        display: block;
-        transition: 0.3s;
-    }
-
-</style>
-<div class:"customerSettings_sidenav">
-    <img src="user_profilePicture.jpg" style="border-radius:50%; display:inline-block"/><p>username</p>
+<div class:"customerSettings_sidenav"
+     style="height:100%; width:200px; position: relative; z-index:1; top:0; left:0; background-color:#FBF8F2; overflow-x: hidden; padding-top: 20px; color: black; display: inline-block; margin-right: 20px;">
+     <img src="user_profilePicture.jpg" style="border-radius:50%; display:flex;"/><p>{{session['custName']}}</p>
         <a class="dropdown-item" href="#">Account</a>
         <a class="dropdown-item" href="/CustomerPurchase">Purchase</a>
         <a class="dropdown-item" href="/customerVouchers">Vouchers</a>
@@ -36,18 +15,21 @@ Library Loan System - customerSettings
         <a class="dropdown-item" href="/customerMembership">Membership</a>
         <a class="dropdown-item" href="/logout">Log out</a>
 </div>
-<div class="mainContent">
+<div class="mainContent" style="display:inline-block";>
     <h2>Account</h2>
-    <div class:"customerParticulars">
-        {% for i in custDetails %}
-        <p>Username: {{i[1]}}</p>
-        <p>Membership Points: {{i[2]}}</p>
-        <p>Email: {{i[3]}}</p>
-        <p>Password: {{i[4]}}</p>
-        <p>Phone number: {{i[5]}}</p>
-        <p>Shipping address: {{i[6]}}</p>
-        <p>Postal Code: {{i[7]}}</p>
-        {%endfor%}
-    </div>
+    <form method="post" action="/CustomerSettings" style="background-color:white;" class='customerParticulars'>
+        <!--<input type="submit" value="edit" class="submitBtn btn-primary" name="custSettingsbtn"
+    style="border-color:#F5BA76; text-align:right; align-items:flex-end; display: flex; background-color: #F5BA76; color: floralwhite;" />-->
+        <div ">
+            {% for i in cust_details%}
+            <p>Username: {{i[1]}}</p>
+            <p>Membership Points: {{i[2]}}</p>
+            <p>Email: {{i[3]}}</p>
+            <p>Password: {{i[4]}}</p>
+            <p>Phone number: {{i[5]}}</p>
+            <p>Shipping address: {{i[6]}}</p>
+            {% endfor %}
+        </div>
+    </form>
 </div>
 {% endblock %}

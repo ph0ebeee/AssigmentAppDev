@@ -4,8 +4,10 @@ from flask import Flask, render_template, jsonify, request, url_for, redirect, f
 import pyodbc
 import shelve
 import paypalrestsdk
-#from flask_login import current_user, login_required
+import tkinter
+from tkinter import messagebox
 
+from requests import Session
 from products.SQLtoPython import products
 from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
@@ -29,7 +31,11 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 @app.route('/')
 def home():
+<<<<<<< HEAD
     return render_template('templates/paypal/success_payment.html')
+=======
+    return render_template('staff.html')
+>>>>>>> a8c8e1dd4b97423c53861f5c7e5ea6d57c1b84a4
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -37,6 +43,7 @@ def login():
     loginPage = loginForm()
     return render_template('usersLogin/loginPage.html', form=loginPage)
 
+#validate users login details to respective customer / staff page
 @app.route('/LoginValidate', methods=['GET', 'POST'])
 def loginValidate():
     if request.method == 'POST':
@@ -48,20 +55,28 @@ def loginValidate():
             custDetails = validated_Cust_Details(form.email.data,form.password.data)
             session['custID'] = (custDetails[0][0])
             session['custName'] = (custDetails[0][1])
+            session['emailAddr'] = (custDetails[0][3])
             session['role'] = 'Customer'
-            return render_template('customer/customerSettings.html', custDetails = custDetails)  # change to customer page
+            return render_template('customer/customerPage.html') # change to customer page
         elif validateStaffLogin == True:
             staffDetails = validated_Staff_Details(form.email.data,form.password.data)
             return render_template('usersLogin/loginPage.html', staffDetails = staffDetails)  # change to staff page
         # else:
         #     return render_template('usersLogin/loginPage.html', form=loginPage)
 
+#route to go customer's settings 
+@app.route('/CustomerSettings', methods=['GET', 'POST'])
+def ViewCustSettings():
+    cust_details = CustDetails(session['custID'])
+    return render_template('customer/customerSettings.html', cust_details = cust_details)
+
+#route to go purchase history in customer's settings
 @app.route('/CustomerPurchase', methods=['GET', 'POST'])
 def ViewCustPurchase():
     custPurchaseList = CustomerPurchase(session["custID"])
     return render_template('customer/customerPurchase.html', custPurchaseList = custPurchaseList)
 
-#route for sign up form to be seen on loginPage.html  - viona
+#route for sign up form to be seen on loginPage.html viona: TBC
 @app.route('/Signup',methods=['GET','POST'])
 def signUp():
     signupPage = forms.signupForm(csrf_enabled=False)
@@ -70,7 +85,7 @@ def signUp():
         #use JS to change the layout of the navbar according to Cust or Staff account
     return render_template('signupPage.html', form=signupPage)
 
-@app.route('/ForgetPassword')
+@app.route('/ForgetPassword') #viona: TBC
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
@@ -111,6 +126,7 @@ def NewlyRestockedItems():
 #Retrieve from sql to print receipt - Phoebe
 
 # shopping cart by Phoebe
+<<<<<<< HEAD
 @app.route('/ShoppingCart/<int:id>', methods = ['POST'])
 def update_items(id):
     cart_product= {}
@@ -134,6 +150,11 @@ def delete_items(id):
 
     return redirect(url_for('ShoppingCart'))
 
+=======
+#@app.route('/ShoppingCart', methods = ['POST'])
+#def add_product():
+    #cart_product_name = {}
+>>>>>>> a8c8e1dd4b97423c53861f5c7e5ea6d57c1b84a4
 
 @app.route('/SuccessReceipt', methods =['GET'])
 def retrieve_database_receipt():
@@ -164,9 +185,28 @@ def receipt_display():
 # @app.route('/ShoppingCart', methods = ['POST'])
 # def add_product():
 #     cart_product_name = {}
+<<<<<<< HEAD
 #@app.route('/ShoppingCart', methods = ['POST'])
 #def add_product():
 #    cart_product_name = {}
+=======
+
+#@app.route('/ShoppingCart', methods = ['POST'])
+#def add_product():
+#    cart_product_name = {}
+
+
+@app.route('/DeleteItems/<int:id>',methods =['POST'])                 #change the int:id
+def delete_items(id):
+    delete_items = {}
+    db = shelve.open('cart_product.db', 'w')
+    delete_items = db['Items']
+
+    delete_items.pop(id)
+
+    db['Items'] = delete_items
+    db.close()
+>>>>>>> a8c8e1dd4b97423c53861f5c7e5ea6d57c1b84a4
 
 
 
@@ -188,11 +228,24 @@ def receipt_display():
 #         users_dict[user.get_user_id()] = user
 #         db['Users'] = users_dict
 
+# anna's staff logout
+@app.route('/logout')
+def logout():
+    # This code is to hide the main tkinter window
+    root = tkinter.Tk()
+    root.withdraw()
+    # Message Box
+    messagebox.showinfo("Title", "Message")
+    root.destroy()
+
+    return render_template('home.html')
+
 @app.route('/logout')
 def logout():
     session.clear()
     return render_template('home.html')
 # anna
+
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
     UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
@@ -225,6 +278,10 @@ def updateusername():
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/updateUsername.html', form=UpdateStaff)
 
+
+@app.route('/game2')
+def game2():
+    return render_template('game2/game2.html')
 
 if __name__ == '__main__':
     app.run()

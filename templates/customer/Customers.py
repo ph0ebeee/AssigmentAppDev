@@ -8,19 +8,25 @@ class Customers(Users.Users):
                       'Database=EcoDen;'
                       'Trusted_Connection=yes;')
 
-    def __init__(self, first_name, last_name, email, password, gender, membership, orders, address, card_details):
-        super().__init__(first_name, last_name, email, password, gender, membership, orders)
+    def __init__(self, id, name, email, password, membership, contactNum, address):
+        super().__init__(id, name, email, password, membership)
         self.__address = address
-        self.__card_details = card_details
+        self.__contactNum = contactNum
 
     def get_address(self):
         return self.__address
 
-    def get_card_details(self):
-        return self.__card_details
+    #def get_card_details(self):
+    #    return self.__card_details
+
+    def get_contactNum(self):
+        return self.__contactNum
 
     def set_address(self, address):
         self.__address = address
 
-    def set_card_details(self, card_details):
-        self.__card_details = card_details
+    #def set_card_details(self, card_details):
+    #    self.__card_details = card_details
+
+    def set_contactNum(self, contactNum):
+        self.__contactNum = contactNum
