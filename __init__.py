@@ -1,29 +1,37 @@
-from flask import Flask, render_template, request, session
+from dns import transaction
+from flask import Flask, render_template, jsonify, request, url_for, redirect, flash, session
 # from flask_session import Session
+import pyodbc
+import shelve
+import paypalrestsdk
 import tkinter
 from tkinter import messagebox
-
-from forms.forms import createCust
+from requests import Session
 from products.SQLtoPython import products
+from templates.paypal.receipt import Receipt
+from werkzeug.utils import redirect
 from forms import forms
 #from flask_bcrypt import Bcrypt
+from forms.forms import loginForm
 from templates.staff import staff_forms
 from templates.staff.staffcust import orders
 from userAuthentication.loginValidation import *
 from script import *
 import shelve, users
+
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
+from forms.forms import signupForm
 
 app = Flask(__name__,template_folder="./templates")
-#app.config["SESSION_PERMANENT"] = False
-#app.config["SESSION_TYPE"] = "filesystem"
-#Session(app)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+# Session(app)
 #bcrypt = Bcrypt(app)
 
 @app.route('/')
 def home():
-    return render_template('staff.html')
+    return render_template('home.html')
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -49,8 +57,8 @@ def loginValidate():
         elif validateStaffLogin == True:
             staffDetails = validated_Staff_Details(form.email.data,form.password.data)
             return render_template('usersLogin/loginPage.html', staffDetails = staffDetails)  # change to staff page
-        else:
-            return render_template('usersLogin/loginPage.html', form=loginPage)
+        #else:
+            # return render_template('usersLogin/loginPage.html', form=loginPage)
 
 #route to go customer's settings 
 @app.route('/CustomerSettings', methods=['GET', 'POST'])
@@ -106,14 +114,18 @@ def NewlyRestockedItems():
 #     return jsonify(message)
 
 # payment via paypal done by Phoebe
+# payment via paypal done by Phoebe
+# @app.route('/Success', methods = ['POST'])
+# def send_receipt_info():
+#     jsdata = request.form['javascript_data']
+#     return jsdata
+
+#Retrieve from sql to print receipt - Phoebe
 @app.route('/Payment', methods=['POST'])
 def payment():
     return render_template('paypal_standard.html')
 
-@app.route('/Success', methods = ['POST'])
-def send_receipt_info():
-    jsdata = request.form['javascript_data']
-    return jsdata
+
 
 #Retrieve from sql to print receipt - Phoebe
 @app.route('/Payment/Success', methods = ['POST'])
@@ -121,6 +133,29 @@ def success_payment():
     return render_template('success_payment.html')
 
 # shopping cart by Phoebe
+@app.route('/ShoppingCart/<int:id>', methods = ['POST'])
+def update_items(id):
+    cart_product= {}
+    db = shelve.open('card_product.db','w')
+    cart_product = db['Items']
+    cart_product.insert(id)
+    db['Items'] = cart_product
+    db.close()
+
+
+@app.route('/DeleteItems/<int:id>',methods =['POST'])                 #TEST
+def delete_items(id):
+    delete_items = {}
+    db = shelve.open('cart_product.db', 'w')
+    delete_items = db['Items']
+
+    delete_items.pop(id)
+
+    db['Items'] = delete_items
+    db.close()
+
+    return redirect(url_for('ShoppingCart'))
+
 #@app.route('/ShoppingCart', methods = ['POST'])
 #def add_product():
     #cart_product_name = {}
@@ -136,11 +171,15 @@ def retrieve_database_receipt():
     cursor = conn.cursor()
     cursor.execute('SELECT OrderID,POSDate,Totalprice from CustOrder')
     cursor_data = cursor.fetchall()
-    for i in cursor_data:
-        receipt_details.update({i[0],i[1],i[2]})     # need to add the i[2]
+    return cursor_data
+
+    # for i in cursor_data:
+    #     receipt_details.update({i[0],i[1],i[2]})     # need to add the i[2]
 
 
-
+def receipt_display():
+    to_send = retrieve_database_receipt()
+    return render_template("templates/paypal/success_payment.html", to_send=to_send)
 
 # shopping cart by Phoebe
 
@@ -163,11 +202,6 @@ def delete_items(id):
 
     db['Items'] = delete_items
     db.close()
-
-    return redirect(url_for('#'))  #figure out what is meant to be at the hashtag
-
-
-
 
 # @app.route('/ShoppingCart', methods = ['POST'])
 # def add_product():
@@ -311,9 +345,15 @@ def delete_items(id):
 # anna's staff logout
 @app.route('/logout')
 def logout():
-    #session.clear()
+    # This code is to hide the main tkinter window
+    root = tkinter.Tk()
+    root.withdraw()
+    # Message Box
+    messagebox.showinfo("Title", "Message")
+    root.destroy()
+
     return render_template('home.html')
-#anna
+
 
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
@@ -322,6 +362,7 @@ def staffaccount():
         return redirect(url_for('###'))
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/staff_account.html', form=UpdateStaff)
+
 
 @app.route('/customerManagement', methods=['GET', 'POST'])
 def customerManagement():
