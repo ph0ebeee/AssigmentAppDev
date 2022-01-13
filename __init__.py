@@ -1,32 +1,24 @@
-from dns import transaction
-from flask import Flask, render_template, jsonify, request, url_for, redirect, flash, session
+from flask import Flask, render_template, request, session
 # from flask_session import Session
-import pyodbc
-import shelve
-import paypalrestsdk
 import tkinter
 from tkinter import messagebox
 
-from requests import Session
+from forms.forms import createCust
 from products.SQLtoPython import products
-from templates.paypal.receipt import Receipt
-from werkzeug.utils import redirect
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import loginForm
 from templates.staff import staff_forms
 from templates.staff.staffcust import orders
 from userAuthentication.loginValidation import *
 from script import *
-
+import shelve, users
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
-from forms.forms import signupForm
 
 app = Flask(__name__,template_folder="./templates")
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+#app.config["SESSION_PERMANENT"] = False
+#app.config["SESSION_TYPE"] = "filesystem"
+#Session(app)
 #bcrypt = Bcrypt(app)
 
 @app.route('/')
@@ -319,20 +311,9 @@ def delete_items(id):
 # anna's staff logout
 @app.route('/logout')
 def logout():
-    # This code is to hide the main tkinter window
-    root = tkinter.Tk()
-    root.withdraw()
-    # Message Box
-    messagebox.showinfo("Title", "Message")
-    root.destroy()
-
+    #session.clear()
     return render_template('home.html')
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return render_template('home.html')
-# anna
+#anna
 
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
@@ -342,21 +323,54 @@ def staffaccount():
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/staff_account.html', form=UpdateStaff)
 
-
 @app.route('/customerManagement', methods=['GET', 'POST'])
 def customerManagement():
-    to_send= orders()
-    return render_template("staff/staff_cust.html", to_send=to_send)
+    create_customer_form = createCust(request.form)
+    if request.method == 'POST' and create_customer_form.validate():
+        users_dict = {}
+        db = shelve.open('user.db', 'c')
 
-@app.route('/acceptedOrder', methods=['GET', 'POST'])
-def acceptedOrder():
-    to_send= orders()
-    return render_template('staff/accepted.html', to_send=to_send)
+        try:
+            users_dict = db['Users']
+        except:
+            print("Error in retrieving Users from user.db.")
 
-@app.route('/declinedOrder', methods=['GET', 'POST'])
-def declinedOrder():
-    to_send= orders()
-    return render_template('staff/declined.html', to_send=to_send)
+        user = users.Users(create_customer_form.first_name.data, create_customer_form.last_name.data, create_customer_form.gender.data, create_customer_form.email.data, create_customer_form.address.data, create_customer_form.membership.data)
+        users_dict[user.get_user_id()] = user
+        db['Users'] = users_dict
+
+        db.close()
+
+        # Test codes
+        users_dict = db['Users']
+        user = users_dict[user.get_user_id()]
+        print(user.get_first_name(), user.get_last_name(), "was stored in user.db successfully with user_id ==", user.get_user_id())
+
+
+        return redirect(url_for('retrieveUsers'))
+    return render_template('staff/staff_cust.html', form=create_customer_form)
+
+@app.route('/retrieveUsers')
+def retrieve_users():
+    users_dict = {}
+    db = shelve.open('user.db', 'r')
+    users_dict = db['Users']
+    db.close()
+
+    users_list = []
+    for key in users_dict:
+        user = users_dict.get(key)
+        users_list.append(user)
+
+
+    return render_template('staff/declined.html')
+
+#@app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
+#def update_user(id):
+    #update_customer_form = createCust(request.form)
+
+   #return render_template('updatecustomer.html', form=update_customer_form)
+
 
 @app.route('/updateusername', methods=['GET', 'POST'])
 def updateusername():

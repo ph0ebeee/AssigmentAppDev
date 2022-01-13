@@ -1,28 +1,82 @@
 {%extends "base_s.html" %}
 {% block title %}
-Library Loan System - DeclinedOrder
+Library Loan System - Retrieve Users
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid h-100">
         <div class="row h-100">
             <div class="col-2" id="green">
-                    <a class="dropdown-item" href="/customerManagement">Orders</a>
-                    <a class="dropdown-item" href="/acceptedOrder">Accepted</a>
-                    <a class="dropdown-item" href="#">Declined</a>
+                    <a class="dropdown-item" href="/customerManagement">New Customer</a>
+                    <a class="dropdown-item" href="/game2">Accepted</a>
+                    <a class="dropdown-item" href="#">Retrieve Customer</a>
             </div>
             <!--Contains the main content
                     of the webpage-->
             <div class="col-10" style="text-align: justify;">
-                <h1>Declined</h1>
+                <!--<h1>Declined</h1>
                 {%for i in to_send%}
                 <p> {{i[0]}}</p>
-                {%endfor%}
+                {%endfor%}-->
+
+<h1 class="display-4">Retrieve Users</h1>
+                <div>
+  {% if count == 0 %}
+  <p>There are no users.</p>
+  {% elif count == 1 %}
+  <p>There is 1 user.</p>
+  {% else %}
+  <p>There are {{ count }} users.</p>
+  {% endif %}
+</div>
+
+<div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Gender</th>
+          <th>Email</th>
+          <th>Mailing Address</th>
+        <th>Membership</th>
+        <th>Remarks</th>
+        <th></th>
+        <th></th>
+            </tr>
+    </thead>
+    <tbody>
+        {% for user in users_list %}
+      <tr>
+        <td>{{ user.get_user_id() }}</td>
+        <td>{{ user.get_first_name() }}</td>
+        <td>{{ user.get_last_name() }}</td>
+        <td>{{ user.get_gender() }}</td>
+          <td>{{ user.get_email() }}</td>
+        <td>{{ user.get_address() }}</td>
+        {% if user.get_membership() == "F" %}
+        <td>Fellow</td>
+        {% elif user.get_membership() == "S" %}
+        <td>Senior</td>
+        {% elif user.get_membership() == "P" %}
+        <td>Professional</td>
+        {% endif %}
+        <td>{{ user.get_remarks() }}</td>
+        <td><a href="#" class="btn btn-warning">Update</a></td>
+        <td>
+          <form action="" method="POST">
+            <input type="submit" value="Delete" class="btn btn-danger">
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+
+    </tbody>
+  </table>
+</div>
             </div>
         </div>
-    </div>
-</body>
+</div>
 
-</html>
 {% endblock %}
-
