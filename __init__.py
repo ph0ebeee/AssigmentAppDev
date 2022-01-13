@@ -31,7 +31,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 @app.route('/')
 def home():
-    return render_template('staff.html')
+    return render_template('home.html')
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -124,13 +124,12 @@ def NewlyRestockedItems():
 # shopping cart by Phoebe
 @app.route('/ShoppingCart/<int:id>', methods = ['POST'])
 def update_items(id):
-    cart_product= {}
+    cart_product = {}
     db = shelve.open('card_product.db','w')
     cart_product = db['Items']
     cart_product.insert(id)
     db['Items'] = cart_product
     db.close()
-
 
 @app.route('/DeleteItems/<int:id>',methods =['POST'])                 #TEST
 def delete_items(id):
@@ -165,8 +164,6 @@ def retrieve_database_receipt():
  # for i in cursor_data:
     #     receipt_details.update({i[0],i[1],i[2]})     # need to add the i[2]
 
-
-
 def receipt_display():
     to_send = retrieve_database_receipt()
     return render_template("templates/paypal/success_payment.html", to_send=to_send)
@@ -180,18 +177,6 @@ def receipt_display():
 #@app.route('/ShoppingCart', methods = ['POST'])
 #def add_product():
 #    cart_product_name = {}
-
-
-@app.route('/DeleteItems/<int:id>',methods =['POST'])                 #change the int:id
-def delete_items(id):
-    delete_items = {}
-    db = shelve.open('cart_product.db', 'w')
-    delete_items = db['Items']
-
-    delete_items.pop(id)
-
-    db['Items'] = delete_items
-    db.close()
 
 # @app.route('/contactUs', methods=['GET', 'POST'])
 # def feedback():
