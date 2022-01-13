@@ -12,7 +12,7 @@ from templates.paypal.receipt import Receipt
 from werkzeug.utils import redirect
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import loginForm
+from forms.forms import loginForm, createCust
 from templates.staff import staff_forms
 from templates.staff.staffcust import orders
 from userAuthentication.loginValidation import *
@@ -31,7 +31,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('staff.html')
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -114,23 +114,12 @@ def NewlyRestockedItems():
 #     return jsonify(message)
 
 # payment via paypal done by Phoebe
-# payment via paypal done by Phoebe
 # @app.route('/Success', methods = ['POST'])
 # def send_receipt_info():
 #     jsdata = request.form['javascript_data']
 #     return jsdata
 
 #Retrieve from sql to print receipt - Phoebe
-@app.route('/Payment', methods=['POST'])
-def payment():
-    return render_template('paypal_standard.html')
-
-
-
-#Retrieve from sql to print receipt - Phoebe
-@app.route('/Payment/Success', methods = ['POST'])
-def success_payment():
-    return render_template('success_payment.html')
 
 # shopping cart by Phoebe
 @app.route('/ShoppingCart/<int:id>', methods = ['POST'])
@@ -173,8 +162,9 @@ def retrieve_database_receipt():
     cursor_data = cursor.fetchall()
     return cursor_data
 
-    # for i in cursor_data:
+ # for i in cursor_data:
     #     receipt_details.update({i[0],i[1],i[2]})     # need to add the i[2]
+
 
 
 def receipt_display():
@@ -203,129 +193,6 @@ def delete_items(id):
     db['Items'] = delete_items
     db.close()
 
-# @app.route('/ShoppingCart', methods = ['POST'])
-# def add_product():
-#     cart_product = {}
-#     db = shelve.open(cart_product)
-#
-#     try:
-#         cart_product = db['Products']
-#     except:
-#         print("Error in retrieving Products from products.db")
-#
-#     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
-#                       'Server=(localdb)\MSSQLLocalDB;'
-#                       'Database=EcoDen;'
-#                       'Trusted_Connection=yes;')
-#     cursor = conn.cursor()
-#     cursor.execute('SELECT ProductName from Product')
-#     cursor_data = cursor.fetchall()
-#     for i in cursor_data:
-#         cart_product.update( {i[0]:i[1]} )
-#
-# @app.route('/deleteProduct', methods = ['POST'])
-# def delete_product():
-#     pass
-
-# @app.route('/add', methods=['POST'])
-# def add_product_to_cart():
-# 	try:
-#             conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
-#                               'Server=(localdb)\MSSQLLocalDB;'
-#                               'Database=EcoDen;'
-#                               'Trusted_Connection=yes;')
-#             cart_product = {}
-#             cursor = conn.cursor()
-#             cursor.execute('SELECT ProductName from Product')
-#             cursor_data = cursor.fetchone()
-#             for i in cursor_data:
-#                 cart_product.update({i[0]:i[1]}) #change the array to the suitable variable
-#                 all_total_price = 0
-#                 all_total_quantity = 0
-#
-#                 for key, value in session['cart_item'].items():
-#                     if cursor_data['code'] == key:
-#                         #session.modified = True
-#                         #if session['cart_item'][key]['quantity'] is not None:
-#                         #	session['cart_item'][key]['quantity'] = 0
-#                         old_quantity = ['cart_item'][key]['quantity']
-#                         total_quantity = old_quantity + _quantity
-#                         ['cart_item'][key]['quantity'] = total_quantity
-#                         ['cart_item'][key]['total_price'] = total_quantity * cursor_data['price']
-# 				else:
-# 					['cart_item'] = array_merge(session['cart_item'], itemArray)
-#
-# 				for key, value in session['cart_item'].items():
-# 					individual_quantity = int(session['cart_item'][key]['quantity'])
-# 					individual_price = float(session['cart_item'][key]['total_price'])
-# 					all_total_quantity = all_total_quantity + individual_quantity
-# 					all_total_price = all_total_price + individual_price
-# 			else:
-# 				session['cart_item'] = itemArray
-# 				all_total_quantity = all_total_quantity + _quantity
-# 				all_total_price = all_total_price + _quantity * cursor_data['price']
-#
-# 			session['all_total_quantity'] = all_total_quantity
-# 			session['all_total_price'] = all_total_price
-#
-# 			return redirect(url_for('.products'))
-# 		else:
-# 			return 'Error while adding item to cart'
-#     finally:
-#         pass
-#
-# @app.route('/')
-# def products():
-# 	try:
-#             conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
-#                               'Server=(localdb)\MSSQLLocalDB;'
-#                               'Database=EcoDen;'
-#                               'Trusted_Connection=yes;')
-#             cart_product = {}
-#             cursor = conn.cursor()
-#             cursor.execute('SELECT ProductName from Product')
-#             cursor_data = cursor.fetchall()
-#             for i in cursor_data:
-#                 cart_product.update({i[0]:i[1]}) #change the array to the suitable variable
-#             return render_template('products.html', products=cursor_data)
-# 	finally:
-# 		cursor.close()
-# 		conn.close()
-#
-#
-# @app.route('/delete')
-# def delete_product():
-# 	try:
-# 		all_total_price = 0
-# 		all_total_quantity = 0
-#                 for key, value in ['cart_item'].items():
-#                     individual_quantity = int(['cart_item'][key]['quantity'])
-#                     individual_price = float(['cart_item'][key]['total_price'])
-#                     all_total_quantity = all_total_quantity + individual_quantity
-#                     all_total_price = all_total_price + individual_price
-#
-# 		# if all_total_quantity == 0:
-# 		# 	session.clear()
-# 		# else:
-# 		# 	session['all_total_quantity'] = all_total_quantity             WORK ON THESE!!!
-# 		# 	session['all_total_price'] = all_total_price
-#
-# 		# return redirect('/')
-# 		return redirect(url_for('.products'))
-#     finally:
-#         pass
-#
-# def array_merge( first_array , second_array ):
-# 	if isinstance( first_array , list ) and isinstance( second_array , list ):
-# 		return first_array + second_array
-# 	elif isinstance( first_array , dict ) and isinstance( second_array , dict ):
-# 		return dict( list( first_array.items() ) + list( second_array.items() ) )
-# 	elif isinstance( first_array , set ) and isinstance( second_array , set ):
-# 		return first_array.union( second_array )
-# 	return False
-#
-#
-
 # @app.route('/contactUs', methods=['GET', 'POST'])
 # def feedback():
 #     feedback = CreateUserForm(request.form)
@@ -343,17 +210,21 @@ def delete_items(id):
 #         db['Users'] = users_dict
 
 # anna's staff logout
+#@app.route('/logout')
+#def logout():
+    # This code is to hide the main tkinter window
+    #root = tkinter.Tk()
+    #root.withdraw()
+    # Message Box
+    #messagebox.showinfo("Title", "Message")
+    #root.destroy()
+
+    #return render_template('home.html')
+
 @app.route('/logout')
 def logout():
-    # This code is to hide the main tkinter window
-    root = tkinter.Tk()
-    root.withdraw()
-    # Message Box
-    messagebox.showinfo("Title", "Message")
-    root.destroy()
-
+    session.clear()
     return render_template('home.html')
-
 
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
