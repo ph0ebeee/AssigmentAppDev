@@ -4,8 +4,8 @@ import root as root
 
 class Product(root.Root):
 
-    def __init__(self, product_id,product_name, product_price):
-        super().__init__('Phoebe', '12/1/2022', 'Phoebe', '12/1/22')
+    def __init__(self, product_id,product_name, product_price,quantity ):
+        super().__init__('Phoebe', '12/1/2022', 'Phoebe', '12/1/22')    #first is userid, datetime(module)
         self.__product_id = product_id
         self.__product_name = product_name
         self.__product_price = product_price

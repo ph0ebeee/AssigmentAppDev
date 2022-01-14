@@ -1,27 +1,17 @@
-from dns import transaction
-from flask import Flask, render_template, jsonify, request, url_for, redirect, flash, session
+from flask import Flask, render_template, request, session
 # from flask_session import Session
-import pyodbc
-import shelve
-import paypalrestsdk
-import tkinter
-from tkinter import messagebox
-from requests import Session
 from products.SQLtoPython import products
-from templates.paypal.receipt import Receipt
-from werkzeug.utils import redirect
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import loginForm, createCust
+from forms.forms import createCust
 from templates.staff import staff_forms
-from templates.staff.staffcust import orders
 from userAuthentication.loginValidation import *
 from script import *
 import shelve, users
+from shoppingcart.cartdu import add_product_to_cart, empty_cart, backproduct
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
-from forms.forms import signupForm
 
 app = Flask(__name__,template_folder="./templates")
 app.config["SESSION_PERMANENT"] = False
@@ -121,7 +111,7 @@ def NewlyRestockedItems():
 
 #Retrieve from sql to print receipt - Phoebe
 
-# shopping cart by Phoebe
+# shoppingcart by Phoebe
 @app.route('/ShoppingCart/<int:id>', methods = ['POST'])
 def update_items(id):
     cart_product = {}
@@ -144,9 +134,12 @@ def delete_items(id):
 
     return redirect(url_for('ShoppingCart'))
 
-#@app.route('/ShoppingCart', methods = ['POST'])
-#def add_product():
-    #cart_product_name = {}
+@app.route('/ShoppingCart', methods = ['GET','POST'])
+def open_cart():
+    add_product_to_cart()
+    empty_cart()
+    backproduct()
+    return render_template("shoppingcart/shopping_cart.html")
 
 @app.route('/SuccessReceipt', methods =['GET'])
 def retrieve_database_receipt():
@@ -164,19 +157,10 @@ def retrieve_database_receipt():
  # for i in cursor_data:
     #     receipt_details.update({i[0],i[1],i[2]})     # need to add the i[2]
 
+
 def receipt_display():
     to_send = retrieve_database_receipt()
-    return render_template("templates/paypal/success_payment.html", to_send=to_send)
-
-# shopping cart by Phoebe
-
-# @app.route('/ShoppingCart', methods = ['POST'])
-# def add_product():
-#     cart_product_name = {}
-
-#@app.route('/ShoppingCart', methods = ['POST'])
-#def add_product():
-#    cart_product_name = {}
+    return render_template("paypal/success_payment.html", to_send=to_send)
 
 # @app.route('/contactUs', methods=['GET', 'POST'])
 # def feedback():
@@ -210,6 +194,7 @@ def receipt_display():
 def logout():
     session.clear()
     return render_template('home.html')
+
 
 @app.route('/staffaccount', methods=['GET', 'POST'])
 def staffaccount():
@@ -247,6 +232,7 @@ def customerManagement():
         return redirect(url_for('retrieveUsers'))
     return render_template('staff/staff_cust.html', form=create_customer_form)
 
+
 @app.route('/retrieveUsers')
 def retrieve_users():
     users_dict = {}
@@ -281,6 +267,7 @@ def updateusername():
 @app.route('/game2')
 def game2():
     return render_template('game2/game2.html')
+
 
 if __name__ == '__main__':
     app.run()
