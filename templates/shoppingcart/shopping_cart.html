@@ -3,6 +3,7 @@
 Library Loan System - HomeDen
 {% endblock %}
 
+ {% block content %}
 <div>
 		{% with messages = get_flashed_messages() %}
 		  {% if messages %}
@@ -55,7 +56,8 @@ Library Loan System - HomeDen
 		{% endif %}
 	</div>
 
-<!--{% block content %}-->
+{% endblock %}
+
 
 
 <!--        <h1> Products </h1>-->
@@ -96,4 +98,4 @@ Library Loan System - HomeDen
 <!--		{% else %}-->
 <!--			<div class="no-records">Your Cart is Empty!</div>-->
 <!--		{% endif %}-->
-<!--{% endblock %}-->
+
