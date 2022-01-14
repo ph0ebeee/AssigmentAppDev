@@ -8,7 +8,7 @@ from templates.staff import staff_forms
 from userAuthentication.loginValidation import *
 from script import *
 import shelve, users
-from shoppingcart.cartdu import add_product_to_cart, empty_cart, backproduct
+from templates.shoppingcart.cartdu import add_product_to_cart, empty_cart, backproduct
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
