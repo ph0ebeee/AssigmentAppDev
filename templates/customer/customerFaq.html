@@ -1,0 +1,16 @@
+{%extends "base.html" %}
+{% block title %}
+Library Loan System - customerSettings
+{% endblock %}
+
+{% block content %}
+<div class:"customerSettings_sidenav"
+     style="height:100%; width:200px; position: relative; z-index:1; top:0; left:0; background-color:#FBF8F2; overflow-x: hidden; padding-top: 20px; color: black; display: inline-block; margin-right: 20px;">
+    <img src="user_profilePicture.jpg" style="border-radius:50%; display:inline" /><p>{{session['custName']}}</p>
+    <a class="dropdown-item" href="/customerSettings">Account</a>
+    <a class="dropdown-item" href="/customerPurchase">Purchase</a>
+    <a class="dropdown-item" href="/customerVouchers">Vouchers</a>
+    <a class="dropdown-item" href="#">FAQ</a>
+    <a class="dropdown-item" href="/customerMembership">Membership</a>
+    <a class="dropdown-item" href="/logout">Log out</a>
+</div>
