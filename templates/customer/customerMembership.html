@@ -14,3 +14,22 @@ Library Loan System - customerSettings
     <a class="dropdown-item" href="#">Membership</a>
     <a class="dropdown-item" href="/logout">Log out</a>
 </div>
+<div class="mainContent" style="display:inline-block;">
+    <h2>Membership points</h2>
+    {% for i in custVoucherList %}
+    <p>Total membership points:{{i[0]}} </p>
+    <p> What is membership points and how are they useful? </p>
+    <p> It is points allocated to a member, which may be used by the member as payment for goods or services or entitle the member to any other benefit as a reward. Customers are qualified for membership and just have purchase items with us to gain membership points. </p>
+    <p> 1 point will be awarded for every S$1 dollar spent, with the minimum of $30 nett spend in a single receipt</p>
+    <p> 100 points earned allows you to enjoy S$1 off for your next purchase</p>
+    <br />
+    <br />
+    <h6>Claim more points here:</h6>
+    <div class="gamepage-responsive" style="margin: 10px; padding: 10px; background-color: #F0BC80; font-size:12px; border-block-color:black;">
+        <a href="/game1">Kirby</a>
+        <a href="/game2">Match It</a>
+        <a href="/game3">Save the Earth</a>
+    </div>
+    {%endfor%}
+</div>
+{% endblock %}
