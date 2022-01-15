@@ -39,18 +39,20 @@ Library Loan System - HomeDen
 						<td style="text-align:center;">
 							<a href="{{ url_for('.delete_product', code=session['cart_item'][key]['code']) }}" class="btnRemoveAction">
 								<input type="submit" value="REMOVE"  />
+
 							</a>
 						</td>
 					</tr>
 				{% endfor %}
 				<tr>
 					<td colspan="2" align="right">Total:</td>
-					<td align="right">{{ session['all_total_quantity'] }}</td>
 					<td align="right" colspan="2"><strong> {{ session['all_total_price'] }}</strong></td>
 					<td></td>
 				</tr>
 			</tbody>
 			</table>
+				<button class = "btn-voucher" type = "button">VOUCHERS</button>
+				<input type ='submit' value="CHECKOUT" class = "btn btn-primary btn-purchase">
 		{% else: %}
 			<div class="no-records">Your Cart is Empty</div>
 		{% endif %}

@@ -9,6 +9,9 @@ def success_payment():
     cursor.execute('SELECT OrderID,POSDate,Totalprice from CustOrder')
     cursor_data = cursor.fetchall()
     for i in cursor_data:
-        receipt_details.update({i[0],i[1],i[2]})
-    print(receipt_details)
-
+        orderID = [i[0]]
+        date = [i[1]]
+        total_price = [i[2]]
+        print(orderID,date,total_price)
+        receipt_details.update({i[0]:i[0],i[0]:i[2]})
+success_payment()
