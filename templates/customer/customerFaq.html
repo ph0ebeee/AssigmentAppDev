@@ -14,3 +14,19 @@ Library Loan System - customerSettings
     <a class="dropdown-item" href="/customerMembership">Membership</a>
     <a class="dropdown-item" href="/logout">Log out</a>
 </div>
+<div class="mainContent" style="display:inline-block;">
+    <h2>FAQ</h2>
+    {% for i in custVoucherList %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <tbody>
+                <tr>
+                    <td>{{i[0]}}</td> <!-- need change to the specific list heh-->
+                    <td>{{i[2]}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {%endfor%}
+</div>
+{% endblock %} 
