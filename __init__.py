@@ -20,8 +20,14 @@ app.config["SESSION_TYPE"] = "filesystem"
 #bcrypt = Bcrypt(app)
 
 @app.route('/')
+#function for images selected to be seen on image slideshow  - viona
 def home():
-    return render_template('home.html')
+    image1 = './static/Assets/images/imageCarousel_1.jpg' 
+    image2 = './static/Assets/images/imageCarousel_2.jpg' 
+    image3 = './static/Assets/images/imageCarousel_3.jpg' 
+    image4 = './static/Assets/images/imageCarousel_4.jpg' 
+    image5 = './static/Assets/images/imageCarousel_5.jpg' 
+    return render_template('home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
