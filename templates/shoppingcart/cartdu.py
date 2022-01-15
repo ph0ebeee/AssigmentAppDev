@@ -16,7 +16,7 @@ def add_product_to_cart():
 			cursor.execute('SELECT ProductID, ProductName, ProductPrice from Product')
 			cursor_data = cursor.fetchone()
 
-			itemArray = { cursor_data['ProductID'] : {'name' : cursor_data['ProductName'], 'code' : cursor_data['ProductID'], 'price' : cursor_data['ProductPrice'], 'quantity' : _quantity, 'total_price': _quantity * cursor_data['ProductPrice']}}
+			itemArray = { cursor_data['code'] : {'name' : cursor_data['ProductName'], 'code' : cursor_data['ProductID'], 'price' : cursor_data['ProductPrice'], 'quantity' : _quantity, 'total_price': _quantity * cursor_data['ProductPrice']}}
 			
 			all_total_price = 0
 			all_total_quantity = 0
@@ -72,7 +72,7 @@ def backproduct():
 def empty_cart():
 	try:
 		session.clear()
-		return redirect(url_for('.products'))
+		return redirect(url_for('.open_cart'))
 	except Exception as e:
 		print(e)
 
@@ -101,7 +101,7 @@ def delete_product(code):
 			session['all_total_price'] = all_total_price
 		
 		#return redirect('/')
-		return redirect(url_for('.products'))
+		return redirect(url_for('.shopping_cart'))
 	except Exception as e:
 		print(e)
 		

@@ -35,18 +35,18 @@ Library Loan System - HomeDen
 <!--						<td><img src="/static/images/{{ session['cart_item'][key]['image'] }}" class="cart-item-image" />{{ session['cart_item'][key]['name'] }}</td>-->
 						<td>{{ session['cart_item'][key]['code'] }}</td>
 						<td style="text-align:right;">{{ quantity }}</td>
-						<td  style="text-align:right;">₹ {{ item_price }}</td>
+						<td  style="text-align:right;"> {{ item_price }}</td>
 						<td style="text-align:center;">
-<!--							<a href="{{ url_for('.delete_product', code=session['cart_item'][key]['code']) }}" class="btnRemoveAction">-->
-<!--								<img src="/static/images/icon-delete.png" alt="Remove Item" />-->
-<!--							</a>-->
+							<a href="{{ url_for('.delete_product', code=session['cart_item'][key]['code']) }}" class="btnRemoveAction">
+								<input type="submit" value="REMOVE"  />
+							</a>
 						</td>
 					</tr>
 				{% endfor %}
 				<tr>
 					<td colspan="2" align="right">Total:</td>
 					<td align="right">{{ session['all_total_quantity'] }}</td>
-					<td align="right" colspan="2"><strong>₹ {{ session['all_total_price'] }}</strong></td>
+					<td align="right" colspan="2"><strong> {{ session['all_total_price'] }}</strong></td>
 					<td></td>
 				</tr>
 			</tbody>
@@ -56,7 +56,28 @@ Library Loan System - HomeDen
 		{% endif %}
 	</div>
 
-{% endblock %}
+	<div id="product-grid">
+		<div class="txt-heading">Products</div>
+
+		{% for product in backproduct %}
+		<p>hello world</p>
+
+			<div class="product-item">
+				<form method="post" action="/add">
+					<div class="product-tile-footer">
+						<div class="product-title">{{ product.name }}</div>
+						<div class="product-price"> {{ product.price }}</div>
+						<div class="cart-action">
+							<input type="text" class="product-quantity" name="quantity" value="1" size="2" />
+							<input type="hidden" name="code" value="{{ product.code }}"/>
+							<input type="submit" value="Add to Cart" class="btnAddAction" />
+						</div>
+					</div>
+				</form>
+			</div>
+	{% endfor %}
+
+		{% endblock %}
 
 
 

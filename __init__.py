@@ -14,6 +14,8 @@ from templates.shoppingcart.cartdu import add_product_to_cart, empty_cart, backp
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 
 app = Flask(__name__,template_folder="./templates")
+app.secret_key = "secret key"
+
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 # Session(app)
@@ -112,27 +114,27 @@ def NewlyRestockedItems():
 #Retrieve from sql to print receipt - Phoebe
 
 # shoppingcart by Phoebe
-@app.route('/ShoppingCart/<int:id>', methods = ['POST'])
-def update_items(id):
-    cart_product = {}
-    db = shelve.open('card_product.db','w')
-    cart_product = db['Items']
-    cart_product.insert(id)
-    db['Items'] = cart_product
-    db.close()
-
-@app.route('/DeleteItems/<int:id>',methods =['POST'])                 #TEST
-def delete_items(id):
-    delete_items = {}
-    db = shelve.open('cart_product.db', 'w')
-    delete_items = db['Items']
-
-    delete_items.pop(id)
-
-    db['Items'] = delete_items
-    db.close()
-
-    return redirect(url_for('ShoppingCart'))
+# @app.route('/ShoppingCart/<int:id>', methods = ['POST'])
+# def update_items(id):
+#     cart_product = {}
+#     db = shelve.open('card_product.db','w')
+#     cart_product = db['Items']
+#     cart_product.insert(id)
+#     db['Items'] = cart_product
+#     db.close()
+#
+# @app.route('/DeleteItems/<int:id>',methods =['POST'])                 #TEST
+# def delete_items(id):
+#     delete_items = {}
+#     db = shelve.open('cart_product.db', 'w')
+#     delete_items = db['Items']
+#
+#     delete_items.pop(id)
+#
+#     db['Items'] = delete_items
+#     db.close()
+#
+#     return redirect(url_for('ShoppingCart'))
 
 @app.route('/ShoppingCart', methods = ['GET','POST'])
 def open_cart():
