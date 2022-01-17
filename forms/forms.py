@@ -22,3 +22,10 @@ class CreateCustomerForm(Form):
     address = TextAreaField('Mailing Address:', [validators.length(max=200), validators.DataRequired()])
     membership = RadioField('Membership', choices=[('F', 'Fellow'), ('S', 'Senior'), ('P', 'Professional')], default='F')
     remarks = TextAreaField('Remarks', [validators.Optional()])
+
+class CreateStaffForm(Form):
+    name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
+    address = TextAreaField('Mailing Address:', [validators.length(max=200), validators.DataRequired()])
+    role = RadioField('Role', choices=[('F', 'Fellow'), ('S', 'Senior'), ('P', 'Professional')], default='F')
+    remarks = TextAreaField('Remarks', [validators.Optional()])

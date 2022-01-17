@@ -1,7 +1,7 @@
 class Users:
     count_id = 0
 
-    def __init__(self, id, name, email, password, membership, gender):
+    def __init__(self, id, name, email, password, membership, gender, address):
         Users.count_id += 1
         self.__id = id
         self.__name = name
@@ -9,7 +9,9 @@ class Users:
         self.__email = email
         self.__password = password
         self.__membership = membership
+        self.__address = address
         #self.__orders = orders
+
     def get_id(self):
         return self.__id
 
@@ -27,6 +29,9 @@ class Users:
 
     def get_membership(self):
         return self.__membership
+
+    def get_address(self):
+        return self.__address
 
     #def get_orders(self):
     #    return self.__orders
@@ -47,6 +52,9 @@ class Users:
 
     def set_membership(self, membership):
         self.__membership = membership
+
+    def set_address(self,address):
+        self.__address = address
 
     #def set_orders(self, orders):
     #    self.__orders = orders
