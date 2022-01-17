@@ -18,8 +18,15 @@ def products():
     for i in cursor_data:
         product_Name = [i[0]]  # fetch the first value in the data
         product_Price = [i[1]] # fetch the second value in the data
+<<<<<<< HEAD
         print(product_Name)
         print(product_Price)
 
 
+=======
+        #print(product_Name)
+        #print(product_Price)
+
+products()
+>>>>>>> fd4e97b977d9bb0a34755f32603e59c6b32ba9b7
     # ask viona about ratings in the database !

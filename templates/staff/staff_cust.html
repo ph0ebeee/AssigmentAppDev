@@ -11,7 +11,7 @@ Library Loan System - CustomerManagement
             <div class="col-2" id="green">
                     <a class="dropdown-item" href="#">New Customer</a>
                     <a class="dropdown-item" href="/game2">Game 2</a>
-                    <a class="dropdown-item" href="/retrieveUsers">Retrieve Customer</a>
+                    <a class="dropdown-item" href="/retrieveCustomers">Retrieve Customer</a>
             </div>
             <!--Contains the main content
                     of the webpage-->
@@ -25,10 +25,7 @@ Library Loan System - CustomerManagement
 
 <form method="POST" action="">
   <div class="form-group">
-    {{ render_field(form.first_name, class="form-control") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.last_name, class="form-control") }}
+    {{ render_field(form.name, class="form-control") }}
   </div>
   <div class="form-group">
     {{ render_field(form.gender, class="form-control") }}

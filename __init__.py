@@ -1,14 +1,21 @@
 from flask import Flask, render_template, request, session
 # from flask_session import Session
-from products.SQLtoPython import products
+#from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import createCust
+from forms.forms import CreateCustomerForm, CreateStaffForm
+import users.Users as Users
 from templates.staff import staff_forms
 from userAuthentication.loginValidation import *
 from script import *
+<<<<<<< HEAD
 import shelve, users
 from templates.shoppingcart.cartdu import  empty_cart, array_merge
+=======
+from datetime import datetime
+import shelve, Staffs
+from templates.shoppingcart.cartdu import add_product_to_cart, empty_cart, backproduct
+>>>>>>> fd4e97b977d9bb0a34755f32603e59c6b32ba9b7
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
@@ -29,7 +36,7 @@ def home():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return render_template('home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+    return render_template('staff.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -61,14 +68,30 @@ def loginValidate():
 #route to go customer's settings 
 @app.route('/CustomerSettings', methods=['GET', 'POST'])
 def ViewCustSettings():
-    cust_details = CustDetails(session['custID'])
-    return render_template('customer/customerSettings.html', cust_details = cust_details)
+    if (session['role'] == "Customer"):
+        cust_details = CustDetails(session['custID'])
+        return render_template('customer/customerSettings.html', cust_details = cust_details)
+    else:
+        return render_template('usersLogin/loginPage.html') 
 
 #route to go purchase history in customer's settings
 @app.route('/CustomerPurchase', methods=['GET', 'POST'])
 def ViewCustPurchase():
     custPurchaseList = CustomerPurchase(session["custID"])
     return render_template('customer/customerPurchase.html', custPurchaseList = custPurchaseList)
+
+#route to go available vouchers display page in customer's settings
+@app.route('/customerVouchers', methods=['GET', 'POST'])
+def ViewCustVouchers():
+    custVoucherList = CustomerVoucher(session["custID"])
+    dateNow = datetime.now()
+    return render_template('customer/customerVouchers.html', custVoucherList = custVoucherList, dateNow=dateNow)
+
+#route to go available vouchers display page in customer's settings
+@app.route('/customerFAQ', methods=['GET', 'POST'])
+def ViewFAQ():
+    faqList = viewFAQ()
+    return render_template('customer/customerFaq.html', faqList = faqList)
 
 #route for sign up form to be seen on loginPage.html viona: TBC
 @app.route('/Signup',methods=['GET','POST'])
@@ -271,9 +294,9 @@ def staffaccount():
     return render_template('staff/staff_account.html', form=UpdateStaff)
 
 
-@app.route('/customerManagement', methods=['GET', 'POST'])
-def customerManagement():
-    create_customer_form = createCust(request.form)
+@app.route('/createCustomers', methods=['GET', 'POST'])
+def create_customers():
+    create_customer_form = CreateCustomerForm(request.form)
     if request.method == 'POST' and create_customer_form.validate():
         users_dict = {}
         db = shelve.open('user.db', 'c')
@@ -283,24 +306,22 @@ def customerManagement():
         except:
             print("Error in retrieving Users from user.db.")
 
-        user = users.Users(create_customer_form.first_name.data, create_customer_form.last_name.data, create_customer_form.gender.data, create_customer_form.email.data, create_customer_form.address.data, create_customer_form.membership.data)
-        users_dict[user.get_user_id()] = user
+        user = Users.Users(create_customer_form.name.data,
+                           create_customer_form.gender.data,
+                           create_customer_form.email.data,
+                           create_customer_form.address.data,
+                           create_customer_form.membership.data,
+                           create_customer_form.remarks.data)
+        users_dict[user.get_id()] = user
         db['Users'] = users_dict
-
         db.close()
 
-        # Test codes
-        users_dict = db['Users']
-        user = users_dict[user.get_user_id()]
-        print(user.get_first_name(), user.get_last_name(), "was stored in user.db successfully with user_id ==", user.get_user_id())
-
-
-        return redirect(url_for('retrieveUsers'))
+        return redirect(url_for('retrieve_customers'))
     return render_template('staff/staff_cust.html', form=create_customer_form)
 
 
-@app.route('/retrieveUsers')
-def retrieve_users():
+@app.route('/retrieveCustomers')
+def retrieve_customers():
     users_dict = {}
     db = shelve.open('user.db', 'r')
     users_dict = db['Users']
@@ -312,14 +333,119 @@ def retrieve_users():
         users_list.append(user)
 
 
-    return render_template('staff/declined.html')
+    return render_template('staff/declined.html',count=len(users_list),users_list=users_list)
 
-#@app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
-#def update_user(id):
-    #update_customer_form = createCust(request.form)
+@app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
+def update_user(id):
+    update_user_form = CreateCustomerForm(request.form)
+    if request.method == 'POST' and update_user_form.validate():
+        users_dict = {}
+        db = shelve.open('user.db', 'w')
+        users_dict = db['Users']
 
-   #return render_template('updatecustomer.html', form=update_customer_form)
+        user = users_dict.get(id)
+        user.set_name(update_user_form.name.data)
+        user.set_gender(update_user_form.gender.data)
+        user.set_email(update_user_form.email.data)
+        user.set_address(update_user_form.address.data)
+        user.set_membership(update_user_form.membership.data)
+        user.set_remarks(update_user_form.remarks.data)
 
+        db['Users'] = users_dict
+        db.close()
+
+        return redirect(url_for('retrieve_users'))
+
+    else:
+        users_dict = {}
+        db = shelve.open('user.db','r')
+        users_dict = db['Users']
+        db.close()
+
+        user = users_dict.get(id)
+        update_user_form.name.data = user.get_first_name()
+        update_user_form.gender.data = user.get_gender()
+        update_user_form.email.data = user.get_email()
+        update_user_form.address.data = user.get_address()
+        update_user_form.membership.data = user.get_membership()
+        update_user_form.remarks.data = user.get_remarks()
+
+        return render_template('updateUsers.html', form=update_user_form)
+
+@app.route('/createStaff', methods=['GET', 'POST'])
+def create_staff():
+    create_staff_form = CreateStaffForm(request.form)
+    if request.method == 'POST' and create_staff_form.validate():
+        staff_dict = {}
+        db = shelve.open('staff.db', 'c')
+
+        try:
+            staff_dict = db['Staff']
+        except:
+            print("Error in retrieving Users from user.db.")
+
+        staff = Users.Users(create_staff_form.name.data,
+                           create_staff_form.email.data,
+                           create_staff_form.address.data,
+                           create_staff_form.role.data,
+                           create_staff_form.remarks.data)
+        staff_dict[staff.get_id()] = staff
+        db['Staff'] = staff_dict
+        db.close()
+
+        return redirect(url_for('retrieve_staff'))
+    return render_template('staff/createStaff.html', form=create_staff_form)
+
+
+@app.route('/retrieveStaff')
+def retrieve_staff():
+    staff_dict = {}
+    db = shelve.open('staff.db', 'r')
+    staff_dict = db['Staff']
+    db.close()
+
+    staff_list = []
+    for key in staff_dict:
+        staff = staff_dict.get(key)
+        staff_list.append(staff)
+
+
+    return render_template('staff/retrieveStaff.html',count=len(staff_list),users_list=staff_list)
+
+@app.route('/updateStaff/<int:id>/', methods=['GET', 'POST'])
+def update_staff(id):
+    update_staff_form = CreateStaffForm(request.form)
+    if request.method == 'POST' and update_staff_form.validate():
+        staff_dict = {}
+        db = shelve.open('staff.db', 'w')
+        staff_dict = db['Staff']
+
+        staff = staff_dict.get(id)
+        staff.set_name(update_staff_form.name.data)
+        staff.set_email(update_staff_form.email.data)
+        staff.set_address(update_staff_form.address.data)
+        staff.set_membership(update_staff_form.role.data)
+        staff.set_remarks(update_staff_form.remarks.data)
+
+        db['Staff'] = staff_dict
+        db.close()
+
+        return redirect(url_for('retrieve_staff'))
+
+    else:
+        staff_dict = {}
+        db = shelve.open('staff.db','r')
+        staff_dict = db['Staff']
+        db.close()
+
+        staff = staff_dict.get(id)
+        update_staff_form.name.data = staff.get_name()
+        update_staff_form.email.data = staff.get_email()
+        update_staff_form.address.data = staff.get_address()
+        update_staff_form.role.data = staff.get_role()
+        update_staff_form.remarks.data = staff.get_remarks()
+
+        return render_template('updateStaff.html', form=update_staff_form)
 
 @app.route('/updateusername', methods=['GET', 'POST'])
 def updateusername():
