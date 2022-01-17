@@ -7,6 +7,7 @@ from forms.forms import createCust
 from templates.staff import staff_forms
 from userAuthentication.loginValidation import *
 from script import *
+from datetime import datetime
 import shelve, users
 from templates.shoppingcart.cartdu import add_product_to_cart, empty_cart, backproduct
 
@@ -61,14 +62,30 @@ def loginValidate():
 #route to go customer's settings 
 @app.route('/CustomerSettings', methods=['GET', 'POST'])
 def ViewCustSettings():
-    cust_details = CustDetails(session['custID'])
-    return render_template('customer/customerSettings.html', cust_details = cust_details)
+    if (session['role'] == "Customer"):
+        cust_details = CustDetails(session['custID'])
+        return render_template('customer/customerSettings.html', cust_details = cust_details)
+    else:
+        return render_template('usersLogin/loginPage.html') 
 
 #route to go purchase history in customer's settings
 @app.route('/CustomerPurchase', methods=['GET', 'POST'])
 def ViewCustPurchase():
     custPurchaseList = CustomerPurchase(session["custID"])
     return render_template('customer/customerPurchase.html', custPurchaseList = custPurchaseList)
+
+#route to go available vouchers display page in customer's settings
+@app.route('/customerVouchers', methods=['GET', 'POST'])
+def ViewCustVouchers():
+    custVoucherList = CustomerVoucher(session["custID"])
+    dateNow = datetime.now()
+    return render_template('customer/customerVouchers.html', custVoucherList = custVoucherList, dateNow=dateNow)
+
+#route to go available vouchers display page in customer's settings
+@app.route('/customerFAQ', methods=['GET', 'POST'])
+def ViewFAQ():
+    faqList = viewFAQ()
+    return render_template('customer/customerFaq.html', faqList = faqList)
 
 #route for sign up form to be seen on loginPage.html viona: TBC
 @app.route('/Signup',methods=['GET','POST'])
