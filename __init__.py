@@ -98,11 +98,17 @@ def ViewCustVouchers():
     dateNow = datetime.now()
     return render_template('customer/customerVouchers.html', custVoucherList = custVoucherList, dateNow=dateNow)
 
-#route to go available vouchers display page in customer's settings
+#route to go faq page in customer's settings
 @app.route('/customerFAQ', methods=['GET', 'POST'])
 def ViewFAQ():
     faqList = viewFAQ()
     return render_template('customer/customerFaq.html', faqList = faqList)
+
+#route to go membership page in customer's settings
+@app.route('/customerMembership', methods=['GET', 'POST'])
+def ViewCustMembership():
+    cust_details = CustDetails(session['custID'])
+    return render_template('customer/customerMembership.html', cust_details = cust_details)
 
 @app.route('/inventory', methods=['GET', 'POST'])
 def inventoryStats():
