@@ -8,10 +8,9 @@ import users.Users as Users
 from templates.staff import staff_forms
 from userAuthentication.loginValidation import *
 from script import *
-import shelve, users
 from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
-import shelve, Staffs
+import shelve, Staffs, users.Users
 
 
 # from templates.chatbot.chat import get_response
@@ -303,11 +302,8 @@ def create_staff():
         except:
             print("Error in retrieving Users from user.db.")
 
-        staff = Users.Users(create_staff_form.name.data,
-                           create_staff_form.email.data,
-                           create_staff_form.address.data,
-                           create_staff_form.role.data,
-                           create_staff_form.remarks.data)
+        staff = Staffs.Staffs(create_staff_form.name.data, create_staff_form.email.data, create_staff_form.address.data,
+                              create_staff_form.role.data,create_staff_form.remarks.data)
         staff_dict[staff.get_id()] = staff
         db['Staff'] = staff_dict
         db.close()
@@ -365,6 +361,32 @@ def update_staff(id):
         update_staff_form.remarks.data = staff.get_remarks()
 
         return render_template('updateStaff.html', form=update_staff_form)
+
+@app.route('/deleteUser/<int:id>', methods=['POST'])
+def delete_user(id):
+    users_dict = {}
+    db = shelve.open('user.db', 'w')
+    users_dict = db['User']
+
+    users_dict.pop(id)
+
+    db['User'] = users_dict
+    db.close()
+
+    return redirect(url_for('retrieve_customers'))
+
+@app.route('/deleteStaff/<int:id>', methods=['POST'])
+def delete_staff(id):
+    staff_dict = {}
+    db = shelve.open('staff.db', 'w')
+    staff_dict = db['Staff']
+
+    staff_dict.pop(id)
+
+    db['Staff'] = staff_dict
+    db.close()
+
+    return redirect(url_for('retrieve_staff'))
 
 @app.route('/updateusername', methods=['GET', 'POST'])
 def updateusername():
