@@ -33,7 +33,7 @@ def home():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return render_template('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+    return render_template('./staff.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 @app.route('/custHome')
 #function for images selected to be seen on image slideshow  - viona
@@ -221,7 +221,7 @@ def create_customers():
         db = shelve.open('user.db', 'c')
 
         try:
-            users_dict = db['Users']
+            users_dict = db['User']
         except:
             print("Error in retrieving Users from user.db.")
 
@@ -232,7 +232,7 @@ def create_customers():
                            create_customer_form.membership.data,
                            create_customer_form.remarks.data)
         users_dict[user.get_id()] = user
-        db['Users'] = users_dict
+        db['User'] = users_dict
         db.close()
 
         return redirect(url_for('retrieve_customers'))
@@ -243,7 +243,7 @@ def create_customers():
 def retrieve_customers():
     users_dict = {}
     db = shelve.open('user.db', 'r')
-    users_dict = db['Users']
+    users_dict = db['User']
     db.close()
 
     users_list = []
@@ -260,7 +260,7 @@ def update_user(id):
     if request.method == 'POST' and update_user_form.validate():
         users_dict = {}
         db = shelve.open('user.db', 'w')
-        users_dict = db['Users']
+        users_dict = db['User']
 
         user = users_dict.get(id)
         user.set_name(update_user_form.name.data)
@@ -270,7 +270,7 @@ def update_user(id):
         user.set_membership(update_user_form.membership.data)
         user.set_remarks(update_user_form.remarks.data)
 
-        db['Users'] = users_dict
+        db['User'] = users_dict
         db.close()
 
         return redirect(url_for('retrieve_users'))
@@ -278,7 +278,7 @@ def update_user(id):
     else:
         users_dict = {}
         db = shelve.open('user.db','r')
-        users_dict = db['Users']
+        users_dict = db['User']
         db.close()
 
         user = users_dict.get(id)
