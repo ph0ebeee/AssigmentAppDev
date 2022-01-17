@@ -3,7 +3,8 @@ from flask import Flask, render_template, request, session
 from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import createCust
+from forms.forms import CreateCustomerForm
+import users.Users as Users
 from templates.staff import staff_forms
 from userAuthentication.loginValidation import *
 from script import *
@@ -30,7 +31,7 @@ def home():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return render_template('home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+    return render_template('staff.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -229,7 +230,7 @@ def staffaccount():
 
 @app.route('/customerManagement', methods=['GET', 'POST'])
 def customerManagement():
-    create_customer_form = createCust(request.form)
+    create_customer_form = CreateCustomerForm(request.form)
     if request.method == 'POST' and create_customer_form.validate():
         users_dict = {}
         db = shelve.open('user.db', 'c')
@@ -239,16 +240,21 @@ def customerManagement():
         except:
             print("Error in retrieving Users from user.db.")
 
-        user = users.Users(create_customer_form.first_name.data, create_customer_form.last_name.data, create_customer_form.gender.data, create_customer_form.email.data, create_customer_form.address.data, create_customer_form.membership.data)
-        users_dict[user.get_user_id()] = user
+        user = Users.Users(create_customer_form.name.data,
+                           create_customer_form.gender.data,
+                           create_customer_form.email.data,
+                           create_customer_form.address.data,
+                           create_customer_form.membership.data,
+                           create_customer_form.remarks.data)
+        users_dict[user.get_id()] = user
         db['Users'] = users_dict
 
         db.close()
 
         # Test codes
         users_dict = db['Users']
-        user = users_dict[user.get_user_id()]
-        print(user.get_first_name(), user.get_last_name(), "was stored in user.db successfully with user_id ==", user.get_user_id())
+        user = users_dict[user.get_id()]
+        print(user.get_name(), "was stored in user.db successfully with user_id ==", user.get_id())
 
 
         return redirect(url_for('retrieveUsers'))
@@ -268,13 +274,44 @@ def retrieve_users():
         users_list.append(user)
 
 
-    return render_template('staff/declined.html')
+    return render_template('staff/declined.html',count=len(users_list),users_list=users_list)
 
-#@app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
-#def update_user(id):
-    #update_customer_form = createCust(request.form)
+@app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
+def update_user(id):
+    update_user_form = CreateCustomerForm(request.form)
+    if request.method == 'POST' and update_user_form.validate():
+        users_dict = {}
+        db = shelve.open('user.db', 'w')
+        users_dict = db['Users']
 
-   #return render_template('updatecustomer.html', form=update_customer_form)
+        user = users_dict.get(id)
+        user.set_name(update_user_form.name.data)
+        user.set_gender(update_user_form.gender.data)
+        user.set_email(update_user_form.email.data)
+        user.set_address(update_user_form.address.data)
+        user.set_membership(update_user_form.membership.data)
+        user.set_remarks(update_user_form.remarks.data)
+
+        db['Users'] = users_dict
+        db.close()
+
+        return redirect(url_for('retrieve_users'))
+
+    else:
+        users_dict = {}
+        db = shelve.open('user.db','r')
+        users_dict = db['Users']
+        db.close()
+
+        user = users_dict.get(id)
+        update_user_form.name.data = user.get_first_name()
+        update_user_form.gender.data = user.get_gender()
+        update_user_form.email.data = user.get_email()
+        update_user_form.address.data = user.get_address()
+        update_user_form.membership.data = user.get_membership()
+        update_user_form.remarks.data = user.get_remarks()
+
+        return render_template('updateUsers.html', form=update_user_form)
 
 
 @app.route('/updateusername', methods=['GET', 'POST'])
