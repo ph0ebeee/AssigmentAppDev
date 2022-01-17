@@ -22,5 +22,4 @@ def products():
         print(product_Price)
 
 
-
     # ask viona about ratings in the database !

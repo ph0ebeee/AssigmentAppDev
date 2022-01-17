@@ -13,9 +13,9 @@ text-align: center;
 {%for i in to_send%}
     <div class="receipt">
         <h1>PAYMENT SUCCESSFUL</h1>
-        <p id ="trans_num"> Order ID: {{i[0]}}</p>
-        <p id = "time">Time: {{i[1]}}</p>
-        <p id = "total">Total:$ {{i[2]}}</p>
+        <p id ="trans_num"> Order ID: {{i.OrderID}}</p>
+        <p id = "time">Time: {{i.POSDate}}</p>
+        <p id = "total">Total:$ {{i.Totalprice}}</p>
         <p> Thank you for purchasing with us! We hope to see you again</p>
     </div>
 {%endfor%}

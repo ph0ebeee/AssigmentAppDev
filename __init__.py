@@ -8,7 +8,7 @@ from templates.staff import staff_forms
 from userAuthentication.loginValidation import *
 from script import *
 import shelve, users
-from templates.shoppingcart.cartdu import add_product_to_cart, empty_cart, backproduct
+from templates.shoppingcart.cartdu import  empty_cart, array_merge
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
@@ -142,12 +142,76 @@ def NewlyRestockedItems():
 #
 #     return redirect(url_for('ShoppingCart'))
 
-@app.route('/ShoppingCart', methods = ['GET','POST'])
+@app.route('/ShoppingCart', methods = ['GET','POST'])           #product for testing
 def open_cart():
-    add_product_to_cart()
-    empty_cart()
-    backproduct()
-    return render_template("shoppingcart/shopping_cart.html")
+    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
+                          'Server=(localdb)\MSSQLLocalDB;'
+                          'Database=EcoDen;'
+                          'Trusted_Connection=yes;')
+    cursor = conn.cursor()
+    cursor.execute('SELECT ProductID,ProductName,ProductPrice from Product')
+    cursor_data = cursor.fetchall()
+    return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data)
+
+@app.route('/ShoppingCart/add', methods = ['POST'])
+def add_product():
+    cursor = None
+    try:
+        _quantity = int(request.form['quantity'])
+        _code = request.form['code']
+        # validate the received values
+        if _quantity and _code and request.method == 'POST':
+            conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                              'Server=(localdb)\MSSQLLocalDB;'
+                              'Database=EcoDen;'
+                              'Trusted_Connection=yes;')
+            cursor = conn.cursor()
+            cursor.execute('SELECT ProductID, ProductName, ProductPrice from Product WHERE  ProductID = ?', _code)
+            cursor_data = cursor.fetchone()
+            print(cursor_data)
+            selectedItem = { _code : {'name' : cursor_data.ProductName, 'code' : cursor_data.ProductID, 'price' : cursor_data.ProductPrice, 'quantity' : _quantity, 'total_price': _quantity * cursor_data.ProductPrice}}
+            print(selectedItem)
+            # for key in selectedItem:
+            #     print(key, selectedItem[key])
+            all_total_price = 0
+            all_total_quantity = 0
+
+            session.modified = True
+            if 'cart_item' in session:
+                if cursor_data.ProductID in session['cart_item']:
+                    for key, value in session['cart_item'].items():
+                        if cursor_data.ProductID == key:
+                            #session.modified = True
+                            #if session['cart_item'][key]['quantity'] is not None:
+                            #	session['cart_item'][key]['quantity'] = 0
+                            old_quantity = session['cart_item'][key]['quantity']
+                            total_quantity = old_quantity + _quantity
+                            session['cart_item'][key]['quantity'] = total_quantity
+                            session['cart_item'][key]['total_price'] = total_quantity * cursor_data.ProductPrice
+                else:
+                    session['cart_item'] = array_merge(session['cart_item'], selectedItem)
+
+                for key, value in session['cart_item'].items():
+                    individual_quantity = int(session['cart_item'][key]['quantity'])
+                    individual_price = float(session['cart_item'][key]['total_price'])
+                    all_total_quantity = all_total_quantity + individual_quantity
+                    all_total_price = all_total_price + individual_price
+            else:
+                session['cart_item'] = selectedItem
+                all_total_quantity = all_total_quantity + _quantity
+                all_total_price = all_total_price + _quantity * cursor_data.ProductPrice
+
+            session['all_total_quantity'] = all_total_quantity
+            session['all_total_price'] = all_total_price
+            return redirect(url_for('.open_cart'))
+
+        else:
+            return 'Error while adding item to cart'
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
 
 @app.route('/SuccessReceipt', methods =['GET','POST'])
 def retrieve_database_receipt():
@@ -156,13 +220,10 @@ def retrieve_database_receipt():
                           'Server=(localdb)\MSSQLLocalDB;'
                           'Database=EcoDen;'
                           'Trusted_Connection=yes;')
-    receipt_details ={}
     cursor = conn.cursor()
     cursor.execute('SELECT OrderID,POSDate,Totalprice from CustOrder')
     cursor_data = cursor.fetchall()
-    for i in cursor_data:
-        receipt_details.update( {i[0]:i[1]} )
-        return render_template("paypal/success_payment.html", to_send= cursor_data)
+    return render_template("paypal/success_payment.html", to_send= cursor_data)
 
 
 
