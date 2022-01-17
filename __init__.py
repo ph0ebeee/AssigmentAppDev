@@ -33,7 +33,17 @@ def home():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return render_template('home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+    return render_template('./staff.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+
+@app.route('/custHome')
+#function for images selected to be seen on image slideshow  - viona
+def custhome():
+    image1 = './static/Assets/images/imageCarousel_1.jpg' 
+    image2 = './static/Assets/images/imageCarousel_2.jpg' 
+    image3 = './static/Assets/images/imageCarousel_3.jpg' 
+    image4 = './static/Assets/images/imageCarousel_4.jpg' 
+    image5 = './static/Assets/images/imageCarousel_5.jpg' 
+    return render_template('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -58,9 +68,13 @@ def loginValidate():
             return render_template('customer/customerPage.html') # change to customer page
         elif validateStaffLogin == True:
             staffDetails = validated_Staff_Details(form.email.data,form.password.data)
-            return render_template('usersLogin/loginPage.html', staffDetails = staffDetails)  # change to staff page
-        #else:
-            # return render_template('usersLogin/loginPage.html', form=loginPage)
+            session['staffID'] = (staffDetails[0][0])
+            session['staffName'] = (staffDetails[0][1])
+            session['emailAddr'] = (staffDetails[0][2])
+            session['role'] = 'Staff'
+            return render_template('staff/retrieveStaff.html', staffDetails = staffDetails)  # change to staff page
+        else:
+            return render_template('usersLogin/loginPage.html', form=loginPage)
 
 #route to go customer's settings 
 @app.route('/CustomerSettings', methods=['GET', 'POST'])
@@ -84,11 +98,26 @@ def ViewCustVouchers():
     dateNow = datetime.now()
     return render_template('customer/customerVouchers.html', custVoucherList = custVoucherList, dateNow=dateNow)
 
-#route to go available vouchers display page in customer's settings
+#route to go faq page in customer's settings
 @app.route('/customerFAQ', methods=['GET', 'POST'])
 def ViewFAQ():
     faqList = viewFAQ()
     return render_template('customer/customerFaq.html', faqList = faqList)
+
+#route to go membership page in customer's settings
+@app.route('/customerMembership', methods=['GET', 'POST'])
+def ViewCustMembership():
+    cust_details = CustDetails(session['custID'])
+    return render_template('customer/customerMembership.html', cust_details = cust_details)
+
+@app.route('/inventory', methods=['GET', 'POST'])
+def inventoryStats():
+    oosList = checkOOS_items()
+    topProductList = top_product()
+    topProductList = topProductList[:10]
+    topCustList = top_customer()
+    topCustList = topCustList[:3]
+    return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList)
 
 #route for sign up form to be seen on loginPage.html viona: TBC
 @app.route('/Signup',methods=['GET','POST'])
@@ -106,6 +135,10 @@ def ForgetPassword():
 @app.route('/AboutUs')   # added but havent push
 def AboutUs():
     return render_template('about us/aboutUs.html')
+
+@app.route('/custAboutUs')   # added but havent push
+def custAboutUs():
+    return render_template('customer/aboutUs.html')
 
 @app.route('/DiscountedItems', methods=['GET', 'POST'])   # added but havent push
 def DiscountedItems():
@@ -197,6 +230,9 @@ def staffaccount():
         #use JS to change the layout of the navbar according Staff account
     return render_template('staff/staff_account.html', form=UpdateStaff)
 
+@app.route('/MainPage')
+def MainPage():
+    return render_template('staff.html')
 
 @app.route('/createCustomers', methods=['GET', 'POST'])
 def create_customers():
@@ -206,7 +242,7 @@ def create_customers():
         db = shelve.open('user.db', 'c')
 
         try:
-            users_dict = db['Users']
+            users_dict = db['User']
         except:
             print("Error in retrieving Users from user.db.")
 
@@ -217,18 +253,17 @@ def create_customers():
                            create_customer_form.membership.data,
                            create_customer_form.remarks.data)
         users_dict[user.get_id()] = user
-        db['Users'] = users_dict
+        db['User'] = users_dict
         db.close()
 
         return redirect(url_for('retrieve_customers'))
     return render_template('staff/staff_cust.html', form=create_customer_form)
 
-
 @app.route('/retrieveCustomers')
 def retrieve_customers():
     users_dict = {}
     db = shelve.open('user.db', 'r')
-    users_dict = db['Users']
+    users_dict = db['User']
     db.close()
 
     users_list = []
@@ -245,7 +280,7 @@ def update_user(id):
     if request.method == 'POST' and update_user_form.validate():
         users_dict = {}
         db = shelve.open('user.db', 'w')
-        users_dict = db['Users']
+        users_dict = db['User']
 
         user = users_dict.get(id)
         user.set_name(update_user_form.name.data)
@@ -255,7 +290,7 @@ def update_user(id):
         user.set_membership(update_user_form.membership.data)
         user.set_remarks(update_user_form.remarks.data)
 
-        db['Users'] = users_dict
+        db['User'] = users_dict
         db.close()
 
         return redirect(url_for('retrieve_users'))
@@ -263,7 +298,7 @@ def update_user(id):
     else:
         users_dict = {}
         db = shelve.open('user.db','r')
-        users_dict = db['Users']
+        users_dict = db['User']
         db.close()
 
         user = users_dict.get(id)
