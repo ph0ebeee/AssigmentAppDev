@@ -17,9 +17,9 @@ Library Loan System - HomeDen
 	</div>
 
 	<div id="shopping-cart">
-		<div class="txt-heading">Cart</div>
+		<h1><div class="txt-heading">Cart</div></h1>
 		{% if 'cart_item' in session %}
-			<table class="tbl-cart" cellpadding="10" cellspacing="1">
+			<a id="btnEmpty" href="{{ url_for('.empty_cart') }}">Empty Cart</a>			<table class="tbl-cart" cellpadding="10" cellspacing="1">
 			<tbody>
 				<tr>
 					<th style="text-align:left;">Name</th>
@@ -36,12 +36,15 @@ Library Loan System - HomeDen
 						<td style="text-align:right;">{{ quantity }}</td>
 						<td  style="text-align:right;"> {{ item_price }}</td>
 						<td style="text-align:center;">
+						<a href="{{ url_for('.delete_product', code=session['cart_item'][key]['code']) }}" class="btnRemoveAction">
+							<input type="submit" value="REMOVE"/>
+							</a>
 						</td>
 					</tr>
 				{% endfor %}
 				<tr>
 					<td colspan="2" align="right">Total:</td>
-					<td align="right" colspan="2"><strong> {{ session['all_total_price'] }}</strong></td>
+					<td align="right" colspan="2" ><bold> {{ session['all_total_price'] }}</bold></td>
 					<td></td>
 				</tr>
 			</tbody>

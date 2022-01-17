@@ -9,10 +9,10 @@ from templates.staff import staff_forms
 from userAuthentication.loginValidation import *
 from script import *
 import shelve, users
-from templates.shoppingcart.cartdu import  empty_cart, array_merge
+from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
 import shelve, Staffs
-# from templates.shoppingcart.cartdu import empty_cart, backproduct
+
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
@@ -33,7 +33,7 @@ def home():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return render_template('staff.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+    return render_template('home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
@@ -136,31 +136,6 @@ def NewlyRestockedItems():
 # def send_receipt_info():
 #     jsdata = request.form['javascript_data']
 #     return jsdata
-
-#Retrieve from sql to print receipt - Phoebe
-
-# shoppingcart by Phoebe
-# @app.route('/ShoppingCart/<int:id>', methods = ['POST'])
-# def update_items(id):
-#     cart_product = {}
-#     db = shelve.open('card_product.db','w')
-#     cart_product = db['Items']
-#     cart_product.insert(id)
-#     db['Items'] = cart_product
-#     db.close()
-#
-# @app.route('/DeleteItems/<int:id>',methods =['POST'])                 #TEST
-# def delete_items(id):
-#     delete_items = {}
-#     db = shelve.open('cart_product.db', 'w')
-#     delete_items = db['Items']
-#
-#     delete_items.pop(id)
-#
-#     db['Items'] = delete_items
-#     db.close()
-#
-#     return redirect(url_for('ShoppingCart'))
 
 
 @app.route('/SuccessReceipt', methods =['GET','POST'])
@@ -407,7 +382,6 @@ def add_product():
     try:
         _quantity = int(request.form['quantity'])
         _code = request.form['code']
-        # validate the received values
         if _quantity and _code and request.method == 'POST':
             conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                               'Server=(localdb)\MSSQLLocalDB;'
@@ -416,11 +390,7 @@ def add_product():
             cursor = conn.cursor()
             cursor.execute('SELECT ProductID, ProductName, ProductPrice from Product WHERE  ProductID = ?', _code)
             cursor_data = cursor.fetchone()
-            print(cursor_data)
             selectedItem = { _code : {'name' : cursor_data.ProductName, 'code' : cursor_data.ProductID, 'price' : cursor_data.ProductPrice, 'quantity' : _quantity, 'total_price': _quantity * cursor_data.ProductPrice}}
-            print(selectedItem)
-            # for key in selectedItem:
-            #     print(key, selectedItem[key])
             all_total_price = 0
             all_total_quantity = 0
 
@@ -429,9 +399,6 @@ def add_product():
                 if cursor_data.ProductID in session['cart_item']:
                     for key, value in session['cart_item'].items():
                         if cursor_data.ProductID == key:
-                            #session.modified = True
-                            #if session['cart_item'][key]['quantity'] is not None:
-                            #	session['cart_item'][key]['quantity'] = 0
                             old_quantity = session['cart_item'][key]['quantity']
                             total_quantity = old_quantity + _quantity
                             session['cart_item'][key]['quantity'] = total_quantity
@@ -461,6 +428,43 @@ def add_product():
         cursor.close()
         conn.close()
 
+
+@app.route('/delete/<string:code>')
+def delete_product(code):
+    try:
+        all_total_price = 0
+        all_total_quantity = 0
+        session.modified = True
+
+        for item in session['cart_item'].items():
+            if item[0] == code:
+                session['cart_item'].pop(item[0], None)
+                if 'cart_item' in session:
+                    for key, value in session['cart_item'].items():
+                        individual_quantity = int(session['cart_item'][key]['quantity'])
+                        individual_price = float(session['cart_item'][key]['total_price'])
+                        all_total_quantity = all_total_quantity + individual_quantity
+                        all_total_price = all_total_price + individual_price
+                break
+
+        if all_total_quantity == 0:
+            session.clear()
+        else:
+            session['all_total_quantity'] = all_total_quantity
+            session['all_total_price'] = all_total_price
+
+        return redirect(url_for('.open_cart'))
+    except Exception as e:
+        print(e)
+
+
+@app.route('/ShoppingCart/empty')
+def empty_cart():
+    try:
+        session.clear()
+        return redirect(url_for('.open_cart'))
+    except Exception as e:
+        print(e)
 
 
 
