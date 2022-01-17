@@ -140,15 +140,17 @@ def NewlyRestockedItems():
 
 @app.route('/SuccessReceipt', methods =['GET','POST'])
 def retrieve_database_receipt():
-
-    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
-                          'Server=(localdb)\MSSQLLocalDB;'
-                          'Database=EcoDen;'
-                          'Trusted_Connection=yes;')
-    cursor = conn.cursor()
-    cursor.execute('SELECT OrderID,POSDate,Totalprice from CustOrder')
-    cursor_data = cursor.fetchall()
-    return render_template("paypal/success_payment.html", to_send= cursor_data)
+    try:
+        conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
+                              'Server=(localdb)\MSSQLLocalDB;'
+                              'Database=EcoDen;'
+                              'Trusted_Connection=yes;')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * from CustOrder')
+        cursor_data = cursor.fetchall()
+        return render_template("paypal/success_payment.html", to_send= cursor_data)
+    except Exception as e:
+        print(e)
 
 
 
