@@ -1,5 +1,5 @@
 {%extends "base_s.html" %}
-{% block title %}Library Loan System - Retrieve Users{% endblock %}
+{% block title %}Library Loan System - Retrieve Staff{% endblock %}
 
 {% block content %}
 <div class="container-fluid h-100">
@@ -10,7 +10,7 @@
                     <a class="dropdown-item" href="#">Retrieve Customer</a>
             </div>
 
-<h1 class="display-4">Retrieve Users</h1>
+<h1 class="display-4">Retrieve Staff</h1>
                 <div>
   {% if count == 0 %}
   <p>There are no users.</p>
@@ -25,42 +25,40 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>User ID</th>
+        <th>Staff ID</th>
         <th>Name</th>
-        <th>Gender</th>
           <th>Email</th>
-          <th>Mailing Address</th>
-        <th>Membership</th>
+          <th>Address</th>
+        <th>Role</th>
         <th>Remarks</th>
         <th></th>
         <th></th>
             </tr>
     </thead>
     <tbody>
-        {% for user in users_list %}
+        {% for staff in staff_list %}
       <tr>
-        <td>{{ user.get_id() }}</td>
-        <td>{{ user.get_name() }}</td>
-        <td>{{ user.get_gender() }}</td>
-          <td>{{ user.get_email() }}</td>
-        <td>{{ user.get_address() }}</td>
-        {% if user.get_membership() == "F" %}
+        <td>{{ staff.get_id() }}</td>
+        <td>{{ staff.get_name() }}</td>
+          <td>{{ staff.get_email() }}</td>
+        <td>{{ staff.get_address() }}</td>
+        {% if staff.get_role() == "F" %}
         <td>Fellow</td>
-        {% elif user.get_membership() == "S" %}
+        {% elif staff.get_role() == "S" %}
         <td>Senior</td>
-        {% elif user.get_membership() == "P" %}
+        {% elif staff.get_role() == "P" %}
         <td>Professional</td>
         {% endif %}
-        <td>{{ user.get_remarks() }}</td>
-          <td><a href="/updateUser/{{user.get_id()}}" class="btn btn-warning">Update</a></td>
+        <td>{{ staff.get_remarks() }}</td>
+          <td><a href="/updateStaff/{{staff.get_id()}}" class="btn btn-warning">Update</a></td>
         <td>
-          <form action="{{url_for('delete_user', id=user.get_id())}}" method="POST">
+          <form action="{{url_for('delete_staff', id=staff.get_id())}}" method="POST">
             <!--<input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{user.get_first_name()}} {{user.get_last_name()}}?');">-->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal_{{user.get_id()}}">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal_{{staff.get_id()}}">
   Delete
 </button>
 
-<div class="modal" id="myModal_{{user.get_id()}}">
+<div class="modal" id="myModal_{{staff.get_id()}}">
   <div class="modal-dialog">
     <div class="modal-content">
 
@@ -92,3 +90,4 @@
         </div>
 </div>
 {% endblock %}
+
