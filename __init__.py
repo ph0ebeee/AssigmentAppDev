@@ -68,9 +68,13 @@ def loginValidate():
             return render_template('customer/customerPage.html') # change to customer page
         elif validateStaffLogin == True:
             staffDetails = validated_Staff_Details(form.email.data,form.password.data)
-            return render_template('usersLogin/loginPage.html', staffDetails = staffDetails)  # change to staff page
-        #else:
-            # return render_template('usersLogin/loginPage.html', form=loginPage)
+            session['staffID'] = (staffDetails[0][0])
+            session['staffName'] = (staffDetails[0][1])
+            session['emailAddr'] = (staffDetails[0][2])
+            session['role'] = 'Staff'
+            return render_template('staff/retrieveStaff.html', staffDetails = staffDetails)  # change to staff page
+        else:
+            return render_template('usersLogin/loginPage.html', form=loginPage)
 
 #route to go customer's settings 
 @app.route('/CustomerSettings', methods=['GET', 'POST'])
@@ -99,6 +103,15 @@ def ViewCustVouchers():
 def ViewFAQ():
     faqList = viewFAQ()
     return render_template('customer/customerFaq.html', faqList = faqList)
+
+@app.route('/inventory', methods=['GET', 'POST'])
+def inventoryStats():
+    oosList = checkOOS_items()
+    topProductList = top_product()
+    topProductList = topProductList[:10]
+    topCustList = top_customer()
+    topCustList = topCustList[:3]
+    return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList)
 
 #route for sign up form to be seen on loginPage.html viona: TBC
 @app.route('/Signup',methods=['GET','POST'])
@@ -237,7 +250,6 @@ def create_customers():
 
         return redirect(url_for('retrieve_customers'))
     return render_template('staff/staff_cust.html', form=create_customer_form)
-
 
 @app.route('/retrieveCustomers')
 def retrieve_customers():
