@@ -8,14 +8,11 @@ import users.Users as Users
 from templates.staff import staff_forms
 from userAuthentication.loginValidation import *
 from script import *
-<<<<<<< HEAD
 import shelve, users
 from templates.shoppingcart.cartdu import  empty_cart, array_merge
-=======
 from datetime import datetime
 import shelve, Staffs
-from templates.shoppingcart.cartdu import add_product_to_cart, empty_cart, backproduct
->>>>>>> fd4e97b977d9bb0a34755f32603e59c6b32ba9b7
+# from templates.shoppingcart.cartdu import empty_cart, backproduct
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
