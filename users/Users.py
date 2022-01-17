@@ -30,6 +30,9 @@ class Users:
     def get_membership(self):
         return self.__membership
 
+    def set_address(self,address):
+        self.__address = address
+
     def get_address(self):
         return self.__address
 
@@ -52,9 +55,6 @@ class Users:
 
     def set_membership(self, membership):
         self.__membership = membership
-
-    def set_address(self,address):
-        self.__address = address
 
     #def set_orders(self, orders):
     #    self.__orders = orders
