@@ -67,9 +67,13 @@ def loginValidate():
             return render_template('customer/customerPage.html') # change to customer page
         elif validateStaffLogin == True:
             staffDetails = validated_Staff_Details(form.email.data,form.password.data)
-            return render_template('usersLogin/loginPage.html', staffDetails = staffDetails)  # change to staff page
-        #else:
-            # return render_template('usersLogin/loginPage.html', form=loginPage)
+            session['staffID'] = (staffDetails[0][0])
+            session['staffName'] = (staffDetails[0][1])
+            session['emailAddr'] = (staffDetails[0][2])
+            session['role'] = 'Staff'
+            return render_template('staff/retrieveStaff.html', staffDetails = staffDetails)  # change to staff page
+        else:
+            return render_template('usersLogin/loginPage.html', form=loginPage)
 
 #route to go customer's settings 
 @app.route('/CustomerSettings', methods=['GET', 'POST'])
@@ -93,11 +97,26 @@ def ViewCustVouchers():
     dateNow = datetime.now()
     return render_template('customer/customerVouchers.html', custVoucherList = custVoucherList, dateNow=dateNow)
 
-#route to go available vouchers display page in customer's settings
+#route to go faq page in customer's settings
 @app.route('/customerFAQ', methods=['GET', 'POST'])
 def ViewFAQ():
     faqList = viewFAQ()
     return render_template('customer/customerFaq.html', faqList = faqList)
+
+#route to go membership page in customer's settings
+@app.route('/customerMembership', methods=['GET', 'POST'])
+def ViewCustMembership():
+    cust_details = CustDetails(session['custID'])
+    return render_template('customer/customerMembership.html', cust_details = cust_details)
+
+@app.route('/inventory', methods=['GET', 'POST'])
+def inventoryStats():
+    oosList = checkOOS_items()
+    topProductList = top_product()
+    topProductList = topProductList[:10]
+    topCustList = top_customer()
+    topCustList = topCustList[:3]
+    return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList)
 
 #route for sign up form to be seen on loginPage.html viona: TBC
 @app.route('/Signup',methods=['GET','POST'])
@@ -153,15 +172,17 @@ def NewlyRestockedItems():
 
 @app.route('/SuccessReceipt', methods =['GET','POST'])
 def retrieve_database_receipt():
-
-    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
-                          'Server=(localdb)\MSSQLLocalDB;'
-                          'Database=EcoDen;'
-                          'Trusted_Connection=yes;')
-    cursor = conn.cursor()
-    cursor.execute('SELECT OrderID,POSDate,Totalprice from CustOrder')
-    cursor_data = cursor.fetchall()
-    return render_template("paypal/success_payment.html", to_send= cursor_data)
+    try:
+        conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
+                              'Server=(localdb)\MSSQLLocalDB;'
+                              'Database=EcoDen;'
+                              'Trusted_Connection=yes;')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * from CustOrder')
+        cursor_data = cursor.fetchall()
+        return render_template("paypal/success_payment.html", to_send= cursor_data)
+    except Exception as e:
+        print(e)
 
 
 
@@ -236,7 +257,6 @@ def create_customers():
 
         return redirect(url_for('retrieve_customers'))
     return render_template('staff/staff_cust.html', form=create_customer_form)
-
 
 @app.route('/retrieveCustomers')
 def retrieve_customers():
