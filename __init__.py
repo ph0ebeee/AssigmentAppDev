@@ -3,33 +3,15 @@ from flask import Flask, render_template, request, session, jsonify
 #from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-
-from forms.forms import CreateCustomerForm, CreateStaffForm, CreditCardForm
+from forms.forms import updateCust, updateStaff,CreditCardForm
 import users.Users as Users
-
-from templates.staff import staff_forms
-
-from forms.forms import updateCust, updateStaff
-import users.Users as Users
-from templates.staff import mightdelete
-<<<<<<< HEAD
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings
-=======
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust
-
->>>>>>> 060278e19a365d6898394a57d92c0eb08af15b7f
 from userAuthentication.loginValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
-
-import shelve, Staffs
 from templates.paypal.CustomerInfo import CustomerInfo
 import paypalrestsdk
-
-import shelve, Staffs, users.Users
-
-
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 
@@ -191,10 +173,6 @@ def NewlyRestockedItems():
 #     return jsdata
 
 
-
-
-
-
 # @app.route('/contactUs', methods=['GET', 'POST'])
 # def feedback():
 #     feedback = CreateUserForm(request.form)
@@ -211,18 +189,7 @@ def NewlyRestockedItems():
 #         users_dict[user.get_user_id()] = user
 #         db['Users'] = users_dict
 
-# anna's staff logout
-#@app.route('/logout')
-#def logout():
-    # This code is to hide the main tkinter window
-    #root = tkinter.Tk()
-    #root.withdraw()
-    # Message Box
-    #messagebox.showinfo("Title", "Message")
-    #root.destroy()
-
-    #return render_template('home.html')
-
+#logout
 @app.route('/logout')
 def logout():
     session.clear()
@@ -300,32 +267,14 @@ def update_user(id):
 
 @app.route('/deleteUser/<int:id>', methods=['POST'])
 def delete_user(id):
-    users_dict = {}
-    db = shelve.open('user.db', 'w')
-    users_dict = db['User']
-
-    users_dict.pop(id)
-
-    db['User'] = users_dict
-    db.close()
+    pass
 
     return redirect(url_for('retrieve_customers'))
 
 @app.route('/deleteStaff/<int:id>', methods=['POST'])
 def delete_staff(id):
-    staff_dict = {}
-    db = shelve.open('staff.db', 'w')
-    staff_dict = db['Staff']
-
-    staff_dict.pop(id)
-
-    db['Staff'] = staff_dict
-    db.close()
-
+    pass
     return redirect(url_for('retrieve_staff'))
-
-#@app.route('/updateusername', methods=['GET', 'POST'])
-#def updateusername():
 
 @app.route('/updateStaffaccount/<int:id>/', methods=['GET', 'POST'])
 def update_staff_account(id):

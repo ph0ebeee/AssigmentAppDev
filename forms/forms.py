@@ -14,7 +14,6 @@ class loginForm(Form):
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
     password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
 
-
 class updateCust(Form):
     name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
@@ -25,12 +24,7 @@ class updateCust(Form):
 class updateStaff(Form):
     name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
-<<<<<<< HEAD
     password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
-=======
-    address = TextAreaField('Mailing Address:', [validators.length(max=200), validators.DataRequired()])
-    role = RadioField('Role', choices=[('F', 'Fellow'), ('S', 'Senior'), ('P', 'Professional')], default='F')
-    remarks = TextAreaField('Remarks', [validators.Optional()])
 
 class CreditCardForm(Form):
     name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
@@ -38,4 +32,4 @@ class CreditCardForm(Form):
     card_no = IntegerField('Card Number:', [validators.Length(min=16, max=16), validators.DataRequired()])
     expiry = DateField('Valid Till:', [validators.Length(min=1, max=150), validators.DataRequired()])
     cvc = IntegerField('CVC:', [validators.Length(min=3, max=3), validators.DataRequired()])
->>>>>>> 060278e19a365d6898394a57d92c0eb08af15b7f
+
