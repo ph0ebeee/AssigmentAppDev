@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}
+Library Loan System - HomeDen
+{% endblock %}
+
+{% block content %}
+<head>
+
+  <meta charset="utf-8"/>
+
+  <!-- Optimal rendering on mobile devices. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Optimal Internet Explorer compatibility -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- Sample CSS styles for demo purposes. You can override these styles to match your web page's branding. -->
+  <link rel="stylesheet" type="text/css" href="https://www.paypalobjects.com/webstatic/en_US/developer/docs/css/cardfields.css"/>
+
+</head>
+<body>
+
+<!-- JavaScript SDK -->
+ <script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&client-id=AfRIwzrYKNDDjzhwa6wx4MAuoKf-7j0t76lAYyH-OEAC_XwtpxZmWX_VQ7M4INH10LUrIsESHWDFcUmm" data-client-token= "eyJicmFpbnRyZWUiOnsiYXV0aG9yaXphdGlvbkZpbmdlcnByaW50IjoiZTcwYWNjYmYxYzg5MmUyODhiYTk2NGI0MzY4OThkMDVlNWE0YzU2ZWFhNmFlMjIxMzRjMDExMGZmNTc5NGI3ZXxtZXJjaGFudF9pZD1yd3dua3FnMnhnNTZobTJuJnB1YmxpY19rZXk9NjNrdm4zN3Z0MjlxYjRkZiZjcmVhdGVkX2F0PTIwMjItMDEtMThUMDg6MjY6MDUuODEwWiIsInZlcnNpb24iOiIzLXBheXBhbCJ9LCJwYXlwYWwiOnsiaWRUb2tlbiI6ImV5SnJhV1FpT2lKbE5EQTJOakE0WWpVMFlUazBORGd4WWprMVl6YzFOREkwT0dOak1USXpaaUlzSW5SNWNDSTZJa3BYVkNJc0ltRnNaeUk2SWxKVE1qVTJJbjAuZXlKcGMzTWlPaUpvZEhSd2N6b3ZMMkZ3YVM1ellXNWtZbTk0TG5CaGVYQmhiQzVqYjIwaUxDSmhZM0lpT2xzaVkyeHBaVzUwSWwwc0ltRjFaQ0k2SWtGbVVrbDNlbkpaUzA1RVJHcDZhSGRoTm5kNE5FMUJkVzlMWmkwM2FqQjBOelpzUVZsNVNDMVBSVUZEWDFoM2RIQjRXbTFYV0Y5V1VUZE5ORWxPU0RFd1RGVnlTWE5GVTBoWFJFWmpWVzF0SWl3aWNtOXNaU0k2SWsxRlVrTklRVTVVSWl3aVlYVjBhRjkwYVcxbElqb3hOalF5TkRrME16WTJMQ0poZWlJNkltZGpjQzV6YkdNaUxDSnpZMjl3WlhNaU9sc2lRbkpoYVc1MGNtVmxPbFpoZFd4MElsMHNJbVY0Y0NJNk1UWTBNalE1TlRJMk5pd2ljMlZ6YzJsdmJsOXBibVJsZUNJNklrRnlVbFJQTFdWdVdtRlpTSE5QV0hWTVJHTmljelpIVEc1NWJTSXNJbWxoZENJNk1UWTBNalE1TkRNMk5pd2lhblJwSWpvaVZUSkJRVXRuWTBobVpHbzNhVXR0YXpGR1gyRm1aR2s1UjI5eGJrWkhVbk4wUjJkMFQwY3hZWEYyT0RRdGNYUTJVREZKWWxoT2Eza3pTVUkwZDA4ek1FOVlSa1Z5UWw5TWVYbHZOV2N5TlhOU05IWmZXV0owVFU1dGVWOXVPRzVTWjFkRlNrbHVVM0JZVDB0RWNWOWtVRUZGVFRsaloxVktUV0pPWDB4Q09WRWlMQ0pqYkdsbGJuUmZhV1FpT2lKQlpsSkpkM3B5V1V0T1JFUnFlbWgzWVRaM2VEUk5RWFZ2UzJZdE4yb3dkRGMyYkVGWmVVZ3RUMFZCUTE5WWQzUndlRnB0VjFoZlZsRTNUVFJKVGtneE1FeFZja2x6UlZOSVYwUkdZMVZ0YlNKOS5KZVVpNGRUMEFPdHVwa0ttaWVRZHJYZ3lLRlVkVkhzVC1CVXdzSzVrNkJNVl9wMlZiZU9EeHUwRm1NMUhudlJzSlFNSWJ2dDEtYkVwZ0FTbDdGX0NXcjVieUpqemRWdGRZUk90VW1sVGExR2w5dUVqYkpTYjU4NnhoWlloSGFxNTBGUDR2Z3JMSERiWEU4eDlfV1hzR0FFanBBcnRZNXBuNnQtY2FLUGVMSjdBbEFGcGRrcDJCSGE2S3JaYngxUUhJelZucURCc3prS2FmeV93RGNrZVNZcXdBRGx3NjNDcXl6MHNsb05zZTVYWlgxNFZMS3g2MENhS3pTaTRLemFLbVdNVTFMTEpTRG0wdmk1ZzhlX0pvam96TDJfbXdObFBFeGpYWHIxVkM3UmpXUFhRMW5COG00WGY2WU13emdwdVNfa2I0QlN4WllCcXZzTURPV1NubVEiLCJhY2Nlc3NUb2tlbiI6IkEyMUFBS05Sd0dfcXN6QWtaX3hTX3JpTURNcEszUGg5TXVsSWhiVXJIaWdfLVpfMDJnZVJHUHFYMUtYSHZsWjdWLS1Hb1dCN0N1dnR2cGFSYkpIeGdITVNPc0M0RFVEX1EifX0="></script>
+
+   <!-- Buttons container -->
+   <table border="0" align="center" valign="top" bgcolor="#FFFFFF" style="width: 39%">
+     <tr>
+       <td colspan="2">
+         <div id="paypal-button-container"></div>
+       </td>
+     </tr>
+     <tr><td colspan="2">&nbsp;</td></tr>
+   </table>
+   <div align="center"> or </div>
+
+{% from "includes/_formHelper.html" import render_field %}
+
+
+<form method="POST" action="">
+  <div class="form-group">
+    {{ render_field(form.name, class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ render_field(form.address, class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ render_field(form.card_no, class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ render_field(form.expiry, class="form-control datapicker") }}
+  </div>
+  <div class="form-group">
+    {{ render_field(form.cvc, class="form-control ") }}
+  </div>
+  <input type="submit" value="CONFIRM" class="btn btn-primary"/>
+</form>
+</body>
+   <script>
+     let orderId;
+
+     // Displays PayPal buttons
+     paypal.Buttons({
+       style: {
+         layout: 'horizontal'
+       },
+        createOrder: function(data, actions) {
+           return actions.order.create({
+             purchase_units: [{
+               amount: {
+                 value: "1.00"
+               }
+             }]
+           });
+         },
+         onApprove: function(data, actions) {
+           return actions.order.capture().then(function(details) {
+             window.location.href = '/SuccessReceipt';
+           });
+         }
+     }).render("#paypal-button-container");
+
+     // If this returns false or the card fields aren't visible, see Step #1.
+     if (paypal.HostedFields.isEligible()) {
+
+       // Renders card fields
+       paypal.HostedFields.render({
+         // Call your server to set up the transaction
+         createOrder: function () {
+           return fetch('/your-server/paypal/order', {
+            method: 'post'
+          }).then(function(res) {
+              return res.json();
+          }).then(function(orderData) {
+            orderId = orderData.id;
+            return orderId;
+          });
+         },
+
+         styles: {
+           '.valid': {
+            'color': 'green'
+           },
+           '.invalid': {
+            'color': 'red'
+           }
+         },
+
+         fields: {
+           number: {
+             selector: "#card-number",
+             placeholder: "4111 1111 1111 1111"
+           },
+           cvv: {
+             selector: "#cvv",
+             placeholder: "123"
+           },
+           expirationDate: {
+             selector: "#expiration-date",
+             placeholder: "MM/YY"
+           }
+         }
+       }).then(function (cardFields) {
+         document.querySelector("#card-form").addEventListener('submit', (event) => {
+           event.preventDefault();
+
+           cardFields.submit({
+             // Cardholder's first and last name
+             cardholderName: document.getElementById('card-holder-name').value,
+             // Billing Address
+             billingAddress: {
+               // Street address, line 1
+               streetAddress: document.getElementById('card-billing-address-street').value,
+               // Street address, line 2 (Ex: Unit, Apartment, etc.)
+               extendedAddress: document.getElementById('card-billing-address-unit').value,
+               // State
+               region: document.getElementById('card-billing-address-state').value,
+               // City
+               locality: document.getElementById('card-billing-address-city').value,
+               // Postal Code
+               postalCode: document.getElementById('card-billing-address-zip').value,
+               // Country Code
+               countryCodeAlpha2: document.getElementById('card-billing-address-country').value
+             }
+           }).then(function () {
+             fetch('/your-server/api/order/' + orderId + '/capture/', {
+               method: 'post'
+             }).then(function(res) {
+                return res.json();
+             }).then(function (orderData) {
+                // Three cases to handle:
+                //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+                //   (2) Other non-recoverable errors -> Show a failure message
+                //   (3) Successful transaction -> Show confirmation or thank you
+
+                // This example reads a v2/checkout/orders capture response, propagated from the server
+                // You could use a different API or structure for your 'orderData'
+                var errorDetail = Array.isArray(orderData.details) && orderData.details[0];
+
+                if (errorDetail && errorDetail.issue === 'INSTRUMENT_DECLINED') {
+                  return actions.restart(); // Recoverable state, per:
+                  // https://developer.paypal.com/docs/checkout/integration-features/funding-failure/
+                }
+
+                if (errorDetail) {
+                    var msg = 'Sorry, your transaction could not be processed.';
+                    if (errorDetail.description) msg += '\n\n' + errorDetail.description;
+                    if (orderData.debug_id) msg += ' (' + orderData.debug_id + ')';
+                    return alert(msg); // Show a failure message
+                }
+
+                // Show a success message or redirect
+                alert('Transaction completed!');
+             })
+          }).catch(function (err) {
+            alert('Payment could not be captured! ' + JSON.stringify(err))
+          });
+         });
+       });
+     } else {
+       // Hides card fields if the merchant isn't eligible
+       document.querySelector("#card-form").style = 'display: none';
+     }
+   </script>
+{% endblock %}

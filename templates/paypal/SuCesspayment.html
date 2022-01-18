@@ -10,13 +10,11 @@ div{
 text-align: center;
 }
 </style>
-{%for i in to_send[0:1]%}
     <div class="receipt">
         <h1>PAYMENT SUCCESSFUL</h1>
-        <p id ="trans_num"> Order ID: {{i.OrderID}}</p>
-        <p id = "time">Time: {{i.POSDate}}</p>
-        <p id = "total">Total:$ {{i.TotalPrice}}</p>
+        <p id ="trans_num"> Order ID: {{get_trans_id}}</p>
+        <p id = "time">Time: {{get_trans_time}}</p>
+        <p id = "total">Total:$ {{get_trans_value}}</p>
         <p> Thank you for purchasing with us! We hope to see you again</p>
     </div>
-{%endfor%}
 {%endblock%}

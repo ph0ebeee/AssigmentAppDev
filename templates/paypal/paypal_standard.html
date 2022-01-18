@@ -1,6 +1,5 @@
-<!DOCTYPE html>
-<html>
-  <head>
+(%block content%)
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures optimal rendering on mobile devices -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <!-- Optimal Internet Explorer compatibility -->
     <script src = "paypal.js" async></script>
@@ -30,17 +29,19 @@
         onApprove: function(data, actions) {
           return actions.order.capture().then(function(orderData) {
             var transaction = orderData.purchase_units[0].payments.captures[0];
-<!--              trans_num = transaction.id-->
-<!--              time = transaction.update_time-->
-<!--              total = transaction.amount.value-->
-<!--              $.ajax{{-->
-<!--                type: "POST"-->
-<!--                url:'{{ url_for('Success.send_receipt_info')}}'-->
-<!--                data:{-->
-<!--                  trans_num = trans_num-->
-<!--                  time = time-->
-<!--                  total = total-->
-<!--                };-->
+              trans_num = transaction.id
+              time = transaction.update_time
+              total = transaction.amount.value
+
+              //$.post("/PostReceipt", {
+              //  data:{
+               //   trans_num = trans_num
+               //   time = time
+               //   total = total
+               // };
+               // {
+               // javascript_data : data
+             // }});
 
 
 
@@ -67,4 +68,4 @@
 
     </script>
   </body>
-</html>
+(%endblock%)
