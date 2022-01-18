@@ -3,10 +3,10 @@ from flask import Flask, render_template, request, session
 #from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import CreateCustomerForm, CreateStaffForm
+from forms.forms import updateCust, updateStaff
 import users.Users as Users
 from templates.staff import mightdelete
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust
 from userAuthentication.loginValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
@@ -248,77 +248,52 @@ def retrieve_staff():
     StaffList = checkStaff()
     return render_template('staff/retrieveStaff.html', StaffList = StaffList)
 
-@app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
-def update_user(id):
-    update_user_form = CreateCustomerForm(request.form)
-    if request.method == 'POST' and update_user_form.validate():
-        users_dict = {}
-        db = shelve.open('user.db', 'w')
-        users_dict = db['User']
-
-        user = users_dict.get(id)
-        user.set_name(update_user_form.name.data)
-        user.set_gender(update_user_form.gender.data)
-        user.set_email(update_user_form.email.data)
-        user.set_address(update_user_form.address.data)
-        user.set_membership(update_user_form.membership.data)
-        user.set_remarks(update_user_form.remarks.data)
-
-        db['User'] = users_dict
-        db.close()
-
-        return redirect(url_for('retrieve_users'))
-
-    else:
-        users_dict = {}
-        db = shelve.open('user.db','r')
-        users_dict = db['User']
-        db.close()
-
-        user = users_dict.get(id)
-        update_user_form.name.data = user.get_first_name()
-        update_user_form.gender.data = user.get_gender()
-        update_user_form.email.data = user.get_email()
-        update_user_form.address.data = user.get_address()
-        update_user_form.membership.data = user.get_membership()
-        update_user_form.remarks.data = user.get_remarks()
-
-        return render_template('updateUsers.html', form=update_user_form)
-
 @app.route('/updateStaff/<int:id>/', methods=['GET', 'POST'])
 def update_staff(id):
-    update_staff_form = CreateStaffForm(request.form)
+    update_staff_form = updateStaff(request.form)
     if request.method == 'POST' and update_staff_form.validate():
-        staff_dict = {}
-        db = shelve.open('staff.db', 'w')
-        staff_dict = db['Staff']
 
-        staff = staff_dict.get(id)
-        staff.set_name(update_staff_form.name.data)
-        staff.set_email(update_staff_form.email.data)
-        staff.set_address(update_staff_form.address.data)
-        staff.set_membership(update_staff_form.role.data)
-        staff.set_remarks(update_staff_form.remarks.data)
-
-        db['Staff'] = staff_dict
-        db.close()
+        updatestaff(update_staff_form.name.data,
+                    update_staff_form.email.data,
+                    id)
 
         return redirect(url_for('retrieve_staff'))
 
     else:
-        staff_dict = {}
-        db = shelve.open('staff.db','r')
-        staff_dict = db['Staff']
-        db.close()
+        StaffDetail = StaffDetails(id)
 
-        staff = staff_dict.get(id)
-        update_staff_form.name.data = staff.get_name()
-        update_staff_form.email.data = staff.get_email()
-        update_staff_form.address.data = staff.get_address()
-        update_staff_form.role.data = staff.get_role()
-        update_staff_form.remarks.data = staff.get_remarks()
+        for i in StaffDetail:
+            update_staff_form.name.data = StaffDetail[0][1]
+            update_staff_form.email.data = StaffDetail[0][2]
 
-        return render_template('updateStaff.html', form=update_staff_form)
+        return render_template('staff/updateStaff.html', form=update_staff_form)
+
+@app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
+def update_user(id):
+    update_user_form = updateCust(request.form)
+    if request.method == 'POST' and update_user_form.validate():
+
+        updatecust(update_user_form.name.data,
+                    update_user_form.email.data,
+                    update_user_form.membership.data,
+                    update_user_form.contactNum.data,
+                    update_user_form.address.data,
+                    id)
+        return redirect(url_for('retrieve_customers'))
+
+    else:
+        CustDetail = CustDetails(id)
+
+        for i in CustDetail:
+            update_user_form.name.data = CustDetail[0][1]
+            update_user_form.email.data = CustDetail[0][3]
+            update_user_form.membership.data = CustDetail[0][2]
+            update_user_form.contactNum.data = CustDetail[0][5]
+            update_user_form.address.data = CustDetail[0][6]
+
+
+        return render_template('staff/updateUsers.html', form=update_user_form)
+
 
 @app.route('/deleteUser/<int:id>', methods=['POST'])
 def delete_user(id):

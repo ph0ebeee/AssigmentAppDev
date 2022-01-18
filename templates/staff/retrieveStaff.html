@@ -11,7 +11,7 @@ Library Loan System - Staff Management
                    <h2>Staff Management</h2>
                    <div class="table-responsive">
                    <table class="table table-striped table-bordered">
-                    {% for i in StaffList %}
+
                     <thead class="thead-dark">
                         <tr>
                             <th>Staff ID</th>
@@ -22,16 +22,17 @@ Library Loan System - Staff Management
                         </tr>
                     </thead>
                     <tbody>
+                    {% for i in StaffList %}
                         <tr>
                             <td>{{i[0]}}</td>
                             <td>{{i[1]}}</td>
                             <td>{{i[2]}}</td>
-                            <td><a href="/updateStaff" class="btn btn-warning">Update</a>
+                            <td><a href="/updateStaff/{{i[0]}}" class="btn btn-warning">Update</a>
                             <input type="submit" value="Delete" class="btn btn-danger"
                                        onclick="return confirm('Are you sure you want to delete {{i[1]}}?');"></td>
                         </tr>
-                    </tbody>
                     {%endfor%}
+                    </tbody>
                 </table>
             </div>
         </div>

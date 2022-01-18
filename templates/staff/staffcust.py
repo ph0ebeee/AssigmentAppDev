@@ -60,22 +60,18 @@ def checkStaff():
 
     return StaffList
 
-def updateStaff(StaffID):
+def updatestaff(StaffName,EmailAddr,StaffID):
 
     cursor = conn.cursor()
-    cursor.execute("SELECT * from Staff WHERE StaffID = '{}'".format(StaffID))
-
-
-    cursor_data = cursor.fetchall()
-    StaffDetails = []
-    for i in cursor_data:
-        StaffDetails.append(i)
-
-    return StaffDetails
-    cursor = conn.cursor()
-    cursor.execute('''
-                UPDATE Staff
-                SET StaffName =  , EmailAddr = 
-                WHERE StaffID = '{}'
-                ''')
+    query = "UPDATE Staff SET StaffName = '{}', EmailAddr = '{}' WHERE StaffID = '{}'".format(StaffName,EmailAddr,StaffID)
+    cursor.execute(query)
     conn.commit()
+
+def updatecust(CustomerName,EmailAddr,MembershipPoints,ContactNum,ShippingAddr,CustomerID):
+
+    cursor = conn.cursor()
+    query = "UPDATE Customer SET CustomerName = '{}', EmailAddr = '{}', MembershipPoints = '{}', ContactNum = '{}', ShippingAddr = '{}' WHERE CustomerID = '{}'".format(CustomerName,EmailAddr,MembershipPoints,ContactNum,ShippingAddr,CustomerID)
+    cursor.execute(query)
+    conn.commit()
+
+
