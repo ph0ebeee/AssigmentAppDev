@@ -1,3 +1,4 @@
+import shelve
 from flask import Flask, render_template, request, session, jsonify
 # from flask_session import Session
 #from products.SQLtoPython import products
@@ -5,7 +6,8 @@ from forms import forms
 #from flask_bcrypt import Bcrypt
 from forms.forms import updateCust, updateStaff,CreditCardForm
 import users.Users as Users
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
+    deletestaff, createstaff
 from userAuthentication.loginValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
@@ -226,7 +228,6 @@ def update_staff(id):
         updatestaff(update_staff_form.name.data,
                     update_staff_form.email.data,
                     id)
-
         return redirect(url_for('retrieve_staff'))
 
     else:
@@ -273,7 +274,9 @@ def delete_user(id):
 
 @app.route('/deleteStaff/<int:id>', methods=['POST'])
 def delete_staff(id):
-    pass
+
+    deletestaff(id)
+
     return redirect(url_for('retrieve_staff'))
 
 @app.route('/updateStaffaccount/<int:id>/', methods=['GET', 'POST'])
@@ -283,7 +286,7 @@ def update_staff_account(id):
 
         updatestaffsettings(update_staff_account_form.name.data,
                     update_staff_account_form.email.data,
-                    update_staff_account_form.password.data,
+                    #update_staff_account_form.password.data,
                     id)
 
         return redirect(url_for('StaffSettings'))
@@ -294,7 +297,7 @@ def update_staff_account(id):
         for i in StaffDetail:
             update_staff_account_form.name.data = StaffDetail[0][1]
             update_staff_account_form.email.data = StaffDetail[0][2]
-            update_staff_account_form.password.data = StaffDetail[0][3]
+            #update_staff_account_form.password.data = StaffDetail[0][3]
 
         return render_template('staff/updatesetting.html', form=update_staff_account_form)
 
