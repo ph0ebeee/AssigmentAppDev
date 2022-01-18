@@ -1,16 +1,32 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, jsonify
 # from flask_session import Session
 #from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
+
+from forms.forms import CreateCustomerForm, CreateStaffForm, CreditCardForm
+import users.Users as Users
+
+from templates.staff import staff_forms
+
 from forms.forms import updateCust, updateStaff
 import users.Users as Users
 from templates.staff import mightdelete
+<<<<<<< HEAD
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings
+=======
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust
+
+>>>>>>> 060278e19a365d6898394a57d92c0eb08af15b7f
 from userAuthentication.loginValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
+
+import shelve, Staffs
+from templates.paypal.CustomerInfo import CustomerInfo
+import paypalrestsdk
+
 import shelve, Staffs, users.Users
 
 
@@ -25,7 +41,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 # Session(app)
 #bcrypt = Bcrypt(app)
 
-@app.route('/')
+@app.route('/staff')
 #function for images selected to be seen on image slideshow  - viona
 def home():
     image1 = './static/Assets/images/imageCarousel_1.jpg' 
@@ -35,7 +51,7 @@ def home():
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
     return render_template('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
-@app.route('/custHome')
+@app.route('/')
 #function for images selected to be seen on image slideshow  - viona
 def custhome():
     image1 = './static/Assets/images/imageCarousel_1.jpg' 
@@ -175,19 +191,6 @@ def NewlyRestockedItems():
 #     return jsdata
 
 
-@app.route('/SuccessReceipt', methods =['GET','POST'])
-def retrieve_database_receipt():
-    try:
-        conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
-                              'Server=(localdb)\MSSQLLocalDB;'
-                              'Database=EcoDen;'
-                              'Trusted_Connection=yes;')
-        cursor = conn.cursor()
-        cursor.execute('SELECT * from CustOrder')
-        cursor_data = cursor.fetchall()
-        return render_template("paypal/success_payment.html", to_send= cursor_data)
-    except Exception as e:
-        print(e)
 
 
 
@@ -352,7 +355,36 @@ def game2():
     return render_template('game2/game2.html')
 
 
+
+# @app.route('/Receipt')
+# def retrieve_receipt():
+#     receipt_dict = {}
+#     db = shelve.open('receipt.db','r')
+#     receipt_dict = db['Receipt']
+#     db.close()
+#     receipt_list = []
+#     for key in receipt_dict:
+#         receipt = receipt_dict.get(key):
+#         receipt_dict.append()
+#     return render_template('SuCesspayment.html')
+
+# retrieve for receipt - phoebe
+@app.route('/SuccessReceipt', methods =['GET','POST'])
+def retrieve_database_receipt():
+    try:
+        conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
+                              'Server=(localdb)\MSSQLLocalDB;'
+                              'Database=EcoDen;'
+                              'Trusted_Connection=yes;')
+        cursor = conn.cursor()
+        cursor.execute('SELECT OrderID,TotalPrice,POSDate from CustOrder')
+        cursor_data = cursor.fetchall()
+        return render_template("paypal/success_payment.html", to_send= cursor_data)
+    except Exception as e:
+        print(e)
+
 #shopping cart - phoebe
+
 
 @app.route('/ShoppingCart', methods = ['GET','POST'])           #product for testing
 def open_cart():
@@ -364,6 +396,7 @@ def open_cart():
     cursor.execute('SELECT ProductID,ProductName,ProductPrice from Product')
     cursor_data = cursor.fetchall()
     return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data)
+
 
 @app.route('/ShoppingCart/add', methods = ['POST'])
 def add_product():
@@ -456,6 +489,39 @@ def empty_cart():
         print(e)
 
 
+@app.route('/PaymentCreditCard',methods = ['GET','POST'])
+def credit_card_form():
+    CreditCard = CreditCardForm(request.form)
+    if request.method == 'POST' and CreditCard.validate():
+        customers_info_dict = {}
+        db = shelve.open('customerInfo.db', 'c')
 
+        try:
+            customers_info_dict = db['CustomersInfo']
+        except:
+            print("Error in retrieving Customers from customerInfo.db.")
+
+        customerInfo = CustomerInfo(CreditCard.name.data,CreditCard.address.data, CreditCard.card_no.data, CreditCard.expiry.data, CreditCard.cvc.data)
+        customers_info_dict[customerInfo.get_id()] = customerInfo
+        db['CustomersInfo'] = customers_info_dict
+
+        db.close()
+
+        return redirect(url_for('SuccessReceipt'))
+    return render_template('paypal/customer_credit_form.html', form=CreditCard)
+
+
+@app.route('/PostReceipt')
+def get_javascript_data():
+    jsdata = request.form['javascript_data']
+    print (jsdata)
+    return jsdata
+
+
+@app.route('/',methods= ['GET','POST'])
+def payment():
+    return render_template('paypal/paypal_standard.html')
+
+#
 if __name__ == '__main__':
     app.run()
