@@ -1,7 +1,5 @@
-{%extends "base_s.html" %}
-{% block title %}
-Library Loan System - Staff Profile Page
-{% endblock %}
+{% extends "base_s.html" %}
+{% block title %}Library Loan System - Update Staff Settings {% endblock %}
 
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
@@ -15,26 +13,20 @@ Library Loan System - Staff Profile Page
 <div class="mainContent" style="display:inline-block";>
     <h2>Account</h2><br/>
     <form method="post" action="/StaffSettings" style="background-color:white;" class='StaffParticulars'>
-        <div class="taable-responsive">
-            <table class="table table-striped table-bordered">
-                <tbody>
-                {% for i in staff_details%}
-                <tr>
-                    <td>Username: {{i[1]}}</td>
-                    </tr>
-                <tr>
-                    <td>Email: {{i[2]}}</td>
-                    </tr>
-                <tr>
-                    <td>Password: {{i[3]}}</td>
-                </tr>
-                </tbody>
-            </table>
-            <a href="/updateStaffaccount/{{i[0]}}" class="btn btn-warning">Update</a>
-            {%endfor%}
-        </div>
+      <div class="form-group">
+        {{ render_field(form.name, class="form-control") }}
+      </div>
+        <div class="form-group">
+        {{ render_field(form.email, class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ render_field(form.password, class="form-control") }}
+      </div>
+      <input type="submit" value="Submit" class="btn btn-primary"/>
     </form>
 </div>
+
+
 {% endblock %}
 
 

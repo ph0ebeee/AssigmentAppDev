@@ -6,7 +6,7 @@ from forms import forms
 from forms.forms import updateCust, updateStaff
 import users.Users as Users
 from templates.staff import mightdelete
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings
 from userAuthentication.loginValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
@@ -323,11 +323,28 @@ def delete_staff(id):
 
 #@app.route('/updateusername', methods=['GET', 'POST'])
 #def updateusername():
-    #UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
-    #if request.method == 'POST' and UpdateStaff.validate():
-        #return redirect(url_for('###'))
-        #use JS to change the layout of the navbar according Staff account
-    #return render_template('staff/updateUsername.html', form=UpdateStaff)
+
+@app.route('/updateStaffaccount/<int:id>/', methods=['GET', 'POST'])
+def update_staff_account(id):
+    update_staff_account_form = updateStaff(request.form)
+    if request.method == 'POST' and update_staff_account_form.validate():
+
+        updatestaffsettings(update_staff_account_form.name.data,
+                    update_staff_account_form.email.data,
+                    update_staff_account_form.password.data,
+                    id)
+
+        return redirect(url_for('StaffSettings'))
+
+    else:
+        StaffDetail = StaffDetails(id)
+
+        for i in StaffDetail:
+            update_staff_account_form.name.data = StaffDetail[0][1]
+            update_staff_account_form.email.data = StaffDetail[0][2]
+            update_staff_account_form.password.data = StaffDetail[0][3]
+
+        return render_template('staff/updatesetting.html', form=update_staff_account_form)
 
 
 @app.route('/game2')

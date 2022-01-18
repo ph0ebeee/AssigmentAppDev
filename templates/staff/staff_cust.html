@@ -11,7 +11,7 @@ Library Loan System - Customer Management
                    <h2>Customer Management</h2>
                    <div class="table-responsive">
                    <table class="table table-striped table-bordered">
-                    {% for i in custList %}
+
                     <thead class="thead-dark">
                         <tr>
                             <th>Cust ID</th>
@@ -24,6 +24,7 @@ Library Loan System - Customer Management
                         </tr>
                     </thead>
                     <tbody>
+                    {% for i in custList %}
                         <tr>
                             <td>{{i[0]}}</td>
                             <td>{{i[1]}}</td>
@@ -35,8 +36,9 @@ Library Loan System - Customer Management
                             <input type="submit" value="Delete" class="btn btn-danger"
                                        onclick="return confirm('Are you sure you want to delete {{i[1]}}?');"></td>
                         </tr>
+                     {%endfor%}
                     </tbody>
-                    {%endfor%}
+
                 </table>
             </div>
         </div>
