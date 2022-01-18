@@ -5,7 +5,8 @@ from forms import forms
 #from flask_bcrypt import Bcrypt
 from forms.forms import CreateCustomerForm, CreateStaffForm
 import users.Users as Users
-from templates.staff import staff_forms
+from templates.staff import mightdelete
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff
 from userAuthentication.loginValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
@@ -44,6 +45,10 @@ def custhome():
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
     return render_template('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
+@app.route('/staffHome')
+def staffhome():
+    return render_template('./staff.html')
+
 #route for login form to be seen on loginPage.html  - viona
 @app.route('/Login', methods=['GET', 'POST'])
 def login():
@@ -71,7 +76,7 @@ def loginValidate():
             session['staffName'] = (staffDetails[0][1])
             session['emailAddr'] = (staffDetails[0][2])
             session['role'] = 'Staff'
-            return render_template('staff/retrieveStaff.html', staffDetails = staffDetails)  # change to staff page
+            return render_template('./staff.html', staffDetails = staffDetails)  # change to staff page
         else:
             return render_template('usersLogin/loginPage.html', form=loginPage)
 
@@ -218,60 +223,30 @@ def retrieve_database_receipt():
 @app.route('/logout')
 def logout():
     session.clear()
-    return render_template('home.html')
+    return redirect(url_for('home'))
 
-
-@app.route('/staffaccount', methods=['GET', 'POST'])
-def staffaccount():
-    UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
-    if request.method == 'POST' and UpdateStaff.validate():
-        return redirect(url_for('###'))
-        #use JS to change the layout of the navbar according Staff account
-    return render_template('staff/staff_account.html', form=UpdateStaff)
+@app.route('/StaffSettings', methods=['GET', 'POST'])
+def StaffSettings():
+    if (session['role'] == "Staff"):
+        staff_details = StaffDetails(session['staffID'])
+        return render_template('staff/staff_account.html', staff_details = staff_details)
+    else:
+        return render_template('usersLogin/loginPage.html')
 
 @app.route('/MainPage')
 def MainPage():
     return render_template('staff.html')
 
-@app.route('/createCustomers', methods=['GET', 'POST'])
-def create_customers():
-    create_customer_form = CreateCustomerForm(request.form)
-    if request.method == 'POST' and create_customer_form.validate():
-        users_dict = {}
-        db = shelve.open('user.db', 'c')
 
-        try:
-            users_dict = db['User']
-        except:
-            print("Error in retrieving Users from user.db.")
-
-        user = Users.Users(create_customer_form.name.data,
-                           create_customer_form.gender.data,
-                           create_customer_form.email.data,
-                           create_customer_form.address.data,
-                           create_customer_form.membership.data,
-                           create_customer_form.remarks.data)
-        users_dict[user.get_id()] = user
-        db['User'] = users_dict
-        db.close()
-
-        return redirect(url_for('retrieve_customers'))
-    return render_template('staff/staff_cust.html', form=create_customer_form)
-
-@app.route('/retrieveCustomers')
+@app.route('/retrieveCustomers', methods=['GET', 'POST'])
 def retrieve_customers():
-    users_dict = {}
-    db = shelve.open('user.db', 'r')
-    users_dict = db['User']
-    db.close()
+    custList = checkCust()
+    return render_template('staff/staff_cust.html', custList = custList)
 
-    users_list = []
-    for key in users_dict:
-        user = users_dict.get(key)
-        users_list.append(user)
-
-
-    return render_template('staff/declined.html',count=len(users_list),users_list=users_list)
+@app.route('/retrieveStaff', methods=['GET', 'POST'])
+def retrieve_staff():
+    StaffList = checkStaff()
+    return render_template('staff/retrieveStaff.html', StaffList = StaffList)
 
 @app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
 def update_user(id):
@@ -309,43 +284,6 @@ def update_user(id):
         update_user_form.remarks.data = user.get_remarks()
 
         return render_template('updateUsers.html', form=update_user_form)
-
-@app.route('/createStaff', methods=['GET', 'POST'])
-def create_staff():
-    create_staff_form = CreateStaffForm(request.form)
-    if request.method == 'POST' and create_staff_form.validate():
-        staff_dict = {}
-        db = shelve.open('staff.db', 'c')
-
-        try:
-            staff_dict = db['Staff']
-        except:
-            print("Error in retrieving Users from user.db.")
-
-        staff = Staffs.Staffs(create_staff_form.name.data, create_staff_form.email.data, create_staff_form.address.data,
-                              create_staff_form.role.data,create_staff_form.remarks.data)
-        staff_dict[staff.get_id()] = staff
-        db['Staff'] = staff_dict
-        db.close()
-
-        return redirect(url_for('retrieve_staff'))
-    return render_template('staff/createStaff.html', form=create_staff_form)
-
-
-@app.route('/retrieveStaff')
-def retrieve_staff():
-    staff_dict = {}
-    db = shelve.open('staff.db', 'r')
-    staff_dict = db['Staff']
-    db.close()
-
-    staff_list = []
-    for key in staff_dict:
-        staff = staff_dict.get(key)
-        staff_list.append(staff)
-
-
-    return render_template('staff/retrieveStaff.html',count=len(staff_list),users_list=staff_list)
 
 @app.route('/updateStaff/<int:id>/', methods=['GET', 'POST'])
 def update_staff(id):
@@ -408,13 +346,13 @@ def delete_staff(id):
 
     return redirect(url_for('retrieve_staff'))
 
-@app.route('/updateusername', methods=['GET', 'POST'])
-def updateusername():
-    UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
-    if request.method == 'POST' and UpdateStaff.validate():
-        return redirect(url_for('###'))
+#@app.route('/updateusername', methods=['GET', 'POST'])
+#def updateusername():
+    #UpdateStaff = staff_forms.UpdateAccount(csrf_enabled=False)
+    #if request.method == 'POST' and UpdateStaff.validate():
+        #return redirect(url_for('###'))
         #use JS to change the layout of the navbar according Staff account
-    return render_template('staff/updateUsername.html', form=UpdateStaff)
+    #return render_template('staff/updateUsername.html', form=UpdateStaff)
 
 
 @app.route('/game2')

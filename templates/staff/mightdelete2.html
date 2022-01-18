@@ -5,22 +5,12 @@
 <div class="container-fluid h-100">
         <div class="row h-100">
             <div class="col-2" id="green">
-                    <a class="dropdown-item" href="/createCustomers">New Customer</a>
+                    <a class="dropdown-item" href="/retrieveCustomers">Customer Management</a>
                     <a class="dropdown-item" href="/game2">Accepted</a>
                     <a class="dropdown-item" href="#">Retrieve Customer</a>
             </div>
 
-<h1 class="display-4">Retrieve Users</h1>
-                <div>
-  {% if count == 0 %}
-  <p>There are no users.</p>
-  {% elif count == 1 %}
-  <p>There is 1 user.</p>
-  {% else %}
-  <p>There are {{ count }} users.</p>
-  {% endif %}
-</div>
-
+<h1 class="display-4">Declined</h1>
 <div>
   <table class="table table-striped">
     <thead>
