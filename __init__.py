@@ -3,29 +3,28 @@ from flask import Flask, render_template, request, session, jsonify
 #from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-<<<<<<< HEAD
+
 from forms.forms import CreateCustomerForm, CreateStaffForm, CreditCardForm
 import users.Users as Users
 
 from templates.staff import staff_forms
-=======
+
 from forms.forms import updateCust, updateStaff
 import users.Users as Users
 from templates.staff import mightdelete
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust
->>>>>>> 97450804f0575e7c000fd025507537841a4df646
+
 from userAuthentication.loginValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
-<<<<<<< HEAD
+
 import shelve, Staffs
 from templates.paypal.CustomerInfo import CustomerInfo
 import paypalrestsdk
-=======
+
 import shelve, Staffs, users.Users
 
->>>>>>> 97450804f0575e7c000fd025507537841a4df646
 
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
