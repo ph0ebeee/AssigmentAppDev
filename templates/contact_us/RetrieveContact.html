@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Library Loan System - Retrieve Customers{% endblock %}
+
+{% block content %}
+<h1 class="display-4">Retrieve Customers</h1>
+<div>
+  {% if count == 0 %}
+  <p>There are no customers.</p>
+  {% elif count == 1 %}
+  <p>There is 1 customer.</p>
+  {% else %}
+  <p>There are {{ count }} customers.</p>
+  {% endif %}
+</div>
+<div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Customer Name</th>
+        <!-- <th>Customer ID</th> -->
+        <th>Customer Email</th>
+        <th>FeedBack</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for customer in customers_list %}
+        <tr>
+          <td>{{ customer.get_cust_name() }}</td>
+          <td>{{ customer.get_email() }}</td>
+          <td>{{ customer.get_feedback() }}</td>
+          <td>
+            <form action="" method="POST">
+              <input type="submit" value="Delete" class="btn btn-danger">
+            </form>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+

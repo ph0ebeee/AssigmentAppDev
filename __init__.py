@@ -1,30 +1,25 @@
-from dns import transaction
-from flask import Flask, render_template, jsonify, request, url_for, redirect, flash, session
+from flask import Flask, render_template, request, session
 # from flask_session import Session
-import pyodbc
 import shelve
-import paypalrestsdk
-#from flask_login import current_user, login_required
-
-from products.SQLtoPython import products
-from templates.paypal.receipt import Receipt
-from werkzeug.utils import redirect
+# from flask_login import current_user, login_required
+import Feedback_class as Feedbacks
+from templates.products.SQLtoPython import discounted_products, topselling_products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import loginForm
 from templates.staff import staff_forms
 from templates.staff.staffcust import orders
 from userAuthentication.loginValidation import *
 from script import *
 
+from forms.forms import feedbackForm
+
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
-from forms.forms import signupForm
 
 app = Flask(__name__,template_folder="./templates")
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+# Session(app)
 #bcrypt = Bcrypt(app)
 
 @app.route('/')
@@ -38,7 +33,7 @@ def login():
     return render_template('usersLogin/loginPage.html', form=loginPage)
 
 @app.route('/LoginValidate', methods=['GET', 'POST'])
-def loginValidate():
+def loginValidate(loginPage):
     if request.method == 'POST':
         form = loginForm(request.form)
         validateCustLogin = validate_cust_login(form.email.data,form.password.data)
@@ -74,23 +69,71 @@ def signUp():
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
-@app.route('/AboutUs')   # added but havent push
+@app.route('/AboutUs')
 def AboutUs():
-    return render_template('about us/aboutUs.html')
+    return render_template('about_us/aboutUs.html')
+
+# the contact_us form !
+@app.route('/CreateContactUs', methods=['GET', 'POST'])
+def create_contact_us():
+    create_contact_form = feedbackForm(request.form)
+    if request.method == 'POST' and create_contact_form.validate():
+        contact_dict = {}
+        db = shelve.open('contact.db', 'c')
+
+        try:
+            contact_dict = db['ContactUs']
+        except:
+            print("Error in retrieving Feedback from contact.db.")
+
+        contact = Feedbacks.Feedback(create_contact_form.cust_name.data, create_contact_form.email.data, create_contact_form.feedback.data)
+        contact_dict[contact.get_feedback_id()] = contact  # what is that for ?
+        db['ContactUs'] = contact_dict
+
+        # Test codes
+        contact_dict = db['ContactUs']
+        contact = contact_dict[contact.get_feedback_id()]
+        print(contact.get_cust_name(), "was stored in contact.db successfully with feedback_id ==", contact.get_feedback_id)
+
+        db.close()
+        return redirect(url_for('home'))
+    return render_template('contact_us/contactUs.html', form=create_contact_form)
+
+@app.route('/RetrieveContactUs', methods=['GET', 'POST'])
+def retrieve_contact_us():
+    contact_dict = {}
+    db = shelve.open('contact.db', 'r')
+    contact_dict = db['ContactUs']
+    db.close()
+
+    contact_list = []
+    for key in contact_dict:
+        contact = contact_dict.get(key)
+        contact_list.append(contact)
+
+    return render_template('retrieveCustomers.html', count=len(contact_list), contact_list=contact_list)
+
+
+@app.route('/ShopCategories')   # added but havent push
+def ShopCategories():
+    return render_template('products/shopCategories.html')
 
 @app.route('/DiscountedItems', methods=['GET', 'POST'])   # added but havent push
 def DiscountedItems():
-    to_send = products()
+    to_send = discounted_products()
+    # to_send = to_send[:5]
     return render_template('products/discountedItems.html', to_send=to_send)
 
 @app.route('/TopSellingItems', methods=['GET', 'POST'])   # added but havent push
 def TopSellingItems():
-    to_send = products()
+    to_send = topselling_products()
     return render_template('products/topSellingItems.html', to_send=to_send)
 
 @app.route('/NewlyRestockedItems', methods=['GET', 'POST'])   # added but havent push
 def NewlyRestockedItems():
-    to_send = products()
+    to_send = discounted_products() # loop
+    # insert if else here using '.pop'
+    # create another list to store wo yao de discounted items -> different,, go through the product list
     return render_template('products/newlyRestockedItems.html', to_send=to_send)
 
 # chatbot done by Phoebe
