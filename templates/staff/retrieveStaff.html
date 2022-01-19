@@ -6,6 +6,13 @@ Library Loan System - Staff Management
 {% block content %}
 
 <div class="container-fluid h-100">
+    <div class="row h-100">
+            <div class="col-2" id="green">
+                    <a class="dropdown-item" href="#">Announcement</a>
+                    <a class="dropdown-item" href="#">Create Staff</a>
+                    <a class="dropdown-item" href="#">Staff Management</a>
+            </div>
+        </div>
             <div class="col-10" style="text-align: justify;">
                <div class="mainContent" style="display: block;">
                    <h2>Staff Management</h2>
@@ -28,8 +35,12 @@ Library Loan System - Staff Management
                             <td>{{i[1]}}</td>
                             <td>{{i[2]}}</td>
                             <td><a href="/updateStaff/{{i[0]}}" class="btn btn-warning">Update</a>
+                                <form action="/deleteStaff/{{i[0]}}" method="POST">
+
                             <input type="submit" value="Delete" class="btn btn-danger"
-                                       onclick="return confirm('Are you sure you want to delete {{i[1]}}?');"></td>
+                                       onclick="return confirm('Are you sure you want to delete {{i[1]}}?');">
+                                </form>
+                            </td>
                         </tr>
                     {%endfor%}
                     </tbody>

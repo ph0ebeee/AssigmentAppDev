@@ -17,6 +17,25 @@ class loginForm(Form):
     password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
 
 
+<<<<<<< HEAD
+=======
+class feedbackForm(Form):
+    cust_name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
+    feedback = StringField('FeedBack:', [validators.Length(min=1, max=150), validators.DataRequired()])
+
+
+class createProduct(Form):
+    product_Name = StringField('Product Name: ', [validators.Length(min=1, max=150), validators.DataRequired()])
+    product_Category = StringField('Product Category: ', [validators.Length(min=1, max=150), validators.DataRequired()])
+    product_Price = StringField('Product Price: ', [validators.Length(min=1, max=150), validators.DataRequired()])
+    product_Desc = StringField('Product Description: ', [validators.Length(min=1, max=150), validators.DataRequired()])
+    product_Stock = StringField('Product StockCount: ', [validators.Length(min=1, max=150), validators.DataRequired()])
+    product_Discount = StringField('Discount Rate of Product: ', [validators.Length(min=1, max=150), validators.DataRequired()])
+    product_Date = StringField('Date of Product Update : ', [validators.Length(min=1, max=150), validators.DataRequired()])
+
+
+>>>>>>> e46bdd3eecd8d21cba4add4eabaa5cc2aed7d3a9
 class updateCust(Form):
     name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])

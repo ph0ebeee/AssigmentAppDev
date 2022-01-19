@@ -1,11 +1,25 @@
+from flask import Flask, render_template, request, session
+# from flask_session import Session
+import shelve
+# from flask_login import current_user, login_required
+import Feedback_class as Feedbacks
+from templates.products.SQLtoPython import discounted_products, topselling_products
+from forms import forms
+#from flask_bcrypt import Bcrypt
+from userAuthentication.loginValidation import *
+from script import *
+
+from forms.forms import feedbackForm
+
+import shelve
 from flask import Flask, render_template, request, session, jsonify
 # from flask_session import Session
 #from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
 from forms.forms import updateCust, updateStaff,CreditCardForm
-import users.Users as Users
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
+    deletestaff, createstaff
 from userAuthentication.loginValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
@@ -134,45 +148,73 @@ def signUp():
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
-@app.route('/custAboutUs')   # added but havent push
-def custAboutUs():
-    return render_template('customer/aboutUs.html')
-
 @app.route('/AboutUs')   # added but havent push
 def AboutUs():
-    return render_template('about us/aboutUs.html')
+    return render_template('about_us/aboutUs.html')
+
+# the contact_us form !
+@app.route('/CreateContactUs', methods=['GET', 'POST'])
+def create_contact_us():
+    create_contact_form = feedbackForm(request.form)
+    if request.method == 'POST' and create_contact_form.validate():
+        contact_dict = {}
+        db = shelve.open('contact.db', 'c')
+
+        try:
+            contact_dict = db['ContactUs']
+        except:
+            print("Error in retrieving Feedback from contact.db.")
+
+        contact = Feedbacks.Feedback(create_contact_form.cust_name.data, create_contact_form.email.data, create_contact_form.feedback.data)
+        contact_dict[contact.get_feedback_id()] = contact  # what is that for ?
+        db['ContactUs'] = contact_dict
+
+        # Test codes
+        contact_dict = db['ContactUs']
+        contact = contact_dict[contact.get_feedback_id()]
+        print(contact.get_cust_name(), "was stored in contact.db successfully with feedback_id ==", contact.get_feedback_id)
+
+        db.close()
+        return redirect(url_for('home'))
+    return render_template('contact_us/contactUs.html', form=create_contact_form)
+
+@app.route('/RetrieveContactUs', methods=['GET', 'POST'])
+def retrieve_contact_us():
+    contact_dict = {}
+    db = shelve.open('contact.db', 'r')
+    contact_dict = db['ContactUs']
+    db.close()
+
+    contact_list = []
+    for key in contact_dict:
+        contact = contact_dict.get(key)
+        contact_list.append(contact)
+
+    return render_template('contact_us/RetrieveContact.html', count=len(contact_list), contact_list=contact_list)
+
+
+@app.route('/ShopCategories')   # added but havent push
+def ShopCategories():
+    return render_template('products/shopCategories.html')
 
 @app.route('/DiscountedItems', methods=['GET', 'POST'])   # added but havent push
 def DiscountedItems():
-    to_send = products()
+    to_send = discounted_products()
+    # to_send = to_send[:5]
     return render_template('products/discountedItems.html', to_send=to_send)
 
 @app.route('/TopSellingItems', methods=['GET', 'POST'])   # added but havent push
 def TopSellingItems():
-    to_send = products()
+    to_send = topselling_products()
     return render_template('products/topSellingItems.html', to_send=to_send)
 
 @app.route('/NewlyRestockedItems', methods=['GET', 'POST'])   # added but havent push
 def NewlyRestockedItems():
-    to_send = products()
+    to_send = discounted_products() # loop
+    # insert if else here using '.pop'
+    # create another list to store wo yao de discounted items -> different,, go through the product list
     return render_template('products/newlyRestockedItems.html', to_send=to_send)
 
-
-# @app.route('/contactUs', methods=['GET', 'POST'])
-# def feedback():
-#     feedback = CreateUserForm(request.form)
-#     if request.method == 'POST' and feedback.validate():
-#         users_dict = {}
-#         db = shelve.open('user.db', 'c')
-#
-#         try:
-#             users_dict = db['Users']
-#         except:
-#             print("Error in retrieving Users from user.db.")
-#
-#         user = User.User(feedback.name.data, feedback.response.data)
-#         users_dict[user.get_user_id()] = user
-#         db['Users'] = users_dict
 
 #logout
 @app.route('/logout')
@@ -203,6 +245,21 @@ def retrieve_staff():
     StaffList = checkStaff()
     return render_template('staff/retrieveStaff.html', StaffList = StaffList)
 
+
+@app.route('/createStaff', methods=['GET', 'POST'])
+def create_staff():
+    create_staff_form = updateStaff(request.form)
+    if request.method == 'POST' and create_staff_form.validate():
+
+        createstaff(create_staff_form.name.data,
+                    create_staff_form.email.data,
+                    create_staff_form.password.data)
+
+        return redirect(url_for('retrieve_staff'))
+
+    return render_template('staff/createStaff.html', form=create_staff_form)
+
+
 @app.route('/updateStaff/<int:id>/', methods=['GET', 'POST'])
 def update_staff(id):
     update_staff_form = updateStaff(request.form)
@@ -211,7 +268,6 @@ def update_staff(id):
         updatestaff(update_staff_form.name.data,
                     update_staff_form.email.data,
                     id)
-
         return redirect(url_for('retrieve_staff'))
 
     else:
@@ -258,7 +314,9 @@ def delete_user(id):
 
 @app.route('/deleteStaff/<int:id>', methods=['POST'])
 def delete_staff(id):
-    pass
+
+    deletestaff(id)
+
     return redirect(url_for('retrieve_staff'))
 
 @app.route('/updateStaffaccount/<int:id>/', methods=['GET', 'POST'])
@@ -268,7 +326,7 @@ def update_staff_account(id):
 
         updatestaffsettings(update_staff_account_form.name.data,
                     update_staff_account_form.email.data,
-                    update_staff_account_form.password.data,
+                    #update_staff_account_form.password.data,
                     id)
 
         return redirect(url_for('StaffSettings'))
@@ -279,7 +337,7 @@ def update_staff_account(id):
         for i in StaffDetail:
             update_staff_account_form.name.data = StaffDetail[0][1]
             update_staff_account_form.email.data = StaffDetail[0][2]
-            update_staff_account_form.password.data = StaffDetail[0][3]
+            #update_staff_account_form.password.data = StaffDetail[0][3]
 
         return render_template('staff/updatesetting.html', form=update_staff_account_form)
 

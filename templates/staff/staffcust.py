@@ -74,9 +74,22 @@ def updatecust(CustomerName,EmailAddr,MembershipPoints,ContactNum,ShippingAddr,C
     cursor.execute(query)
     conn.commit()
 
-def updatestaffsettings(StaffName,EmailAddr,Password,StaffID):
+def updatestaffsettings(StaffName,EmailAddr,StaffID):
 
     cursor = conn.cursor()
-    query = "UPDATE Staff SET StaffName = '{}', EmailAddr = '{}', Password = '{}' WHERE StaffID = '{}'".format(StaffName,EmailAddr,Password,StaffID)
+    query = "UPDATE Staff SET StaffName = '{}', EmailAddr = '{}' WHERE StaffID = '{}'".format(StaffName,EmailAddr,StaffID)
+    cursor.execute(query)
+    conn.commit()
+
+def createstaff(StaffName,EmailAddr,Password):
+    cursor = conn.cursor()
+    query = "INSERT INTO Staff (StaffName,EmailAddr,Password) VALUES ('{}', '{}','{}')".format(StaffName,EmailAddr,Password)
+    cursor.execute(query)
+    conn.commit()
+
+def deletestaff(StaffID):
+
+    cursor = conn.cursor()
+    query = "DELETE FROM Staff WHERE StaffID = '{}'".format(StaffID)
     cursor.execute(query)
     conn.commit()
