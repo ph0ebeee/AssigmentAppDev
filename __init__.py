@@ -193,6 +193,21 @@ def retrieve_contact_us():
     return render_template('contact_us/RetrieveContact.html', count=len(contact_list), contact_list=contact_list)
 
 
+@app.route('/Grains')
+def grains_cat():
+    return render_template('products/grains.html')
+
+
+@app.route('/Frozen')
+def frozen_cat():
+    return render_template('products/frozen.html')
+
+
+@app.route('/Household')
+def houshold_cat():
+    return render_template('products/houseHold.html')
+
+
 @app.route('/ShopCategories')   # added but havent push
 def ShopCategories():
     return render_template('products/shopCategories.html')
