@@ -17,6 +17,8 @@ class loginForm(Form):
     password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
 
 
+<<<<<<< HEAD
+=======
 class feedbackForm(Form):
     cust_name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
@@ -33,6 +35,7 @@ class createProduct(Form):
     product_Date = StringField('Date of Product Update : ', [validators.Length(min=1, max=150), validators.DataRequired()])
 
 
+>>>>>>> e46bdd3eecd8d21cba4add4eabaa5cc2aed7d3a9
 class updateCust(Form):
     name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
@@ -51,8 +54,9 @@ class createStaff(Form):
 
 class CreditCardForm(Form):
     name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
-    address = TextAreaField('Mailing Address:', [validators.length(max=200), validators.DataRequired()])
-    card_no = IntegerField('Card Number:', [validators.Length(min=16, max=16), validators.DataRequired()])
-    expiry = DateField('Valid Till:', [validators.Length(min=1, max=150), validators.DataRequired()])
-    cvc = IntegerField('CVC:', [validators.Length(min=3, max=3), validators.DataRequired()])
+    email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
+    address = TextAreaField('Mailing Address:', [validators.Length(max=200), validators.DataRequired()])
+    card_no = StringField('Card Number:', [validators.Length(max=16), validators.DataRequired()])
+    expiry = DateField('Valid Till:', format='%Y-%m-%d')
+    cvv = StringField('CVV:', [validators.Length(max=3), validators.DataRequired()])
 

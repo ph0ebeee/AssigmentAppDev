@@ -25,8 +25,8 @@ from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
 from templates.paypal.CustomerInfo import CustomerInfo
-import paypalrestsdk
-# from templates.chatbot.chat import get_response
+import shelve
+# from chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 
 app = Flask(__name__,template_folder="./templates")
@@ -193,6 +193,21 @@ def retrieve_contact_us():
     return render_template('contact_us/RetrieveContact.html', count=len(contact_list), contact_list=contact_list)
 
 
+@app.route('/Grains')
+def grains_cat():
+    return render_template('products/grains.html')
+
+
+@app.route('/Frozen')
+def frozen_cat():
+    return render_template('products/frozen.html')
+
+
+@app.route('/Household')
+def houshold_cat():
+    return render_template('products/houseHold.html')
+
+
 @app.route('/ShopCategories')   # added but havent push
 def ShopCategories():
     return render_template('products/shopCategories.html')
@@ -214,21 +229,6 @@ def NewlyRestockedItems():
     # insert if else here using '.pop'
     # create another list to store wo yao de discounted items -> different,, go through the product list
     return render_template('products/newlyRestockedItems.html', to_send=to_send)
-
-# chatbot done by Phoebe
-
-# @app.route("/Chatbot", methods=['POST'])
-# def chatbot():
-#     text = request.get_json().get("message")
-#     response = get_response(text)
-#     message = {"answer": response}
-#     return jsonify(message)
-
-# payment via paypal done by Phoebe
-# @app.route('/Success', methods = ['POST'])
-# def send_receipt_info():
-#     jsdata = request.form['javascript_data']
-#     return jsdata
 
 
 #logout
@@ -362,21 +362,21 @@ def update_staff_account(id):
 def game2():
     return render_template('game2/game2.html')
 
+# chatbot done by Phoebe
+
+# @app.route("/Chatbot", methods=['POST'])
+# def chatbot():
+#     text = request.get_json().get("message")
+#     response = get_response(text)
+#     message = {"answer": response}
+#     return jsonify(message)
+#
 
 
-# @app.route('/Receipt')
-# def retrieve_receipt():
-#     receipt_dict = {}
-#     db = shelve.open('receipt.db','r')
-#     receipt_dict = db['Receipt']
-#     db.close()
-#     receipt_list = []
-#     for key in receipt_dict:
-#         receipt = receipt_dict.get(key):
-#         receipt_dict.append()
-#     return render_template('SuCesspayment.html')
 
 # retrieve for receipt - phoebe
+
+
 @app.route('/SuccessReceipt', methods =['GET','POST'])
 def retrieve_database_receipt():
     try:
@@ -420,7 +420,7 @@ def add_product():
             cursor = conn.cursor()
             cursor.execute('SELECT ProductID, ProductName, ProductPrice from Product WHERE  ProductID = ?', _code)
             cursor_data = cursor.fetchone()
-            selectedItem = { _code : {'name' : cursor_data.ProductName, 'code' : cursor_data.ProductID, 'price' : cursor_data.ProductPrice, 'quantity' : _quantity, 'total_price': _quantity * cursor_data.ProductPrice}}
+            selectedItem = { _code : {'name': cursor_data.ProductName, 'code': cursor_data.ProductID, 'price' : cursor_data.ProductPrice, 'quantity' : _quantity, 'total_price': _quantity * cursor_data.ProductPrice}}
             all_total_price = 0
             all_total_quantity = 0
 
@@ -497,7 +497,7 @@ def empty_cart():
         print(e)
 
 
-@app.route('/PaymentCreditCard',methods = ['GET','POST'])
+@app.route('/PaymentCreditCard', methods=['GET', 'POST'])
 def credit_card_form():
     CreditCard = CreditCardForm(request.form)
     if request.method == 'POST' and CreditCard.validate():
@@ -507,29 +507,17 @@ def credit_card_form():
         try:
             customers_info_dict = db['CustomersInfo']
         except:
-            print("Error in retrieving Customers from customerInfo.db.")
+            print("Error in retrieving Customers Information from customerInfo.db.")
 
-        customerInfo = CustomerInfo(CreditCard.name.data,CreditCard.address.data, CreditCard.card_no.data, CreditCard.expiry.data, CreditCard.cvc.data)
-        customers_info_dict[customerInfo.get_id()] = customerInfo
+        customerInfo = CustomerInfo(CreditCard.name.data,CreditCard.email.data,  CreditCard.address.data, CreditCard.card_no.data, CreditCard.expiry.data, CreditCard.cvv.data)
+        customers_info_dict[customerInfo.get_customer_id()] = customerInfo
         db['CustomersInfo'] = customers_info_dict
 
         db.close()
 
-        return redirect(url_for('SuccessReceipt'))
+        return redirect(url_for('retrieve_database_receipt'))
     return render_template('paypal/customer_credit_form.html', form=CreditCard)
 
 
-@app.route('/PostReceipt')
-def get_javascript_data():
-    jsdata = request.form['javascript_data']
-    print (jsdata)
-    return jsdata
-
-
-@app.route('/',methods= ['GET','POST'])
-def payment():
-    return render_template('paypal/paypal_standard.html')
-
-#
 if __name__ == '__main__':
     app.run()
