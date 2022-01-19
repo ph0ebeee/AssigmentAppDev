@@ -81,9 +81,9 @@ def updatestaffsettings(StaffName,EmailAddr,StaffID):
     cursor.execute(query)
     conn.commit()
 
-def createstaff(StaffName,EmailAddr,Password,StaffID):
+def createstaff(StaffName,EmailAddr,Password):
     cursor = conn.cursor()
-    query = "INSERT INTO Staff (StaffName,EmailAddr,Password,StaffID) VALUES ('{}', '{}','{}','{}')".format(StaffName,EmailAddr,Password,StaffID)
+    query = "INSERT INTO Staff (StaffName,EmailAddr,Password) VALUES ('{}', '{}','{}')".format(StaffName,EmailAddr,Password)
     cursor.execute(query)
     conn.commit()
 

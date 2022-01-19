@@ -220,6 +220,22 @@ def retrieve_staff():
     StaffList = checkStaff()
     return render_template('staff/retrieveStaff.html', StaffList = StaffList)
 
+@app.route('/createStaff', methods=['GET', 'POST'])
+def create_staff():
+    create_staff_form = updateStaff(request.form)
+    if request.method == 'POST' and create_staff_form.validate():
+
+        createstaff(create_staff_form.name.data,
+                    create_staff_form.email.data,
+                    create_staff_form.password.data)
+
+        return redirect(url_for('retrieve_staff'))
+
+
+
+    return render_template('staff/createStaff.html', form=create_staff_form)
+
+
 @app.route('/updateStaff/<int:id>/', methods=['GET', 'POST'])
 def update_staff(id):
     update_staff_form = updateStaff(request.form)
