@@ -40,12 +40,14 @@ class updateCust(Form):
     contactNum = TextAreaField('Contact Number:', [validators.length(max=200), validators.DataRequired()])
     membership = TextAreaField('Membership Points:', [validators.length(max=200), validators.DataRequired()])
 
-
 class updateStaff(Form):
     name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
-    password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
 
+class createStaff(Form):
+    name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
+    password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
 
 class CreditCardForm(Form):
     name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])

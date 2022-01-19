@@ -11,11 +11,11 @@ def StaffDetails(StaffID):
     cursor.execute(query)
 
     cursor_data = cursor.fetchall()
-    StaffDetails = []
+    StaffList = []
     for i in cursor_data:
-        StaffDetails.append(i)
+        StaffList.append(i)
 
-    return StaffDetails
+    return StaffList
 
 def CustDetails(customerID):
 

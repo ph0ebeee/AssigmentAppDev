@@ -9,7 +9,7 @@ from forms import forms
 from userAuthentication.loginValidation import *
 from script import *
 
-from forms.forms import feedbackForm
+from forms.forms import feedbackForm, createStaff
 
 import shelve
 from flask import Flask, render_template, request, session, jsonify
@@ -263,7 +263,7 @@ def retrieve_staff():
 
 @app.route('/createStaff', methods=['GET', 'POST'])
 def create_staff():
-    create_staff_form = updateStaff(request.form)
+    create_staff_form = createStaff(request.form)
     if request.method == 'POST' and create_staff_form.validate():
 
         createstaff(create_staff_form.name.data,
@@ -283,14 +283,15 @@ def update_staff(id):
         updatestaff(update_staff_form.name.data,
                     update_staff_form.email.data,
                     id)
+
         return redirect(url_for('retrieve_staff'))
 
     else:
-        StaffDetail = StaffDetails(id)
+        StaffList = StaffDetails(id)
 
-        for i in StaffDetail:
-            update_staff_form.name.data = StaffDetail[0][1]
-            update_staff_form.email.data = StaffDetail[0][2]
+        for i in StaffList:
+            update_staff_form.name.data = StaffList[0][1]
+            update_staff_form.email.data = StaffList[0][2]
 
         return render_template('staff/updateStaff.html', form=update_staff_form)
 
