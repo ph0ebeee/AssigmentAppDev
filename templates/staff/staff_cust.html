@@ -1,27 +1,48 @@
 {%extends "base_s.html" %}
 {% block title %}
-Library Loan System - CustomerManagement
+Library Loan System - Customer Management
 {% endblock %}
 
 {% block content %}
+
 <div class="container-fluid h-100">
-        <div class="row h-100">
-            <div class="col-2" id="green">
-                    <a class="dropdown-item" href="#">Orders</a>
-                    <a class="dropdown-item" href="/acceptedOrder">Accepted</a>
-                    <a class="dropdown-item" href="/declinedOrder">Declined</a>
-            </div>
-            <!--Contains the main content
-                    of the webpage-->
             <div class="col-10" style="text-align: justify;">
-                <h1>Orders</h1>
-                {%for i in to_send%}
-                <p> {{i[0]}}</p>
-                {%endfor%}
+               <div class="mainContent" style="display: block;">
+                   <h2>Customer Management</h2>
+                   <div class="table-responsive">
+                   <table class="table table-striped table-bordered">
+
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Cust ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Contact</th>
+                            <th>Membership Points</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in custList %}
+                        <tr>
+                            <td>{{i[0]}}</td>
+                            <td>{{i[1]}}</td>
+                            <td>{{i[3]}}</td>
+                            <td>{{i[6]}}</td>
+                            <td>{{i[5]}}</td>
+                            <td>{{i[2]}}</td>
+                            <td><a href="/updateUser/{{i[0]}}" class="btn btn-warning">Update</a>
+                            <input type="submit" value="Delete" class="btn btn-danger"
+                                       onclick="return confirm('Are you sure you want to delete {{i[1]}}?');"></td>
+                        </tr>
+                     {%endfor%}
+                    </tbody>
+
+                </table>
             </div>
         </div>
-    </div>
-</body>
+            </div>
+</div>
 
-</html>
 {% endblock %}

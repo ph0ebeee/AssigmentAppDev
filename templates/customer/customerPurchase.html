@@ -1,41 +1,20 @@
-{%extends "base.html" %}
+{%extends "base_customer.html" %}
 {% block title %}
 Library Loan System - customerSettings
 {% endblock %}
 
 {% block content %}
-<style>
-    #customerSettings_sidenav {
-        height: 100%;
-        width: 200px;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        background-color: #FBF8F2;
-        overflow-x: hidden;
-        padding-top: 20px;
-        color: black;
-    }
-
-        #customerSettings_sidenav a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: underline;
-            font-size: 25px;
-            display: block;
-            transition: 0.3s;
-        }
-</style>
-<div class:"customerSettings_sidenav">
-    <img src="user_profilePicture.jpg" style="border-radius:50%; display:inline-block" /><p>username</p>
-    <a class="dropdown-item" href="#">Account</a>
-    <a class="dropdown-item" href="./templates/customer/customerPurchase">Purchase</a>
+<div class:"customerSettings_sidenav"
+     style="height:100%; width:200px; position: relative; z-index:1; top:0; left:0; background-color:#FBF8F2; overflow-x: hidden; padding-top: 20px; color: black; display: inline-block; margin-right: 20px;">
+    <img src="user_profilePicture.jpg" style="border-radius:50%; display:inline" /><p>{{session['custName']}}</p>
+    <a class="dropdown-item" href="/customerSettings">Account</a>
+    <a class="dropdown-item" href="#">Purchase</a>
     <a class="dropdown-item" href="/customerVouchers">Vouchers</a>
     <a class="dropdown-item" href="/customerFAQ">FAQ</a>
     <a class="dropdown-item" href="/customerMembership">Membership</a>
     <a class="dropdown-item" href="/logout">Log out</a>
 </div>
-<div class="mainContent">
+<div class="mainContent" style="display:inline-block;">
     <h2>Purchase</h2>
     {% for i in custPurchaseList %}
     <div class="table-responsive">

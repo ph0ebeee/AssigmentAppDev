@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Game 2: Match It</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='game2.css') }}">
+    <script src="static/game2.js"></script>
+
+</head>
+<body>
+  <div>
+      <!--<button class = "quit" type = "button"> Quit </button>-->
+      <h2 style="text-align:center"> Flip the cards and try to pair up as many as you can </h2>
+      <h3 class="caution"> Caution : Time is ticking</h3>
+  </div>
+
+    <div class="overlay-text visible">
+      Match It
+      <span class="overlay-text-small">Click to Play</span>
+    </div>
+    <div id="game-over-text" class="overlay-text">
+      GAME OVER
+    </div>
+    <div id="victory-text" class="overlay-text">
+      VICTORY
+      <a href class="overlay-text-small" src="game2/Reedem.html">Redeem Vouchers</a>
+    </div>
+
+    <div class="game-container">
+      <div class="game-info-container">
+        <div class="game-info">
+          Time <span id="time-remaining">60</span>
+        </div>
+        <div class="game-info">
+          Flips <span id="flips">0</span>
+      </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/cheese.jpg') }}">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/meat.jpg') }}">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/cheese.jpg') }}">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/drumstick.jpg') }}">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/milk.jpg') }}">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/meat.jpg') }}">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/flour.jpg') }}">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/milk.jpg') }}">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/pizza.jpg') }}">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/drumstick.jpg') }}">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/pizza.jpg') }}">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-back card-face">
+          <img class="qn" src="{{ url_for('static', filename='Assets/images/qnmark.png') }}">
+        </div>
+        <div class="card-front card-face">
+          <img class="ingredient" src="{{ url_for('static', filename='Assets/images/flour.jpg') }}">
+        </div>
+      </div>
+    </div>
+
+</body>
+</html>

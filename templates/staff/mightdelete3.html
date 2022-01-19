@@ -1,0 +1,38 @@
+{% endblock %}
+{%extends "base_s.html" %}
+{% block title %}
+Library Loan System - Staff Management
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid h-100">
+            <div class="col-10" style="text-align: justify;">
+               <div class="mainContent" style="display: block;">
+                   <h2>Staff Management</h2>
+                   <div class="table-responsive">
+                   <table class="table table-striped table-bordered">
+                    {% for i in StaffList %}
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Staff ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <!--<th>Role</th>-->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{i[0]}}</td>
+                            <td>{{i[1]}}</td>
+                            <td>{{i[3]}}</td>
+                        </tr>
+                    </tbody>
+                    {%endfor%}
+                </table>
+            </div>
+        </div>
+            </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{%extends "base_s.html" %}
+{% block title %}Library Loan System - Retrieve Users{% endblock %}
+
+{% block content %}
+<div class="container-fluid h-100">
+        <div class="row h-100">
+            <div class="col-2" id="green">
+                    <a class="dropdown-item" href="/retrieveCustomers">Customer Management</a>
+                    <a class="dropdown-item" href="/game2">Accepted</a>
+                    <a class="dropdown-item" href="#">Retrieve Customer</a>
+            </div>
+
+<h1 class="display-4">Declined</h1>
+<div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Name</th>
+        <th>Gender</th>
+          <th>Email</th>
+          <th>Mailing Address</th>
+        <th>Membership</th>
+        <th>Remarks</th>
+        <th></th>
+        <th></th>
+            </tr>
+    </thead>
+    <tbody>
+        {% for user in users_list %}
+      <tr>
+        <td>{{ user.get_id() }}</td>
+        <td>{{ user.get_name() }}</td>
+        <td>{{ user.get_gender() }}</td>
+          <td>{{ user.get_email() }}</td>
+        <td>{{ user.get_address() }}</td>
+        {% if user.get_membership() == "F" %}
+        <td>Fellow</td>
+        {% elif user.get_membership() == "S" %}
+        <td>Senior</td>
+        {% elif user.get_membership() == "P" %}
+        <td>Professional</td>
+        {% endif %}
+        <td>{{ user.get_remarks() }}</td>
+          <td><a href="/updateUser/{{user.get_id()}}" class="btn btn-warning">Update</a></td>
+        <td>
+          <form action="{{url_for('delete_user', id=user.get_id())}}" method="POST">
+            <!--<input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{user.get_first_name()}} {{user.get_last_name()}}?');">-->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal_{{user.get_id()}}">
+  Delete
+</button>
+
+<div class="modal" id="myModal_{{user.get_id()}}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title">Delete Confirmation</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        Are you sure you want to delete {{user.get_name()}}?
+      </div>
+
+      <div class="modal-footer">
+        <input type = "submit" value="Delete" class="btn btn-danger">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+            </div>
+        </div>
+</div>
+{% endblock %}

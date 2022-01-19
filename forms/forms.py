@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, SelectField, TextAreaField, PasswordField, validators
+from wtforms import Form, StringField, SelectField, TextAreaField, PasswordField, validators, RadioField, IntegerField
 from wtforms.fields import EmailField, DateField
 
 class signupForm(Form):
@@ -14,6 +14,7 @@ class loginForm(Form):
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
     password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
 
+<<<<<<< HEAD
 class feedbackForm(Form):
     cust_name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
@@ -27,3 +28,23 @@ class createProduct(Form):
     product_Stock = StringField('Product StockCount: ', [validators.Length(min=1, max=150), validators.DataRequired()])
     product_Discount = StringField('Discount Rate of Product: ', [validators.Length(min=1, max=150), validators.DataRequired()])
     product_Date = StringField('Date of Product Update : ', [validators.Length(min=1, max=150), validators.DataRequired()])
+=======
+class updateCust(Form):
+    name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
+    address = TextAreaField('Mailing Address:', [validators.length(max=200), validators.DataRequired()])
+    contactNum = TextAreaField('Contact Number:', [validators.length(max=200), validators.DataRequired()])
+    membership = TextAreaField('Membership Points:', [validators.length(max=200), validators.DataRequired()])
+
+class updateStaff(Form):
+    name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
+
+class CreditCardForm(Form):
+    name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
+    address = TextAreaField('Mailing Address:', [validators.length(max=200), validators.DataRequired()])
+    card_no = IntegerField('Card Number:', [validators.Length(min=16, max=16), validators.DataRequired()])
+    expiry = DateField('Valid Till:', [validators.Length(min=1, max=150), validators.DataRequired()])
+    cvc = IntegerField('CVC:', [validators.Length(min=3, max=3), validators.DataRequired()])
+
+>>>>>>> bda93c2956b976f46b44b9a6f3826b05d47c541d
