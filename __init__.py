@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from flask import Flask, render_template, request, session
 # from flask_session import Session
 import shelve
@@ -14,7 +13,6 @@ from script import *
 
 from forms.forms import feedbackForm
 
-=======
 import shelve
 from flask import Flask, render_template, request, session, jsonify
 # from flask_session import Session
@@ -31,7 +29,6 @@ from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
 from templates.paypal.CustomerInfo import CustomerInfo
 import paypalrestsdk
->>>>>>> bda93c2956b976f46b44b9a6f3826b05d47c541d
 # from templates.chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 
@@ -154,15 +151,7 @@ def signUp():
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
-<<<<<<< HEAD
-@app.route('/AboutUs')
-=======
-@app.route('/custAboutUs')   # added but havent push
-def custAboutUs():
-    return render_template('customer/aboutUs.html')
-
 @app.route('/AboutUs')   # added but havent push
->>>>>>> bda93c2956b976f46b44b9a6f3826b05d47c541d
 def AboutUs():
     return render_template('about_us/aboutUs.html')
 
