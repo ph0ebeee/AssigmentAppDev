@@ -231,22 +231,6 @@ def NewlyRestockedItems():
 #     return jsdata
 
 
-# @app.route('/contactUs', methods=['GET', 'POST'])
-# def feedback():
-#     feedback = CreateUserForm(request.form)
-#     if request.method == 'POST' and feedback.validate():
-#         users_dict = {}
-#         db = shelve.open('user.db', 'c')
-#
-#         try:
-#             users_dict = db['Users']
-#         except:
-#             print("Error in retrieving Users from user.db.")
-#
-#         user = User.User(feedback.name.data, feedback.response.data)
-#         users_dict[user.get_user_id()] = user
-#         db['Users'] = users_dict
-
 #logout
 @app.route('/logout')
 def logout():
@@ -276,6 +260,7 @@ def retrieve_staff():
     StaffList = checkStaff()
     return render_template('staff/retrieveStaff.html', StaffList = StaffList)
 
+
 @app.route('/createStaff', methods=['GET', 'POST'])
 def create_staff():
     create_staff_form = updateStaff(request.form)
@@ -286,8 +271,6 @@ def create_staff():
                     create_staff_form.password.data)
 
         return redirect(url_for('retrieve_staff'))
-
-
 
     return render_template('staff/createStaff.html', form=create_staff_form)
 
