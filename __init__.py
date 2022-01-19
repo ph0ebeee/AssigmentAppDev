@@ -6,8 +6,6 @@ import Feedback_class as Feedbacks
 from templates.products.SQLtoPython import discounted_products, topselling_products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from templates.staff import staff_forms
-from templates.staff.staffcust import orders
 from userAuthentication.loginValidation import *
 from script import *
 
@@ -20,7 +18,6 @@ from flask import Flask, render_template, request, session, jsonify
 from forms import forms
 #from flask_bcrypt import Bcrypt
 from forms.forms import updateCust, updateStaff,CreditCardForm
-import users.Users as Users
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
     deletestaff, createstaff
 from userAuthentication.loginValidation import *
@@ -72,7 +69,7 @@ def login():
 
 #validate users login details to respective customer / staff page
 @app.route('/LoginValidate', methods=['GET', 'POST'])
-def loginValidate(loginPage):
+def loginValidate():
     if request.method == 'POST':
         form = loginForm(request.form)
         validateCustLogin = validate_cust_login(form.email.data,form.password.data)
@@ -193,7 +190,7 @@ def retrieve_contact_us():
         contact = contact_dict.get(key)
         contact_list.append(contact)
 
-    return render_template('retrieveCustomers.html', count=len(contact_list), contact_list=contact_list)
+    return render_template('contact_us/RetrieveContact.html', count=len(contact_list), contact_list=contact_list)
 
 
 @app.route('/ShopCategories')   # added but havent push
