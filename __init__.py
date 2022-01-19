@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, session
 # from flask_session import Session
-import shelve
 # from flask_login import current_user, login_required
 import Feedback_class as Feedbacks
 from templates.products.SQLtoPython import discounted_products, topselling_products
@@ -8,16 +7,12 @@ from forms import forms
 #from flask_bcrypt import Bcrypt
 from userAuthentication.loginValidation import *
 from script import *
-
-from forms.forms import feedbackForm, createStaff
-
-import shelve
 from flask import Flask, render_template, request, session, jsonify
 # from flask_session import Session
 #from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import updateCust, updateStaff,CreditCardForm
+from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
     deletestaff, createstaff
 from userAuthentication.loginValidation import *
