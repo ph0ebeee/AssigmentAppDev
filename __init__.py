@@ -14,7 +14,7 @@ from forms import forms
 #from flask_bcrypt import Bcrypt
 from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
-    deletestaff, createstaff
+    deletestaff, deletecust, createstaff
 from userAuthentication.loginValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
@@ -319,11 +319,13 @@ def update_user(id):
 
 @app.route('/deleteUser/<int:id>', methods=['POST'])
 def delete_user(id):
-    pass
+
+    deletecust(id)
 
     return redirect(url_for('retrieve_customers'))
 
 @app.route('/deleteStaff/<int:id>', methods=['POST'])
+
 def delete_staff(id):
 
     deletestaff(id)

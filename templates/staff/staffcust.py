@@ -93,3 +93,10 @@ def deletestaff(StaffID):
     query = "DELETE FROM Staff WHERE StaffID = '{}'".format(StaffID)
     cursor.execute(query)
     conn.commit()
+
+def deletecust(CustomerID):
+
+    cursor = conn.cursor()
+    query = "DELETE FROM Customer WHERE CustomerID = '{}'".format(CustomerID)
+    cursor.execute(query)
+    conn.commit()
