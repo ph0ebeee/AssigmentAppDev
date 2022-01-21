@@ -105,9 +105,11 @@ h1, h2, h3, h4, h5, h6 {
   list-style: none;
   align-items: center;
 }
+
 .navbar li {
   position: relative;
 }
+
 .navbar a, .navbar a:focus {
   display: flex;
   align-items: center;
@@ -117,11 +119,15 @@ h1, h2, h3, h4, h5, h6 {
   color: #222222;
   white-space: nowrap;
   transition: 0.3s;
+  text-decoration: none;
 }
+
 .navbar a i, .navbar a:focus i {
   font-size: 12px;
   line-height: 0;
   margin-left: 5px;
+  text-decoration: none;
+
 }
 .navbar a:hover, .navbar .active, .navbar .active:focus, .navbar li:hover > a {
   color: #5cb874;
@@ -155,13 +161,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 .navbar .dropdown ul li {
   min-width: 200px;
+  text-decoration: none;
+
 }
 .navbar .dropdown ul a {
   padding: 10px 20px;
   text-transform: none;
+  text-decoration: none;
+
 }
 .navbar .dropdown ul a i {
   font-size: 12px;
+  text-decoration: none;
+
 }
 .navbar .dropdown ul a:hover, .navbar .dropdown ul .active:hover, .navbar .dropdown ul li:hover > a {
   color: #5cb874;
@@ -171,17 +183,7 @@ h1, h2, h3, h4, h5, h6 {
   top: 100%;
   visibility: visible;
 }
-.navbar .dropdown .dropdown ul {
-  top: 0;
-  left: calc(100% - 30px);
-  visibility: hidden;
-}
-.navbar .dropdown .dropdown:hover > ul {
-  opacity: 1;
-  top: 0;
-  left: 100%;
-  visibility: visible;
-}
+
 @media (max-width: 1366px) {
   .navbar .dropdown .dropdown ul {
     left: -90%;
