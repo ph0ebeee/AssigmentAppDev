@@ -278,7 +278,6 @@ def update_staff(id):
         updatestaff(update_staff_form.name.data,
                     update_staff_form.email.data,
                     id)
-
         return redirect(url_for('retrieve_staff'))
 
     else:

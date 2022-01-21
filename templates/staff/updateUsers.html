@@ -4,7 +4,11 @@
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
 
-<h1 class="display-4">Update User</h1>
+<div class="container-fluid h-100">
+
+               <div class="section-title">
+                   <h2>Customer Management</h2>
+               </div>
 
 <form method="POST" action="">
   <div class="form-group">
@@ -24,6 +28,7 @@
   </div>
   <input type="submit" value="Submit" class="btn btn-primary"/>
 </form>
+</div>
 {% endblock %}
 
 
