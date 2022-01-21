@@ -100,3 +100,9 @@ def deletecust(CustomerID):
     query = "DELETE FROM Customer WHERE CustomerID = '{}'".format(CustomerID)
     cursor.execute(query)
     conn.commit()
+
+def addpoints(CustomerID):
+    cursor = conn.cursor()
+    query = "UPDATE Customer SET MembershipPoints = 100 WHERE CustomerID = '{}'".format(CustomerID)
+    cursor.execute(query)
+    conn.commit()

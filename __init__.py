@@ -14,7 +14,7 @@ from forms import forms
 #from flask_bcrypt import Bcrypt
 from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
-    deletestaff, deletecust, createstaff
+    deletestaff, deletecust, createstaff, addpoints
 from userAuthentication.loginValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
@@ -357,6 +357,11 @@ def update_staff_account(id):
 @app.route('/game2')
 def game2():
     return render_template('game2/game2.html')
+
+@app.route('/aftergame2')
+def claimpoints(id):
+    addpoints(id)
+    return render_template('game2/Reedem.html')
 
 # chatbot done by Phoebe
 
