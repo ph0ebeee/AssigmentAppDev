@@ -33,7 +33,7 @@ def home():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return render_template('./staff.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+    return render_template('home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 @app.route('/custHome')
 #function for images selected to be seen on image slideshow  - viona
@@ -217,7 +217,7 @@ def retrieve_database_receipt():
 @app.route('/logout')
 def logout():
     session.clear()
-    return render_template('home.html')
+    return redirect(url_for('/'))
 
 
 @app.route('/staffaccount', methods=['GET', 'POST'])
