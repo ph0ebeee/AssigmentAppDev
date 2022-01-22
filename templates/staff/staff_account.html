@@ -6,41 +6,35 @@ Library Loan System - Staff Profile Page
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for msg in messages %}
-                <p>{{msg}}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <div class="content-section">
-        <img src="images/flour.jpg/" style="border-radius:50%; display:inline-block"/><p>username</p>
-        <h1>Settings</h1>
-      </div>
-
-
-
-<div class="d-flex align-content-center justify-content-center" style="background-color: #FBF8F2; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #DDD5C2;">
-    <div class="card my-5 shadow" style="   width:500px;">
-        <div class="card-body">
-            {%for i in to_send%}
-            <div class="details">
-            <p id ="username" href="/updateusername"> Change Username:{{i[1]}}</p>
-            <p id = "password"> Change Password:{{i[2]}}</p>
-            <p id = "email"> Change Email:{{i[3]}}</p>
-            <p id = "phone_number">Change Phone Number:{{i[3]}}</p>
-
-            </div>
+<div class:"staffSettings_sidenav"
+     style="height:100%; width:200px; position: relative; z-index:1; top:0; left:0; background-color:#FBF8F2; overflow-x: hidden; padding-top: 20px; color: black; display: inline-block; margin-right: 20px;">
+     <img src="/" style="border-radius:50%; display:flex;"/><p>{{session['StaffName']}}</p>
+        <a class="dropdown-item" href="#">Account</a>
+        <a class="dropdown-item" href="/logout">Log out</a>
+</div>
+<div class="mainContent" style="display:inline-block";>
+    <h2>Account</h2><br/>
+    <form method="post" action="/StaffSettings" style="background-color:white;" class='StaffParticulars'>
+        <div class="taable-responsive">
+            <table class="table table-striped table-bordered">
+                <tbody>
+                {% for i in staff_details%}
+                <tr>
+                    <td>Username: {{i[1]}}</td>
+                    </tr>
+                <tr>
+                    <td>Email: {{i[2]}}</td>
+                    </tr>
+                <tr>
+                    <td>Password: {{i[3]}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <a href="/updateStaffaccount/{{i[0]}}" class="btn btn-warning">Update</a>
             {%endfor%}
-
-            <input type="submit" value="update" class="submitBtn btn-primary"
-                   style="border-color:#F5BA76; text-align:right; align-items:flex-end; display: flex; background-color: #F5BA76; color: floralwhite;" />
-            </form>
         </div>
-    </div>
+    </form>
 </div>
 {% endblock %}
-
-{% from "includes/_footer.html" import render_field %}
 
 

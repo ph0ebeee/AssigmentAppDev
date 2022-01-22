@@ -1,93 +1,40 @@
 {%extends "base_s.html" %}
-{% block title %}Library Loan System - Retrieve Staff{% endblock %}
-
-{% block content %}
-<div class="container-fluid h-100">
-        <div class="row h-100">
-            <div class="col-2" id="green">
-                    <a class="dropdown-item" href="/createCustomers">New Customer</a>
-                    <a class="dropdown-item" href="/game2">Accepted</a>
-                    <a class="dropdown-item" href="#">Retrieve Customer</a>
-            </div>
-
-<h1 class="display-4">Retrieve Staff</h1>
-                <div>
-  {% if count == 0 %}
-  <p>There are no users.</p>
-  {% elif count == 1 %}
-  <p>There is 1 user.</p>
-  {% else %}
-  <p>There are {{ count }} users.</p>
-  {% endif %}
-</div>
-
-<div>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Staff ID</th>
-        <th>Name</th>
-          <th>Email</th>
-          <th>Address</th>
-        <th>Role</th>
-        <th>Remarks</th>
-        <th></th>
-        <th></th>
-            </tr>
-    </thead>
-    <tbody>
-        {% for staff in staff_list %}
-      <tr>
-        <td>{{ staff.get_id() }}</td>
-        <td>{{ staff.get_name() }}</td>
-          <td>{{ staff.get_email() }}</td>
-        <td>{{ staff.get_address() }}</td>
-        {% if staff.get_role() == "F" %}
-        <td>Fellow</td>
-        {% elif staff.get_role() == "S" %}
-        <td>Senior</td>
-        {% elif staff.get_role() == "P" %}
-        <td>Professional</td>
-        {% endif %}
-        <td>{{ staff.get_remarks() }}</td>
-          <td><a href="/updateStaff/{{staff.get_id()}}" class="btn btn-warning">Update</a></td>
-        <td>
-          <form action="{{url_for('delete_staff', id=staff.get_id())}}" method="POST">
-            <!--<input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{user.get_first_name()}} {{user.get_last_name()}}?');">-->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal_{{staff.get_id()}}">
-  Delete
-</button>
-
-<div class="modal" id="myModal_{{staff.get_id()}}">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h4 class="modal-title">Delete Confirmation</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-        Are you sure you want to delete {{user.get_name()}}?
-      </div>
-
-      <div class="modal-footer">
-        <input type = "submit" value="Delete" class="btn btn-danger">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-          </form>
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-</div>
-            </div>
-        </div>
-</div>
+{% block title %}
+Library Loan System - Staff Management
 {% endblock %}
 
+{% block content %}
+
+<div class="container-fluid h-100">
+    <div class="section-title">
+                   <h2>Staff Management</h2>
+               </div>
+                   <div class="table-responsive">
+                   <table class="table table-striped table-bordered">
+
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Staff ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Remarks</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in StaffList %}
+                        <tr>
+                            <td>{{i[0]}}</td>
+                            <td>{{i[1]}}</td>
+                            <td>{{i[2]}}</td>
+                            <td><a href="/updateStaff/{{i[0]}}" class="btn btn-warning" style="margin:10px;">Update</a>
+                            <a href="/deleteStaff/{{i[0]}}" class="btn btn-danger"
+                                   onclick="return confirm('Are you sure you want to delete {{i[1]}}?');">Delete</a>
+                            </td>
+                        </tr>
+                    {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+{% endblock %}

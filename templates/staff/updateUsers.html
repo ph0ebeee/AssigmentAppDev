@@ -4,14 +4,15 @@
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
 
-<h1 class="display-4">Update User</h1>
+<div class="container-fluid h-100">
+
+               <div class="section-title">
+                   <h2>Customer Management</h2>
+               </div>
 
 <form method="POST" action="">
   <div class="form-group">
     {{ render_field(form.name, class="form-control") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.gender, class="form-control") }}
   </div>
     <div class="form-group">
     {{ render_field(form.email, class="form-control") }}
@@ -20,15 +21,14 @@
     {{ render_field(form.address, class="form-control") }}
   </div>
   <div class="form-group">
-    {{ render_field(form.membership, class="form-check", style="list-style-type:none") }}
+    {{ render_field(form.contactNum, class="form-control") }}
   </div>
-  <div id="prof">
-    <div class="form-group">
-      {{ render_field(form.remarks, class="form-control") }}
-    </div>
+  <div class="form-group">
+    {{ render_field(form.membership, class="form-check", style="list-style-type:none") }}
   </div>
   <input type="submit" value="Submit" class="btn btn-primary"/>
 </form>
+</div>
 {% endblock %}
 
 
