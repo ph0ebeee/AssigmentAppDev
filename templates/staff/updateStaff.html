@@ -4,13 +4,19 @@
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
 
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/createstaff.css') }}">
+
+</head>
+
 <div class="container-fluid h-100">
 
                <div class="section-title">
-                   <h2>Customer Management</h2>
+                   <h2>Staff Management</h2>
                </div>
 
-
+<div class = "form-style-9">
 <form method="POST" action="">
    <div class="form-group">
     {{ render_field(form.name, class="form-control") }}
@@ -18,8 +24,12 @@
     <div class="form-group">
     {{ render_field(form.email, class="form-control") }}
   </div>
+    <div class="form-group">
+    {{ render_field(form.remarks, class="form-control") }}
+  </div><br/>
   <input type="submit" value="Submit" class="btn btn-primary"/>
 </form>
+</div>
 </div>
 {% endblock %}
 

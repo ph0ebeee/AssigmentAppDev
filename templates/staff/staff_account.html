@@ -6,35 +6,34 @@ Library Loan System - Staff Profile Page
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
 
-<div class:"staffSettings_sidenav"
-     style="height:100%; width:200px; position: relative; z-index:1; top:0; left:0; background-color:#FBF8F2; overflow-x: hidden; padding-top: 20px; color: black; display: inline-block; margin-right: 20px;">
-     <img src="/" style="border-radius:50%; display:flex;"/><p>{{session['StaffName']}}</p>
-        <a class="dropdown-item" href="#">Account</a>
-        <a class="dropdown-item" href="/logout">Log out</a>
-</div>
-<div class="mainContent" style="display:inline-block";>
-    <h2>Account</h2><br/>
-    <form method="post" action="/StaffSettings" style="background-color:white;" class='StaffParticulars'>
-        <div class="taable-responsive">
-            <table class="table table-striped table-bordered">
-                <tbody>
-                {% for i in staff_details%}
-                <tr>
-                    <td>Username: {{i[1]}}</td>
-                    </tr>
-                <tr>
-                    <td>Email: {{i[2]}}</td>
-                    </tr>
-                <tr>
-                    <td>Password: {{i[3]}}</td>
+
+<div class="container-fluid h-100">
+   <div class="section-title">
+       <h2>Account</h2>
+   </div>
+
+<form method="post" action="/StaffSettings" style="background-color:white;" class='StaffParticulars'>
+    <div class="taable-responsive">
+        <table class="table table-striped table-bordered">
+            <tbody>
+            {% for i in staff_details%}
+            <tr>
+                <td>Username: {{i[1]}}</td>
                 </tr>
-                </tbody>
-            </table>
-            <a href="/updateStaffaccount/{{i[0]}}" class="btn btn-warning">Update</a>
-            {%endfor%}
-        </div>
-    </form>
+            <tr>
+                <td>Email: {{i[2]}}</td>
+                </tr>
+            <tr>
+                <td>Password: {{i[3]}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <a href="/updateStaffaccount/{{i[0]}}" class="btn btn-warning">Update</a>
+        {%endfor%}
+    </div>
+</form>
 </div>
+
 {% endblock %}
 
 

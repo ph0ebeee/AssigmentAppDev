@@ -60,10 +60,10 @@ def checkStaff():
 
     return StaffList
 
-def updatestaff(StaffName,EmailAddr,StaffID):
+def updatestaff(StaffName,EmailAddr,Remarks,StaffID):
 
     cursor = conn.cursor()
-    query = "UPDATE Staff SET StaffName = '{}', EmailAddr = '{}' WHERE StaffID = '{}'".format(StaffName,EmailAddr,StaffID)
+    query = "UPDATE Staff SET StaffName = '{}', EmailAddr = '{}', Remarks = '{}' WHERE StaffID = '{}'".format(StaffName,EmailAddr,Remarks,StaffID)
     cursor.execute(query)
     conn.commit()
 
@@ -81,9 +81,9 @@ def updatestaffsettings(StaffName,EmailAddr,StaffID):
     cursor.execute(query)
     conn.commit()
 
-def createstaff(StaffName,EmailAddr,Password):
+def createstaff(StaffName,EmailAddr,Password,Remarks):
     cursor = conn.cursor()
-    query = "INSERT INTO Staff (StaffName,EmailAddr,Password) VALUES ('{}', '{}','{}')".format(StaffName,EmailAddr,Password)
+    query = "INSERT INTO Staff (StaffName,EmailAddr,Password,Remarks) VALUES ('{}', '{}','{}','{}')".format(StaffName,EmailAddr,Password,Remarks)
     cursor.execute(query)
     conn.commit()
 

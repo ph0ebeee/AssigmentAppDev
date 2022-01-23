@@ -263,7 +263,8 @@ def create_staff():
 
         createstaff(create_staff_form.name.data,
                     create_staff_form.email.data,
-                    create_staff_form.password.data)
+                    create_staff_form.password.data,
+                    create_staff_form.remarks.data)
 
         return redirect(url_for('retrieve_staff'))
 
@@ -277,6 +278,7 @@ def update_staff(id):
 
         updatestaff(update_staff_form.name.data,
                     update_staff_form.email.data,
+                    update_staff_form.remarks.data,
                     id)
         return redirect(url_for('retrieve_staff'))
 
@@ -286,6 +288,8 @@ def update_staff(id):
         for i in StaffList:
             update_staff_form.name.data = StaffList[0][1]
             update_staff_form.email.data = StaffList[0][2]
+            update_staff_form.remarks.data = StaffList[0][4]
+
 
         return render_template('staff/updateStaff.html', form=update_staff_form)
 
