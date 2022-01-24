@@ -1,12 +1,8 @@
-from flask import Flask, render_template, request, session
 # from flask_session import Session
 # from flask_login import current_user, login_required
 import Feedback_class as Feedbacks
 from templates.products.SQLtoPython import discounted_products, topselling_products
-from forms import forms
 #from flask_bcrypt import Bcrypt
-from userAuthentication.loginValidation import *
-from script import *
 from flask import Flask, render_template, request, session, jsonify
 # from flask_session import Session
 #from products.SQLtoPython import products
@@ -21,12 +17,8 @@ from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
 from templates.paypal.CustomerInfo import CustomerInfo
 import shelve
-<<<<<<< HEAD
-from chatbot.chat import get_response
-=======
 from templates.chatbot.chat import get_response
 from flask_cors import CORS
->>>>>>> fbf0ff5f99c933be83fe728335030debd502b972
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 
 app = Flask(__name__,template_folder="./templates")
