@@ -6,14 +6,36 @@ Library Loan System - Staff Profile Page
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
 
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/createstaff.css') }}">
+
+</head>
 
 <div class="container-fluid h-100">
    <div class="section-title">
        <h2>Account</h2>
    </div>
 
-<form method="post" action="/StaffSettings" style="background-color:white;" class='StaffParticulars'>
-    <div class="taable-responsive">
+<div class="form-style-9">
+<form method="post" action="/StaffSettings" class='StaffParticulars'>
+    {% for i in staff_details %}
+  <div class="form-group">
+    Username: {{i[1]}}
+  </div>
+    <div class="form-group">
+    Email: {{i[2]}}
+  </div>
+     <div class="form-group">
+    Password: {{i[3]}}
+  </div><br/>
+    <a href="/updateStaffaccount/{{i[0]}}" class="btn btn-warning">Update</a>
+        {%endfor%}
+</form>
+</div>
+</div>
+<!--<form method="post" action="/StaffSettings" class='StaffParticulars'>
+    <div class="table-responsive">
         <table class="table table-striped table-bordered">
             <tbody>
             {% for i in staff_details%}
@@ -32,7 +54,7 @@ Library Loan System - Staff Profile Page
         {%endfor%}
     </div>
 </form>
-</div>
+</div>-->
 
 {% endblock %}
 
