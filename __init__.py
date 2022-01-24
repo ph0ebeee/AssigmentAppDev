@@ -467,18 +467,16 @@ def add_product():
 
         try:
             shopping_cart_dict = db['ShoppingCart']
-            print("scart")
+
         except:
             print("Error in retrieving shopping cart from ShoppingCart.db")
 
 
 
-        itemsSelect = Product(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPrice, all_total_price)
-        print(itemsSelect)
+        itemsSelect = Product(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPrice, all_total_price, all_total_quantity)
         shopping_cart_dict[itemsSelect.get_product_id()] = itemsSelect
         db['ShoppingCart'] = shopping_cart_dict
         db.close()
-        print("shoppingcart")
         cursor.close()
         conn.close()
         return redirect(url_for('open_cart'))
@@ -520,7 +518,6 @@ def delete_product(code):
             shopping_cart_dict.pop(int(code))
             db['ShoppingCart'] = shopping_cart_dict
             db.close()
-            print('delete')
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
 
@@ -540,7 +537,6 @@ def empty_cart():
 
         db['ShoppingCart'] = shopping_cart_dict
         db.close()
-        print('clear')
         session.clear()
         return redirect(url_for('.open_cart'))
     except Exception as e:
