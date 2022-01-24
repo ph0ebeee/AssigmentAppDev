@@ -67,37 +67,33 @@ function togglePopup(idname){
   </style>
 </head>
 <body>
-      <button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/ShoppingCart">BACK</a></button>
-  {% for cart in shopping_list %}
-		<table class="tbl-cart" cellpadding="10" cellspacing="1">
-			<tbody>
+    <button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/ShoppingCart">BACK</a></button>
+    <h1><div class="txt-heading">Cart Overview</div></h1>
+		<table class="tbl-cart" cellpadding="10" cellspacing="1" style="width:80%">
 				<tr>
 					<th style="text-align:left;">Name</th>
+					<th style="text-align:right;" width="10%">Quantity</th>
 					<th style="text-align:right;" width="10%">Price</th>
 				</tr>
+        </table>
+ {% for cart in shopping_list %}
+    <table class="tbl-cart" cellpadding="10" cellspacing="1" style="width:80%">
 					<tr>
-						<td style="text-align:right;">{{ cart.get_product_name()}}</td>
+						<td style="text-align:left;">{{ cart.get_product_name()}}</td>
+						<td style="text-align:right;">{{ cart.get_quantity()}}</td>
 						<td  style="text-align:right;"> {{ cart.get_product_price() }}</td>
 					</tr>
+
 				<tr>
 					<td colspan="2" align="right">Total:</td>
-					<td align="right" colspan="2" ><bold> {{ cart.get_price() }}</bold></td>
-					<td>{{ cart.key }}</td>
+					<td align="right"><bold> {{ cart.get_price() }}</bold></td>
 				</tr>
-			</tbody>
 			</table>
   {% endfor %}
 
+    <button class="popupbuttons" onclick="togglePopup('payment')" >CONFIRM</button>
 
 
-
-
-
-
-
-
-
-    <button class="popupbuttons" onclick="togglePopup('payment')" style="right:150px">CONFIRM</button>
   <script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&client-id=AfRIwzrYKNDDjzhwa6wx4MAuoKf-7j0t76lAYyH-OEAC_XwtpxZmWX_VQ7M4INH10LUrIsESHWDFcUmm" data-client-token= "eyJicmFpbnRyZWUiOnsiYXV0aG9yaXphdGlvbkZpbmdlcnByaW50IjoiZTcwYWNjYmYxYzg5MmUyODhiYTk2NGI0MzY4OThkMDVlNWE0YzU2ZWFhNmFlMjIxMzRjMDExMGZmNTc5NGI3ZXxtZXJjaGFudF9pZD1yd3dua3FnMnhnNTZobTJuJnB1YmxpY19rZXk9NjNrdm4zN3Z0MjlxYjRkZiZjcmVhdGVkX2F0PTIwMjItMDEtMThUMDg6MjY6MDUuODEwWiIsInZlcnNpb24iOiIzLXBheXBhbCJ9LCJwYXlwYWwiOnsiaWRUb2tlbiI6ImV5SnJhV1FpT2lKbE5EQTJOakE0WWpVMFlUazBORGd4WWprMVl6YzFOREkwT0dOak1USXpaaUlzSW5SNWNDSTZJa3BYVkNJc0ltRnNaeUk2SWxKVE1qVTJJbjAuZXlKcGMzTWlPaUpvZEhSd2N6b3ZMMkZ3YVM1ellXNWtZbTk0TG5CaGVYQmhiQzVqYjIwaUxDSmhZM0lpT2xzaVkyeHBaVzUwSWwwc0ltRjFaQ0k2SWtGbVVrbDNlbkpaUzA1RVJHcDZhSGRoTm5kNE5FMUJkVzlMWmkwM2FqQjBOelpzUVZsNVNDMVBSVUZEWDFoM2RIQjRXbTFYV0Y5V1VUZE5ORWxPU0RFd1RGVnlTWE5GVTBoWFJFWmpWVzF0SWl3aWNtOXNaU0k2SWsxRlVrTklRVTVVSWl3aVlYVjBhRjkwYVcxbElqb3hOalF5TkRrME16WTJMQ0poZWlJNkltZGpjQzV6YkdNaUxDSnpZMjl3WlhNaU9sc2lRbkpoYVc1MGNtVmxPbFpoZFd4MElsMHNJbVY0Y0NJNk1UWTBNalE1TlRJMk5pd2ljMlZ6YzJsdmJsOXBibVJsZUNJNklrRnlVbFJQTFdWdVdtRlpTSE5QV0hWTVJHTmljelpIVEc1NWJTSXNJbWxoZENJNk1UWTBNalE1TkRNMk5pd2lhblJwSWpvaVZUSkJRVXRuWTBobVpHbzNhVXR0YXpGR1gyRm1aR2s1UjI5eGJrWkhVbk4wUjJkMFQwY3hZWEYyT0RRdGNYUTJVREZKWWxoT2Eza3pTVUkwZDA4ek1FOVlSa1Z5UWw5TWVYbHZOV2N5TlhOU05IWmZXV0owVFU1dGVWOXVPRzVTWjFkRlNrbHVVM0JZVDB0RWNWOWtVRUZGVFRsaloxVktUV0pPWDB4Q09WRWlMQ0pqYkdsbGJuUmZhV1FpT2lKQlpsSkpkM3B5V1V0T1JFUnFlbWgzWVRaM2VEUk5RWFZ2UzJZdE4yb3dkRGMyYkVGWmVVZ3RUMFZCUTE5WWQzUndlRnB0VjFoZlZsRTNUVFJKVGtneE1FeFZja2x6UlZOSVYwUkdZMVZ0YlNKOS5KZVVpNGRUMEFPdHVwa0ttaWVRZHJYZ3lLRlVkVkhzVC1CVXdzSzVrNkJNVl9wMlZiZU9EeHUwRm1NMUhudlJzSlFNSWJ2dDEtYkVwZ0FTbDdGX0NXcjVieUpqemRWdGRZUk90VW1sVGExR2w5dUVqYkpTYjU4NnhoWlloSGFxNTBGUDR2Z3JMSERiWEU4eDlfV1hzR0FFanBBcnRZNXBuNnQtY2FLUGVMSjdBbEFGcGRrcDJCSGE2S3JaYngxUUhJelZucURCc3prS2FmeV93RGNrZVNZcXdBRGx3NjNDcXl6MHNsb05zZTVYWlgxNFZMS3g2MENhS3pTaTRLemFLbVdNVTFMTEpTRG0wdmk1ZzhlX0pvam96TDJfbXdObFBFeGpYWHIxVkM3UmpXUFhRMW5COG00WGY2WU13emdwdVNfa2I0QlN4WllCcXZzTURPV1NubVEiLCJhY2Nlc3NUb2tlbiI6IkEyMUFBS05Sd0dfcXN6QWtaX3hTX3JpTURNcEszUGg5TXVsSWhiVXJIaWdfLVpfMDJnZVJHUHFYMUtYSHZsWjdWLS1Hb1dCN0N1dnR2cGFSYkpIeGdITVNPc0M0RFVEX1EifX0="></script>
       <div class ="popup" id='payment'>
         <div class = "overlay"></div>
