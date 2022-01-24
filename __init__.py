@@ -21,11 +21,17 @@ from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
 from templates.paypal.CustomerInfo import CustomerInfo
 import shelve
+<<<<<<< HEAD
 from chatbot.chat import get_response
+=======
+from templates.chatbot.chat import get_response
+from flask_cors import CORS
+>>>>>>> fbf0ff5f99c933be83fe728335030debd502b972
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 
 app = Flask(__name__,template_folder="./templates")
 app.secret_key = "secret key"
+CORS(app)
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
