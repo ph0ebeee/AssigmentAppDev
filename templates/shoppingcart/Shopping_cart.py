@@ -23,6 +23,12 @@ class Product:
     def set_price(self,total_price):
         self.__product_total_price = total_price
 
+    def set_quantity(self,quantity):
+        self.__product_quantity = quantity
+
+    def get_quantity(self):
+        return self.__product_quantity
+         
     def get_count(self):
         return self.__count
 
