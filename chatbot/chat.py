@@ -3,15 +3,15 @@ import json
 
 import torch
 
-from model import NeuralNet
-from nltk_utils import bag_of_words, tokenize
+from templates.chatbot.model import NeuralNet
+from templates.chatbot.nltk_utils import bag_of_words, tokenize
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-with open('intent.json', 'r') as json_data:
+with open('./templates/chatbot/intent.json', 'r') as json_data:
     intents = json.load(json_data)
 
-FILE = "data.pth"
+FILE = "./templates/chatbot/data.pth"
 data = torch.load(FILE)
 
 input_size = data["input_size"]
