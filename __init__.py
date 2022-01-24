@@ -369,13 +369,18 @@ def claimpoints(id):
 
 # chatbot done by Phoebe
 
-# @app.route("/Chatbot", methods=['POST'])
-# def chatbot():
-#     text = request.get_json().get("message")
-#     response = get_response(text)
-#     message = {"answer": response}
-#     return jsonify(message)
-#
+
+
+@app.route('/chatbot',methods=['POST'])
+def predict():
+
+    text = request.get_json().get('message')
+    response = get_response(text)
+    message = {"answer": response}
+    return jsonify(message)
+
+
+
 
 
 
@@ -392,6 +397,7 @@ def retrieve_database_receipt():
         cursor = conn.cursor()
         cursor.execute('SELECT OrderID,TotalPrice,POSDate from CustOrder')
         cursor_data = cursor.fetchall()
+        session.clear()
         return render_template("paypal/success_payment.html", to_send= cursor_data)
     except Exception as e:
         print(e)
@@ -408,6 +414,7 @@ def open_cart():
     cursor = conn.cursor()
     cursor.execute('SELECT ProductID,ProductName,ProductPrice from Product')
     cursor_data = cursor.fetchall()
+
     return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data)
 
 
@@ -426,6 +433,7 @@ def add_product():
             cursor.execute('SELECT ProductID, ProductName, ProductPrice from Product WHERE  ProductID = ?', _code)
             cursor_data = cursor.fetchone()
             selectedItem = { _code : {'name': cursor_data.ProductName, 'code': cursor_data.ProductID, 'price' : cursor_data.ProductPrice, 'quantity' : _quantity, 'total_price': _quantity * cursor_data.ProductPrice}}
+            print(selectedItem)
             all_total_price = 0
             all_total_quantity = 0
 
@@ -446,6 +454,7 @@ def add_product():
                     individual_price = float(session['cart_item'][key]['total_price'])
                     all_total_quantity = all_total_quantity + individual_quantity
                     all_total_price = all_total_price + individual_price
+
             else:
                 session['cart_item'] = selectedItem
                 all_total_quantity = all_total_quantity + _quantity
@@ -460,8 +469,26 @@ def add_product():
     except Exception as e:
         print(e)
     finally:
+        shopping_cart_dict = {}
+        db = shelve.open('ShoppingCart.db','c')
+
+        try:
+            shopping_cart_dict = db['ShoppingCart']
+            print("scart")
+        except:
+            print("Error in retrieving shopping cart from ShoppingCart.db")
+
+
+
+        itemsSelect = Product(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPrice, all_total_price)
+        print(itemsSelect)
+        shopping_cart_dict[itemsSelect.get_product_id()] = itemsSelect
+        db['ShoppingCart'] = shopping_cart_dict
+        db.close()
+        print("shoppingcart")
         cursor.close()
         conn.close()
+        return redirect(url_for('open_cart'))
 
 
 @app.route('/delete/<string:code>')
@@ -480,15 +507,32 @@ def delete_product(code):
                         individual_price = float(session['cart_item'][key]['total_price'])
                         all_total_quantity = all_total_quantity + individual_quantity
                         all_total_price = all_total_price + individual_price
+
                 break
 
         if all_total_quantity == 0:
+            shopping_cart_dict = {}
+            db = shelve.open('ShoppingCart.db', 'w')
+            shopping_cart_dict = db['ShoppingCart']
+
+            shopping_cart_dict.clear()
+
+            db['ShoppingCart'] = shopping_cart_dict
+            db.close()
             session.clear()
         else:
+            shopping_cart_dict = {}
+            db = shelve.open('ShoppingCart.db', 'w')
+            shopping_cart_dict = db['ShoppingCart']
+            shopping_cart_dict.pop(int(code))
+            db['ShoppingCart'] = shopping_cart_dict
+            db.close()
+            print('delete')
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
 
         return redirect(url_for('.open_cart'))
+
     except Exception as e:
         print(e)
 
@@ -496,15 +540,31 @@ def delete_product(code):
 @app.route('/ShoppingCart/empty')
 def empty_cart():
     try:
+        shopping_cart_dict = {}
+        db = shelve.open('ShoppingCart.db', 'w')
+        shopping_cart_dict = db['ShoppingCart']
+        shopping_cart_dict.clear()
+
+        db['ShoppingCart'] = shopping_cart_dict
+        db.close()
+        print('clear')
         session.clear()
         return redirect(url_for('.open_cart'))
     except Exception as e:
         print(e)
 
 
-@app.route('/PaymentCreditCard', methods=['GET', 'POST'])
+@app.route('/ShoppingCart/PaymentCreditCard', methods=['GET', 'POST'])
 def credit_card_form():
     CreditCard = CreditCardForm(request.form)
+    shopping_list = []
+    shopping_cart_dict = {}
+    db = shelve.open('ShoppingCart.db', 'r')
+    shopping_cart_dict = db['ShoppingCart']
+    db.close()
+    for key in shopping_cart_dict:
+        cart = shopping_cart_dict.get(key)
+        shopping_list.append(cart)
     if request.method == 'POST' and CreditCard.validate():
         customers_info_dict = {}
         db = shelve.open('customerInfo.db', 'c')
@@ -521,7 +581,9 @@ def credit_card_form():
         db.close()
 
         return redirect(url_for('retrieve_database_receipt'))
-    return render_template('paypal/customer_credit_form.html', form=CreditCard)
+    return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list)
+
+    
 
 
 if __name__ == '__main__':
