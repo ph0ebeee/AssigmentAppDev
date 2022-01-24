@@ -21,7 +21,7 @@ from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
 from templates.paypal.CustomerInfo import CustomerInfo
 import shelve
-# from chatbot.chat import get_response
+from chatbot.chat import get_response
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 
 app = Flask(__name__,template_folder="./templates")
@@ -320,19 +320,14 @@ def update_user(id):
         return render_template('staff/updateUsers.html', form=update_user_form)
 
 
-@app.route('/deleteUser/<int:id>', methods=['POST'])
+@app.route('/deleteUser/<int:id>', methods=['GET'])
 def delete_user(id):
-
     deletecust(id)
-
     return redirect(url_for('retrieve_customers'))
 
-@app.route('/deleteStaff/<int:id>', methods=['POST'])
-
+@app.route('/deleteStaff/<int:id>', methods=['GET'])
 def delete_staff(id):
-
     deletestaff(id)
-
     return redirect(url_for('retrieve_staff'))
 
 @app.route('/updateStaffaccount/<int:id>/', methods=['GET', 'POST'])
