@@ -229,7 +229,7 @@ def NewlyRestockedItems():
 @app.route('/logout')
 def logout():
     session.clear()
-    return render_template('./home.html')
+    return render_template('home.html')
 
 @app.route('/StaffSettings', methods=['GET', 'POST'])
 def StaffSettings():
@@ -456,16 +456,15 @@ def add_product():
                 all_total_quantity = all_total_quantity + _quantity
                 all_total_price = all_total_price + _quantity * cursor_data.ProductPrice
 
+            itemsSelect = Product(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPrice, all_total_price, all_total_quantity)
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
             return redirect(url_for('.open_cart'))
 
         else:
             return 'Error while adding item to cart'
-
     except Exception as e:
         print(e)
-
     finally:
         shopping_cart_dict = {}
         db = shelve.open('ShoppingCart.db','c')
@@ -477,7 +476,7 @@ def add_product():
             print("Error in retrieving shopping cart from ShoppingCart.db")
 
 
-        itemsSelect = Product(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPrice, all_total_price, all_total_quantity)
+
         shopping_cart_dict[itemsSelect.get_product_id()] = itemsSelect
         db['ShoppingCart'] = shopping_cart_dict
         db.close()
@@ -580,4 +579,4 @@ def credit_card_form():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug= True)
