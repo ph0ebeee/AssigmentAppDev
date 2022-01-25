@@ -38,7 +38,7 @@ def home():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return render_template('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+    return render_template('./staff.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 @app.route('/custHome')
 #function for images selected to be seen on image slideshow  - viona
@@ -355,13 +355,9 @@ def update_staff_account(id):
 def game2():
     return render_template('game2/game2.html')
 
-@app.route('/aftergame2', methods=['POST'])
-def claimpoints():
-    addpoints(int(session['custID']))
-    return render_template('game2/Reedem.html')
-
-@app.route('/game2/redeem')
-def redeem():
+@app.route('/aftergame2')
+def claimpoints(id):
+    addpoints(id)
     return render_template('game2/Reedem.html')
 
 # chatbot done by Phoebe
@@ -580,4 +576,4 @@ def credit_card_form():
 
 
 if __name__ == '__main__':
-    app.run(debug= True)
+    app.run()
