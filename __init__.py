@@ -356,9 +356,13 @@ def update_staff_account(id):
 def game2():
     return render_template('game2/game2.html')
 
-@app.route('/aftergame2')
+@app.route('/aftergame2',methods=['POST'])
 def claimpoints():
     addpoints(int(session['custID']))
+    return render_template('game2/Reedem.html')
+
+@app.route('/game2/redeem')
+def redeem():
     return render_template('game2/Reedem.html')
 
 # chatbot done by Phoebe
@@ -372,11 +376,6 @@ def predict():
     response = get_response(text)
     message = {"answer": response}
     return jsonify(message)
-
-
-
-
-
 
 # retrieve for receipt - phoebe
 
