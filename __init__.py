@@ -52,6 +52,7 @@ def custhome():
     return render_template('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 @app.route('/staffHome')
+#render staff.html template - anna
 def staffhome():
     return render_template('./staff.html')
 
@@ -232,6 +233,7 @@ def logout():
     return render_template('home.html')
 
 @app.route('/StaffSettings', methods=['GET', 'POST'])
+#staff account display - anna
 def StaffSettings():
     if (session['role'] == "Staff"):
         staff_details = StaffDetails(session['staffID'])
@@ -240,22 +242,24 @@ def StaffSettings():
         return render_template('usersLogin/loginPage.html')
 
 @app.route('/MainPage')
+#staff home page return template - anna
 def MainPage():
     return render_template('staff.html')
 
-
 @app.route('/retrieveCustomers', methods=['GET', 'POST'])
+#customer management retrieval - anna
 def retrieve_customers():
     custList = checkCust()
     return render_template('staff/staff_cust.html', custList = custList)
 
 @app.route('/retrieveStaff', methods=['GET', 'POST'])
+#staff management retrieval - anna
 def retrieve_staff():
     StaffList = checkStaff()
     return render_template('staff/retrieveStaff.html', StaffList = StaffList)
 
-
 @app.route('/createStaff', methods=['GET', 'POST'])
+#create staff, forms included - anna
 def create_staff():
     create_staff_form = createStaff(request.form)
     if request.method == 'POST' and create_staff_form.validate():
@@ -269,8 +273,8 @@ def create_staff():
 
     return render_template('staff/createStaff.html', form=create_staff_form)
 
-
 @app.route('/updateStaff/<int:id>/', methods=['GET', 'POST'])
+#update staff, forms included - anna
 def update_staff(id):
     update_staff_form = updateStaff(request.form)
     if request.method == 'POST' and update_staff_form.validate():
@@ -293,6 +297,7 @@ def update_staff(id):
         return render_template('staff/updateStaff.html', form=update_staff_form)
 
 @app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
+#update customer details, forms included - anna
 def update_user(id):
     update_user_form = updateCust(request.form)
     if request.method == 'POST' and update_user_form.validate():
@@ -320,16 +325,19 @@ def update_user(id):
 
 
 @app.route('/deleteUser/<int:id>', methods=['GET'])
+#delete function for customer management - anna
 def delete_user(id):
     deletecust(id)
     return redirect(url_for('retrieve_customers'))
 
 @app.route('/deleteStaff/<int:id>', methods=['GET'])
+#delete function for staff management - anna
 def delete_staff(id):
     deletestaff(id)
     return redirect(url_for('retrieve_staff'))
 
 @app.route('/updateStaffaccount/<int:id>/', methods=['GET', 'POST'])
+#update staff account - username, email, password - anna
 def update_staff_account(id):
     update_staff_account_form = updateStaff(request.form)
     if request.method == 'POST' and update_staff_account_form.validate():
@@ -351,24 +359,25 @@ def update_staff_account(id):
 
         return render_template('staff/updatesetting.html', form=update_staff_account_form)
 
-
 @app.route('/game2')
+#game 2 app route
 def game2():
     return render_template('game2/game2.html')
 
 @app.route('/aftergame2',methods=['POST'])
+#adding of points 100 when victory
 def claimpoints():
     addpoints(int(session['custID']))
     return render_template('game2/Reedem.html')
 
 @app.route('/game2/redeem')
+#render template for proof of victory and membership points earned
 def redeem():
     return render_template('game2/Reedem.html')
 
+
+
 # chatbot done by Phoebe
-
-
-
 @app.route('/chatbot',methods=['POST'])
 def predict():
 
