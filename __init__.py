@@ -19,7 +19,6 @@ from templates.paypal.CustomerInfo import CustomerInfo
 import shelve
 from templates.chatbot.chat import get_response
 from flask_cors import CORS
-from templates.shoppingcart.Shopping_cart import Product
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 
 app = Flask(__name__,template_folder="./templates")
@@ -367,6 +366,8 @@ def redeem():
 
 # chatbot done by Phoebe
 
+
+
 @app.route('/chatbot',methods=['POST'])
 def predict():
 
@@ -456,7 +457,6 @@ def add_product():
                 all_total_quantity = all_total_quantity + _quantity
                 all_total_price = all_total_price + _quantity * cursor_data.ProductPrice
 
-            itemsSelect = Product(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPrice, all_total_price, all_total_quantity)
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
             return redirect(url_for('.open_cart'))
@@ -477,6 +477,7 @@ def add_product():
 
 
 
+        itemsSelect = Product(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPrice, all_total_price, all_total_quantity)
         shopping_cart_dict[itemsSelect.get_product_id()] = itemsSelect
         db['ShoppingCart'] = shopping_cart_dict
         db.close()
