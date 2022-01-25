@@ -75,6 +75,15 @@ class Matchit {
         clearInterval(this.countdown);
         this.audioController.victory();
         document.getElementById('victory-text').classList.add('visible');
+
+        $.ajax({
+              url: "/aftergame2",
+              type: "POST",
+              data: {},
+              success: function( result ) {
+                window.location.href = '/game2/redeem'
+              }
+            });
     }
     hideCards() {
         this.cardsArray.forEach(card => {

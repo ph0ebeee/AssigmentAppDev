@@ -20,6 +20,7 @@ import shelve
 from templates.chatbot.chat import get_response
 from flask_cors import CORS
 #from templates.Forms import CreateUserForm,CreateCustomerForm
+from templates.shoppingcart.Shopping_cart import Product
 
 app = Flask(__name__,template_folder="./templates")
 app.secret_key = "secret key"
@@ -356,8 +357,8 @@ def game2():
     return render_template('game2/game2.html')
 
 @app.route('/aftergame2')
-def claimpoints(id):
-    addpoints(id)
+def claimpoints():
+    addpoints(int(session['custID']))
     return render_template('game2/Reedem.html')
 
 # chatbot done by Phoebe
@@ -473,7 +474,7 @@ def add_product():
 
 
 
-        itemsSelect = Product(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPrice, all_total_price, all_total_quantity)
+        itemsSelect = Product(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPrice, all_total_price)
         shopping_cart_dict[itemsSelect.get_product_id()] = itemsSelect
         db['ShoppingCart'] = shopping_cart_dict
         db.close()
