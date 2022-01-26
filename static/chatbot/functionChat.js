@@ -86,6 +86,6 @@ class Chatbox {
     }
 }
 
-
+// create object
 const chatbox = new Chatbox();
 chatbox.display();
