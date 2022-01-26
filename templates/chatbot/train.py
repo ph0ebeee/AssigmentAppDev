@@ -29,10 +29,10 @@ for intent in intents['intents']:
         xy.append((w, tag))
 
 # stem and lower each word
-ignore_words = ['?', '.', '!']
+ignore_words = ['?', '.', '!']     # remove punctuations
 all_words = [stem(w) for w in all_words if w not in ignore_words]
 # remove duplicates and sort
-all_words = sorted(set(all_words))
+all_words = sorted(set(all_words))  # remove duplicated elements
 tags = sorted(set(tags))
 
 print(len(xy), "patterns")
@@ -40,6 +40,7 @@ print(len(tags), "tags:", tags)
 print(len(all_words), "unique stemmed words:", all_words)
 
 # create training data
+# put bag of words
 X_train = []
 y_train = []
 for (pattern_sentence, tag) in xy:
@@ -62,6 +63,9 @@ hidden_size = 8
 output_size = len(tags)
 print(input_size, output_size)
 
+#for batch training
+
+
 class ChatDataset(Dataset):
 
     def __init__(self):
@@ -69,7 +73,7 @@ class ChatDataset(Dataset):
         self.x_data = X_train
         self.y_data = y_train
 
-    # support indexing such that dataset[i] can be used to get i-th sample
+    # support indexing such that dataset[i] can be used to get i-th sample, access data with index
     def __getitem__(self, index):
         return self.x_data[index], self.y_data[index]
 
@@ -81,10 +85,12 @@ dataset = ChatDataset()
 train_loader = DataLoader(dataset=dataset,
                           batch_size=batch_size,
                           shuffle=True,
-                          num_workers=0)
+                          num_workers=0)  #num_workers is for multi processing
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+
+#push model to devices
 model = NeuralNet(input_size, hidden_size, output_size).to(device)
 
 # Loss and optimizer
@@ -101,6 +107,7 @@ for epoch in range(num_epochs):
         outputs = model(words)
         # if y would be one-hot, we must apply
         # labels = torch.max(labels, 1)[1]
+        # criterion of predicted outputs
         loss = criterion(outputs, labels)
 
         # Backward and optimize
@@ -114,6 +121,7 @@ for epoch in range(num_epochs):
 
 print(f'final loss: {loss.item():.4f}')
 
+# save data - model state = key
 data = {
 "model_state": model.state_dict(),
 "input_size": input_size,
