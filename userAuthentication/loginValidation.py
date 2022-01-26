@@ -5,9 +5,10 @@ import pyodbc
 from flask import url_for
 from werkzeug.utils import redirect
 from forms.forms import loginForm
-
+from flask_bcrypt import Bcrypt
 #connect SQL to python
 try:
+    Bcrypt = Bcrypt(app)
     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                       'Server=(localdb)\MSSQLLocalDB;'
                       'Database=EcoDen;'
@@ -27,10 +28,10 @@ try:
         #change the Customer data format in dictionary form
         for i in cursor_data:
             customerEmail_Password.update( {i[0]:i[1]} )
-    
+
         #validation
         for i in customerEmail_Password:
-            if email == i and password == customerEmail_Password[i]:
+            if email == i and bcrypt.check_password_hash(hashed_password, '{i[1]}'):
                return True
                break
             return False

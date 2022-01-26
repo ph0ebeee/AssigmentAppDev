@@ -8,9 +8,9 @@ Library Loan System - Login
 <!-- This is to specify the client ID i have created for this website's sign in google API'-->
 <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
 <!-- Login page where customers and staff input their email and password -->
-<div class="d-flex align-content-center justify-content-center" style="background-color: #FBF8F2; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #DDD5C2;">
+<div class="d-flex align-content-center justify-content-center" style="background-color: white; font-family:'Raleway', Tahoma, Geneva, Verdana, sans-serif;">
     <div class="card my-5 shadow" style="width:500px;">
-        <h3 class="card-title card-header bg-custom navbar-dark mb-3 text-center" style="background-color: #BDB5A0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: floralwhite;">
+        <h3 class="card-title card-header bg-custom navbar-dark mb-3 text-center" style="background-color: #5cb874; font-family: 'Raleway', Tahoma, Geneva, Verdana, sans-serif; color: floralwhite;  ">
             Login
         </h3>
         <div class="card-body">
@@ -24,11 +24,11 @@ Library Loan System - Login
                     {{ render_field(form.password, class="form-control") }}
                 </div><br />
                 <input type="submit" value="login" class="submitBtn btn-primary"
-                       style="border-color:#F5BA76; text-align:right; align-items:flex-end; display: flex; background-color: #F5BA76; color: floralwhite;" />
+                       style="text-align:center; border-color: #5cb874; display: inline-block; background-color: #5cb874; color: floralwhite; font-size: small; padding: 10px 20px; border-radius: 4px; justify-content:center;  "/>
             </form>
             <p style="font-size:12px; text-align:left; display:inline;">
-                Forgot your password? Click <a href="/ForgetPassword" style="color:#F5BA76;">here</a><br />
-                Not a member? Click <a href="/Signup" style="color:#F5BA76;">here</a> to sign up
+                Forgot your password? Click <a href="/ForgetPassword" style="color: #5cb874;">here</a><br />
+                Not a member? Click <a href="/Signup" style="color: #5cb874;">here</a> to sign up
             </p>
             <b style="text-align:center;">or</b>
             <!--google API that allows customers to sign in with google-->
