@@ -385,10 +385,6 @@ def predict():
     message = {"answer": response}
     return jsonify(message)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> fb5999848888e7f30b7c7a2a073e9bbe8b19501a
 # retrieve for receipt - phoebe
 
 
