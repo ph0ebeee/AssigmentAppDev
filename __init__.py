@@ -40,7 +40,7 @@ def home():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return redirect(url_for('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5))
+    return render_template('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 @app.route('/custHome')
 #function for images selected to be seen on image slideshow  - viona
@@ -50,7 +50,7 @@ def custhome():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return redirect(url_for('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5))
+    return render_template('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 @app.route('/staffHome')
 #render staff.html template - anna
