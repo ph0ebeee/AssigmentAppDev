@@ -28,6 +28,18 @@ def validate_signUp_email():
 
     for i in cursor_data1:
         emailList.append(i)
+    
+    if i in emailList:
+        print("email existed")
+    else:
+        validate_signUp_password()
+
+def validate_signUp_password():
+    passwordList = []
+    form = signupForm(csrf_enabled=False)
+    user_password = bcrypt.generate_password_hash(form.password).decode("utf-8")
+
+    # yeet back to sql
 
 validate_signUp_email()
 #retrieve every single email in database and store it in a list
