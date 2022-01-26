@@ -9,12 +9,18 @@ class signupForm(Form):
     gender = SelectField('Gender:', [validators.DataRequired()], choices=[('', 'Select'), ('F', 'Female'), ('M', 'Male')], default='')
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
     password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
+    contactNum = IntegerField('Contact Number:', [validators.length(min=8, max=8), validators.DataRequired()])
     address = TextAreaField('Mailing Address:', [validators.length(max=200), validators.DataRequired()])
-
+    contactNum = IntegerField('Postal Code:', [validators.length(min=6, max=6), validators.DataRequired()])
 
 class loginForm(Form):
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
     password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
+
+class forgetPassword(Form):
+    email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
+    oldPassword = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
+    newPassword = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
 
 class feedbackForm(Form):
     cust_name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])

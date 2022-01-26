@@ -12,6 +12,7 @@ from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, cr
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
     deletestaff, deletecust, createstaff, addpoints
 from userAuthentication.loginValidation import *
+from userAuthentication.signupValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
@@ -39,7 +40,7 @@ def home():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return render_template('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+    return redirect(url_for('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5))
 
 @app.route('/custHome')
 #function for images selected to be seen on image slideshow  - viona
@@ -49,14 +50,15 @@ def custhome():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return render_template('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+    return redirect(url_for('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5))
 
 @app.route('/staffHome')
 #render staff.html template - anna
 def staffhome():
     return render_template('./staff.html')
 
-#route for login form to be seen on loginPage.html  - viona
+# start of Viona's code 
+#route for login form to be seen on loginPage.html
 @app.route('/Login', methods=['GET', 'POST'])
 def login():
     loginPage = loginForm()
@@ -69,7 +71,6 @@ def loginValidate():
         form = loginForm(request.form)
         validateCustLogin = validate_cust_login(form.email.data,form.password.data)
         validateStaffLogin = validate_staff_login(form.email.data,form.password.data)
-        #use JS to change the layout of the navbar according to Cust or Staff account
         if validateCustLogin==True:
             custDetails = validated_Cust_Details(form.email.data,form.password.data)
             session['custID'] = (custDetails[0][0])
@@ -86,6 +87,23 @@ def loginValidate():
             return render_template('./staff.html', staffDetails = staffDetails)  # change to staff page
         else:
             return render_template('usersLogin/loginPage.html', form=loginPage)
+
+#route for sign up form to be seen on signupPage.html
+@app.route('/Signup',methods=['GET','POST'])
+def signUp():
+    signupPage = forms.signupForm(csrf_enabled=False)
+    if request.method == 'POST':
+        form = signupForm(request.form)
+        if (validate_signUp_email(form.email.data) == False):
+            create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data, form.address.data, form.postalCode.data) #conhtact num and postal code not in form
+        else:
+            return redirect(url_for(('signupPage.html'),form=signupPage) #if email exists in database, return back to sign up page
+    return redirect(url_for(('signupPage.html'),form=signupPage)
+
+#route for users to do change their password
+@app.route('/ForgetPassword') 
+def ForgetPassword():
+    return render_template('forgetPassword.html')
 
 #route to go customer's settings 
 @app.route('/CustomerSettings', methods=['GET', 'POST'])
@@ -121,6 +139,7 @@ def ViewCustMembership():
     cust_details = CustDetails(session['custID'])
     return render_template('customer/customerMembership.html', cust_details = cust_details)
 
+#route for staff website such that they are able to see the company's insights
 @app.route('/inventory', methods=['GET', 'POST'])
 def inventoryStats():
     oosList = checkOOS_items()
@@ -129,19 +148,7 @@ def inventoryStats():
     topCustList = top_customer()
     topCustList = topCustList[:3]
     return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList)
-
-#route for sign up form to be seen on loginPage.html viona: TBC
-@app.route('/Signup',methods=['GET','POST'])
-def signUp():
-    signupPage = forms.signupForm(csrf_enabled=False)
-    if request.method == 'POST' and signupPage.validate():
-        return redirect(url_for('###'))
-        #use JS to change the layout of the navbar according to Cust or Staff account
-    return render_template('signupPage.html', form=signupPage)
-
-@app.route('/ForgetPassword') #viona: TBC
-def ForgetPassword():
-    return render_template('forgetPassword.html')
+# end of Viona's code
 
 @app.route('/AboutUs')   # added but havent push
 def AboutUs():

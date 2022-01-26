@@ -5,7 +5,6 @@ import pyodbc
 from flask import url_for
 from werkzeug.utils import redirect
 from forms.forms import loginForm
-from flask_bcrypt import Bcrypt
 #connect SQL to python
 try:
     Bcrypt = Bcrypt(app)
@@ -31,7 +30,7 @@ try:
 
         #validation
         for i in customerEmail_Password:
-            if email == i and bcrypt.check_password_hash(hashed_password, '{i[1]}'):
+            if email == i and bcrypt.check_password_hash(form.password, '{i[1]}'):
                return True
                break
             return False
@@ -84,7 +83,7 @@ try:
         cursor = conn.cursor()
         query = "SELECT * from Staff WHERE EmailAddr='{}' AND Password='{}'".format(email,password)
         cursor.execute(query)
-
+  
         #code to fetch result of the SQL code output for Customer's email
         cursor_data = cursor.fetchall()
 
