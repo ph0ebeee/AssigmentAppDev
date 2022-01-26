@@ -97,8 +97,7 @@ def signUp():
         if (validate_signUp_email(form.email.data) == False):
             create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data, form.address.data, form.postalCode.data) #conhtact num and postal code not in form
         else:
-            return redirect(url_for(('signupPage.html'),form=signupPage) #if email exists in database, return back to sign up page
-    return redirect(url_for(('signupPage.html'),form=signupPage)
+            return render_template('signupPage.html', form=signupPage)
 
 #route for users to do change their password
 @app.route('/ForgetPassword') 
