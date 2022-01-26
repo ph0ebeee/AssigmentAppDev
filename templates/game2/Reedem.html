@@ -1,17 +1,31 @@
-{%extends "base.html" %}
-{% block title %}
-Library Loan System - Reedem Vouchers
-{% endblock %}
+{% extends "base_customer.html" %}
+{% block title %}Library Loan System - Reedem Vouchers{% endblock %}
 
 {% block content %}
-<div class="d-flex align-content-center justify-content-center" style="background-color: #FBF8F2; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #DDD5C2;">
-    <div class="card my-5 shadow" style="width:500px;">
-        <h3 class="card-title card-header bg-custom navbar-dark mb-3 text-center" style="background-color: #BDB5A0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: floralwhite;">
-            Reedem Voucher
-        </h3>
-        <div class="card-body">
-
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/voucher.css') }}">
+</head>
+<div class="container mt-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-5">
+            <div class="card">
+                <div class="text-right p-2"> <img src="https://i.imgur.com/w68MQc4.png" width="120"> </div>
+                <div class="text-center"> <small class="text-uppercase flat">Added</small> </div>
+                <div class="d-flex justify-content-center px-2">
+                    <div class="d-flex flex-row">
+                        <h1 class="mt-0 off">100P</h1> <sup class="mt-2 text-primary star">*</sup>
+                    </div>
+                </div>
+                <div class="line">
+                    <hr>
+                </div>
+                {% for i in cust_details %}
+                <div class="text-center mb-5"> <span class="text-uppercase">TOTAL MEMBER POINTS: {{i[2]}}</span> </div>
+                <div class="text-right p-1"> <small>*T&C APPLY</small> </div>
+                 {%endfor%}
+            </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
