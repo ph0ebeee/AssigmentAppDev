@@ -11,7 +11,7 @@ class signupForm(Form):
     password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
     contactNum = IntegerField('Contact Number:', [validators.length(min=8, max=8), validators.DataRequired()])
     address = TextAreaField('Mailing Address:', [validators.length(max=200), validators.DataRequired()])
-    contactNum = IntegerField('Postal Code:', [validators.length(min=6, max=6), validators.DataRequired()])
+    postalCode = IntegerField('Postal Code:', [validators.length(min=6, max=6), validators.DataRequired()])
 
 class loginForm(Form):
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
