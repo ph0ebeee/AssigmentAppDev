@@ -86,7 +86,7 @@ def loginValidate():
             session['role'] = 'Staff'
             return render_template('./staff.html', staffDetails = staffDetails)  # change to staff page
         else:
-            return redirect(url_for('Login'))
+            return redirect(url_for('login'))
 
 #route for sign up form to be seen on signupPage.html
 @app.route('/Signup',methods=['GET','POST'])
