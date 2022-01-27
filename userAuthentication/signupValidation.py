@@ -44,5 +44,3 @@ def create_new_customer(name, email, passwd, contactnum, addr, postalCode):
     # update the new information onto the SQL
     query = "INSERT INTO Customer (CustomerName, EmailAddr, Password, ContactNum, ShippingAddr, PostalCode) OUTPUT INSERTED.CustomerID VALUES('{}','{}', '{}', {}, '{}', {})".format(name, email, passwd, contactnum, addr, postalCode)
     
-
-validate_signUp_email()
