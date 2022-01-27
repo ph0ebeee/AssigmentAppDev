@@ -40,7 +40,7 @@ def home():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return redirect(url_for('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5))
+    return render_template('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 @app.route('/custHome')
 #function for images selected to be seen on image slideshow  - viona
@@ -50,7 +50,7 @@ def custhome():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return redirect(url_for('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5))
+    return render_template('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5))
 
 @app.route('/staffHome')
 #render staff.html template - anna
@@ -86,7 +86,7 @@ def loginValidate():
             session['role'] = 'Staff'
             return render_template('./staff.html', staffDetails = staffDetails)  # change to staff page
         else:
-            return render_template('usersLogin/loginPage.html', form=loginPage)
+            return redirect(url_for('Login'))
 
 #route for sign up form to be seen on signupPage.html
 @app.route('/Signup',methods=['GET','POST'])
@@ -97,8 +97,8 @@ def signUp():
         if (validate_signUp_email(form.email.data) == False):
             create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data, form.address.data, form.postalCode.data) #conhtact num and postal code not in form
         else:
-            return redirect(url_for(('signupPage.html'),form=signupPage) #if email exists in database, return back to sign up page
-    return redirect(url_for(('signupPage.html'),form=signupPage)
+            return redirect(url_for(('signupPage.html'),form=signupPage)) #if email exists in database, return back to sign up page
+    return redirect(url_for(('signupPage.html'),form=signupPage))
 
 #route for users to do change their password
 @app.route('/ForgetPassword') 
