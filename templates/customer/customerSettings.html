@@ -5,7 +5,7 @@ Library Loan System - customerSettings
 
 {% block content %}
 
-<div class:"customerSettings_sidenav"
+<div class="customerSettings_sidenav"
      style="height:100%; width:200px; position: relative; z-index:1; top:0; left:0; background-color:#FBF8F2; overflow-x: hidden; padding-top: 20px; color: black; display: inline-block; margin-right: 20px;">
      <img src="user_profilePicture.jpg" style="border-radius:50%; display:flex;"/><p>{{session['custName']}}</p>
         <a class="dropdown-item" href="#">Account</a>
@@ -15,12 +15,12 @@ Library Loan System - customerSettings
         <a class="dropdown-item" href="/customerMembership">Membership</a>
         <a class="dropdown-item" href="/logout">Log out</a>
 </div>
-<div class="mainContent" style="display:inline-block";>
+<div class="mainContent" style="display:inline-block;">
     <h2>Account</h2>
-    <form method="post" action="/CustomerSettings" style="background-color:white;" class='customerParticulars'>
+    <form method="post" action="/CustomerSettings" style="color:black;" class='customerParticulars'>
         <!--<input type="submit" value="edit" class="submitBtn btn-primary" name="custSettingsbtn"
     style="border-color:#F5BA76; text-align:right; align-items:flex-end; display: flex; background-color: #F5BA76; color: floralwhite;" />-->
-        <div ">
+        <div>
             {% for i in cust_details%}
             <p>Username: {{i[1]}}</p>
             <p>Membership Points: {{i[2]}}</p>
@@ -32,4 +32,5 @@ Library Loan System - customerSettings
         </div>
     </form>
 </div>
+
 {% endblock %}
