@@ -78,7 +78,7 @@ def loginValidate():
             session['custName'] = (custDetails[0][1])
             session['emailAddr'] = (custDetails[0][3])
             session['role'] = 'Customer'
-            return render_template('customer/customerPage.html') # change to customer page
+            return redirect(url_for('custhome')) # change to customer page
         elif validateStaffLogin == True:
             staffDetails = validated_Staff_Details(form.email.data,form.password.data)
             session['staffID'] = (staffDetails[0][0])
@@ -107,7 +107,7 @@ def ForgetPassword():
     return render_template('forgetPassword.html')
 
 #route to go customer's settings 
-@app.route('/CustomerSettings', methods=['GET', 'POST'])
+@app.route('/customerSettings', methods=['GET', 'POST'])
 def ViewCustSettings():
     if (session['role'] == "Customer"):
         cust_details = CustDetails(session['custID'])
@@ -116,7 +116,7 @@ def ViewCustSettings():
         return render_template('usersLogin/loginPage.html') 
 
 #route to go purchase history in customer's settings
-@app.route('/CustomerPurchase', methods=['GET', 'POST'])
+@app.route('/customerPurchase', methods=['GET', 'POST'])
 def ViewCustPurchase():
     custPurchaseList = CustomerPurchase(session["custID"])
     return render_template('customer/customerPurchase.html', custPurchaseList = custPurchaseList)
@@ -247,7 +247,7 @@ def NewlyRestockedItems():
 @app.route('/logout')
 def logout():
     session.clear()
-    return render_template('home.html')
+    return redirect(url_for('home'))
 
 @app.route('/StaffSettings', methods=['GET', 'POST'])
 #staff account display - anna
@@ -308,7 +308,7 @@ def update_staff(id):
         for i in StaffList:
             update_staff_form.name.data = StaffList[0][1]
             update_staff_form.email.data = StaffList[0][2]
-            update_staff_form.remarks.data = StaffList[0][4]
+            update_staff_form.remarks.data = StaffList[0][5]
 
 
         return render_template('staff/updateStaff.html', form=update_staff_form)
@@ -334,8 +334,8 @@ def update_user(id):
             update_user_form.name.data = CustDetail[0][1]
             update_user_form.email.data = CustDetail[0][3]
             update_user_form.membership.data = CustDetail[0][2]
-            update_user_form.contactNum.data = CustDetail[0][5]
-            update_user_form.address.data = CustDetail[0][6]
+            update_user_form.contactNum.data = CustDetail[0][6]
+            update_user_form.address.data = CustDetail[0][7]
 
 
         return render_template('staff/updateUsers.html', form=update_user_form)

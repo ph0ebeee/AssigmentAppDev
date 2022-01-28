@@ -84,12 +84,14 @@ def updatestaffsettings(StaffName,EmailAddr,StaffID):
     conn.commit()
 
 def createstaff(StaffName,EmailAddr,Password,Remarks):
-    passwordList = []
     form = createStaff(csrf_enabled=False)
-    password = form.password.encode("utf-8")
-    hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+    password = Password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password, salt)
+    salt = salt.decode('UTF-8')
+    hashed = hashed.decode('UTF-8')
     cursor = conn.cursor()
-    query = "INSERT INTO Staff (StaffName,EmailAddr,Password,Remarks) VALUES ('{}', '{}','{}','{}')".format(StaffName,EmailAddr,Password,Remarks)
+    query = "INSERT INTO Staff (StaffName,EmailAddr,Password,passwordSalt,Remarks) VALUES ('{}', '{}','{}','{}','{}')".format(StaffName,EmailAddr,hashed,salt,Remarks)
     cursor.execute(query)
     conn.commit()
 
