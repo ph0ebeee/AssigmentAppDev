@@ -308,7 +308,7 @@ def update_staff(id):
         for i in StaffList:
             update_staff_form.name.data = StaffList[0][1]
             update_staff_form.email.data = StaffList[0][2]
-            update_staff_form.remarks.data = StaffList[0][4]
+            update_staff_form.remarks.data = StaffList[0][5]
 
 
         return render_template('staff/updateStaff.html', form=update_staff_form)
@@ -334,8 +334,8 @@ def update_user(id):
             update_user_form.name.data = CustDetail[0][1]
             update_user_form.email.data = CustDetail[0][3]
             update_user_form.membership.data = CustDetail[0][2]
-            update_user_form.contactNum.data = CustDetail[0][5]
-            update_user_form.address.data = CustDetail[0][6]
+            update_user_form.contactNum.data = CustDetail[0][6]
+            update_user_form.address.data = CustDetail[0][7]
 
 
         return render_template('staff/updateUsers.html', form=update_user_form)
