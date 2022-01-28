@@ -5,6 +5,12 @@
 <body>
     <div class="frozen">
         <h3>Frozen Items</h3>
+        {% for i in to_send %}
+            <p>{{i.get_product_Name()}}</p>
+            <img src="{{i.get_product_Image()}}"/>
+            <p>{{i.get_product_Price()}}</p>
+            <p>{{i.get_product_Stock()}}</p>
+        {% endfor %}
     </div>
 
 </body>

@@ -1,5 +1,5 @@
 {%extends "base.html" %}
-{% block title %} Library Loan System - Discounted Items {% endblock %}}
+{% block title %} Library Loan System - Discounted Items  {% endblock %}}
 
 {% block content %}
 
@@ -8,8 +8,10 @@
         <h3>Discounted Items</h3>
         {% for i in to_send %}
             <p>{{i.get_product_Name()}}</p>
+            <img src="{{i.get_product_Image()}}"/>
             <p>{{i.get_product_Price()}}</p>
             <p>{{i.get_discounted_Price()}}</p>
+
         {% endfor %}
     </div>
 </body>

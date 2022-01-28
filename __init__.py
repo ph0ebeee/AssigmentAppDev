@@ -1,7 +1,8 @@
 # from flask_session import Session
 # from flask_login import current_user, login_required
 import Feedback_class as Feedbacks
-from templates.products.SQLtoPython import discounted_products, topselling_products
+from templates.products.SQLtoPython import discounted_products, topselling_products, newlyrestocked_products, \
+    household_products, frozen_products, grains_products
 #from flask_bcrypt import Bcrypt
 from flask import Flask, render_template, request, session, jsonify
 # from flask_session import Session
@@ -197,17 +198,26 @@ def retrieve_contact_us():
 
 @app.route('/Grains')
 def grains_cat():
-    return render_template('products/grains.html')
+    to_send = grains_products() # loop
+    # insert if else here using '.pop'
+    # create another list to store wo yao de discounted items -> different,, go through the product list
+    return render_template('products/grains.html', to_send=to_send)
 
 
 @app.route('/Frozen')
 def frozen_cat():
-    return render_template('products/frozen.html')
+    to_send = frozen_products() # loop
+    # insert if else here using '.pop'
+    # create another list to store wo yao de discounted items -> different,, go through the product list
+    return render_template('products/frozen.html', to_send=to_send)
 
 
 @app.route('/Household')
-def houshold_cat():
-    return render_template('products/houseHold.html')
+def household_cat():
+    to_send = household_products() # loop
+    # insert if else here using '.pop'
+    # create another list to store wo yao de discounted items -> different,, go through the product list
+    return render_template('products/houseHold.html', to_send=to_send)
 
 
 @app.route('/ShopCategories')   # added but havent push
@@ -227,7 +237,7 @@ def TopSellingItems():
 
 @app.route('/NewlyRestockedItems', methods=['GET', 'POST'])   # added but havent push
 def NewlyRestockedItems():
-    to_send = discounted_products() # loop
+    to_send = newlyrestocked_products() # loop
     # insert if else here using '.pop'
     # create another list to store wo yao de discounted items -> different,, go through the product list
     return render_template('products/newlyRestockedItems.html', to_send=to_send)
