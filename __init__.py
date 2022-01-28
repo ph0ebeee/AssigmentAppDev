@@ -50,7 +50,7 @@ def custhome():
     image3 = './static/Assets/images/imageCarousel_3.jpg' 
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
-    return redirect(url_for('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5))
+    return render_template('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 @app.route('/staffHome')
 #render staff.html template - anna
@@ -77,7 +77,7 @@ def loginValidate():
             session['custName'] = (custDetails[0][1])
             session['emailAddr'] = (custDetails[0][3])
             session['role'] = 'Customer'
-            return render_template('customer/customerPage.html') # change to customer page
+            return redirect(url_for('custhome')) # change to customer page
         elif validateStaffLogin == True:
             staffDetails = validated_Staff_Details(form.email.data,form.password.data)
             session['staffID'] = (staffDetails[0][0])
@@ -97,8 +97,8 @@ def signUp():
         if (validate_signUp_email(form.email.data) == False):
             create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data, form.address.data, form.postalCode.data) #conhtact num and postal code not in form
         else:
-            return render_template('signupPage.html',form=signupPage) #if email exists in database, return back to sign up page
-    return render_template('signupPage.html',form=signupPage)
+            return render_template('usersLogin/signupPage.html',form=signupPage) #if email exists in database, return back to sign up page
+    return render_template('usersLogin/signupPage.html',form=signupPage)
 
 #route for users to do change their password
 @app.route('/ForgetPassword') 
@@ -106,7 +106,7 @@ def ForgetPassword():
     return render_template('forgetPassword.html')
 
 #route to go customer's settings 
-@app.route('/CustomerSettings', methods=['GET', 'POST'])
+@app.route('/customerSettings', methods=['GET', 'POST'])
 def ViewCustSettings():
     if (session['role'] == "Customer"):
         cust_details = CustDetails(session['custID'])
@@ -115,7 +115,7 @@ def ViewCustSettings():
         return render_template('usersLogin/loginPage.html') 
 
 #route to go purchase history in customer's settings
-@app.route('/CustomerPurchase', methods=['GET', 'POST'])
+@app.route('/customerPurchase', methods=['GET', 'POST'])
 def ViewCustPurchase():
     custPurchaseList = CustomerPurchase(session["custID"])
     return render_template('customer/customerPurchase.html', custPurchaseList = custPurchaseList)
@@ -237,7 +237,7 @@ def NewlyRestockedItems():
 @app.route('/logout')
 def logout():
     session.clear()
-    return render_template('home.html')
+    return redirect(url_for('home'))
 
 @app.route('/StaffSettings', methods=['GET', 'POST'])
 #staff account display - anna

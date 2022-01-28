@@ -4,32 +4,76 @@ Library Loan System - customerSettings
 {% endblock %}
 
 {% block content %}
-<div class:"customerSettings_sidenav"
-     style="height:100%; width:200px; position: relative; z-index:1; top:0; left:0; background-color:#FBF8F2; overflow-x: hidden; padding-top: 20px; color: black; display: inline-block; margin-right: 20px;">
-    <img src="user_profilePicture.jpg" style="border-radius:50%; display:inline" /><p>{{session['custName']}}</p>
-    <a class="dropdown-item" href="/customerSettings">Account</a>
-    <a class="dropdown-item" href="/customerPurchase">Purchase</a>
-    <a class="dropdown-item" href="/customerVouchers">Vouchers</a>
-    <a class="dropdown-item" href="/customerFAQ">FAQ</a>
-    <a class="dropdown-item" href="#">Membership</a>
-    <a class="dropdown-item" href="/logout">Log out</a>
-</div>
-<div class="mainContent" style="display:inline-block;">
-    <h2>Membership points</h2>
-    {% for i in cust_details %}
-    <p>Total membership points:{{i[2]}} </p>
-    <p> What is membership points and how are they useful? </p>
-    <p> It is points allocated to a member, which may be used by the member as payment for goods or services or entitle the member to any other benefit as a reward. Customers are qualified for membership and just have purchase items with us to gain membership points. </p>
-    <p> 1 point will be awarded for every S$1 dollar spent, with the minimum of $30 nett spend in a single receipt</p>
-    <p> 100 points earned allows you to enjoy S$1 off for your next purchase</p>
-    <br />
-    <br />
-    <h6>Claim more points here:</h6>
-    <div class="gamepage-responsive" style="margin: 10px; padding: 10px; background-color: #F0BC80; font-size:12px; border-block-color:black;">
-        <a href="/game1">Kirby</a>
-        <a href="/game2">Match It</a>
-        <a href="/game3">Save the Earth</a>
+<div class="container-fluid" style="background-color:white; color:black; ">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0" style="background-color:#396748;">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-black font-weight-bold min-vh-100">
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline" style="color:white">Settings</span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu" style="color:white;">
+                    <li class="nav-item">
+                        <a href="/customerSettings" class="nav-link align-middle px-0" style="color:white;">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Account</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/customerPurchase" class="nav-link align-middle px-0" style="color:white;">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Purchase History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/customerVouchers" class="nav-link px-0 align-middle" style="color:white;">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Vouchers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/customerFAQ" class="nav-link px-0 align-middle" style="color:white;">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline" style="color:white;">FAQ</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link px-0 align-middle" style="color:white;">
+                            <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Membership</span>
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">user</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-light text-small shadow">
+                        <li><a class="dropdown-item" href="/logout">Log out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col py-3">
+            <div class="mainContent" style="display:inline-block;">
+                <h2>Membership points</h2>
+                {% for i in cust_details %}
+                <p>Total membership points:{{i[2]}} </p>
+                <p> What is membership points and how are they useful? </p>
+                <p> It is points allocated to a member, which may be used by the member as payment for goods or services or entitle the member to any other benefit as a reward. Customers are qualified for membership and just have purchase items with us to gain membership points. </p>
+                <p> 1 point will be awarded for every S$1 dollar spent, with the minimum of $30 nett spend in a single receipt</p>
+                <p> 100 points earned allows you to enjoy S$1 off for your next purchase</p>
+                <br />
+                <br />
+                <h6>Claim more points here:</h6>
+                <div class="gamepage-responsive" style="margin: 10px; padding: 10px; background-color: #F0BC80; font-size:12px; border-block-color:black;">
+                    <a href="/game1">Kirby</a>
+                </div>
+                <div class="gamepage-responsive" style="margin: 10px; padding: 10px; background-color: #F0BC80; font-size:12px; border-block-color:black;">
+                    <a href="/game2">Match It</a>
+                </div>
+                <div class="gamepage-responsive" style="margin: 10px; padding: 10px; background-color: #F0BC80; font-size:12px; border-block-color:black;">
+                    <a href="/game3">Save the Earth</a>
+                </div>
+            </div>
+        </div>
     </div>
-    {%endfor%}
 </div>
+{%endfor%}
 {% endblock %}
