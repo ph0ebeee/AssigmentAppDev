@@ -39,8 +39,11 @@ def create_new_customer(name, email, passwd, contactnum, addr, postalCode):
     passwordList = []
     form = signupForm(csrf_enabled=False)
     password = form.password.encode("utf-8")
-    hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password, salt)
+    salt = salt.decode('UTF-8')
+    hashed = hashed.decode('UTF-8')
     print(hashed) #try
     # update the new information onto the SQL
-    query = "INSERT INTO Customer (CustomerName, EmailAddr, Password, ContactNum, ShippingAddr, PostalCode) OUTPUT INSERTED.CustomerID VALUES('{}','{}', '{}', {}, '{}', {})".format(name, email, passwd, contactnum, addr, postalCode)
+    query = "INSERT INTO Customer (CustomerName, EmailAddr, Password, passwordSalt, ContactNum, ShippingAddr, PostalCode) OUTPUT INSERTED.CustomerID VALUES('{}','{}', '{}', '{}' , {}, '{}', {})".format(name, email, hashed, salt, contactnum, addr, postalCode)
     
