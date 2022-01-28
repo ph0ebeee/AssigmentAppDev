@@ -60,22 +60,50 @@ Library Loan System - HomeDen
 
 	<div id="product-grid">
 		<div class="txt-heading">Products</div>
-
+		<table>
 		{% for i in to_send %}
-
-			<div class="product-item">
+			<tr>
+				<td>
+			<div class="product-item" >
 				<form method="post" action="/ShoppingCart/add">
 					<div class="product-tile-footer">
-						<div class="product-title">{{i[1]}}</div>
+
+
+							<div class="product-title">{{i[1]}}</div>
 						<div class="product-price"> {{i[2]}}</div>
 						<div class="cart-action">
 							<input type="text" class="product-quantity" name="quantity" value="1" size="2" />
 							<input type="hidden" name="code" value="{{i.ProductID}}"/>
 							<input type="submit" value="Add to Cart" class="btnAddAction" />
 						</div>
+
 					</div>
 				</form>
 			</div>
-	</div>
+				</td>
+		</tr>
+				<td>
+			<div class="product-item" >
+				<form method="post" action="/ShoppingCart/add">
+					<div class="product-tile-footer">
+
+
+							<div class="product-title">{{i[1]}}</div>
+						<div class="product-price"> {{i[2]}}</div>
+						<div class="cart-action">
+							<input type="text" class="product-quantity" name="quantity" value="1" size="2" />
+							<input type="hidden" name="code" value="{{i.ProductID}}"/>
+							<input type="submit" value="Add to Cart" class="btnAddAction" />
+						</div>
+
+					</div>
+				</form>
+			</div>
+				</td>
+
+
+
 	{% endfor %}
+		</table>
+	</div>
 	{% endblock %}
