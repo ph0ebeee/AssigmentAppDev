@@ -85,7 +85,7 @@ def updatestaffsettings(StaffName,EmailAddr,StaffID):
 
 def createstaff(StaffName,EmailAddr,Password,Remarks):
     form = createStaff(csrf_enabled=False)
-    password = form.password.data.encode("utf-8")
+    password = Password.encode("utf-8")
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password, salt)
     salt = salt.decode('UTF-8')
