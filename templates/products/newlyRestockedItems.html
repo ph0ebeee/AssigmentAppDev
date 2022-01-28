@@ -7,6 +7,7 @@
         <h3>Newly Restocked Items</h3>
         {% for i in to_send %}
             <p>{{i.get_product_Name()}}</p>
+            <img src="{{i.get_product_Image()}}" width="200px" height="225px"/>
             <p>{{i.get_product_Price()}}</p>
             <p>{{i.get_product_Stock()}}</p>
         {% endfor %}

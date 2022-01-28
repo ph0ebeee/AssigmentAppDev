@@ -1,7 +1,8 @@
 # from flask_session import Session
 # from flask_login import current_user, login_required
 import Feedback_class as Feedbacks
-from templates.products.SQLtoPython import discounted_products, topselling_products
+from templates.products.SQLtoPython import discounted_products, topselling_products, newlyrestocked_products, \
+    household_products, frozen_products, grains_products
 #from flask_bcrypt import Bcrypt
 from flask import Flask, render_template, request, session, jsonify
 # from flask_session import Session
@@ -12,6 +13,7 @@ from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, cr
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
     deletestaff, deletecust, createstaff, addpoints
 from userAuthentication.loginValidation import *
+from userAuthentication.signupValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
@@ -60,7 +62,11 @@ def staffhome():
     return render_template('./staff.html')
 
 
+
 #route for login form to be seen on loginPage.html  - viona
+
+# start of Viona's code 
+#route for login form to be seen on loginPage.html
 @app.route('/Login', methods=['GET', 'POST'])
 def login():
     loginPage = loginForm()
@@ -74,14 +80,13 @@ def loginValidate():
         form = loginForm(request.form)
         validateCustLogin = validate_cust_login(form.email.data,form.password.data)
         validateStaffLogin = validate_staff_login(form.email.data,form.password.data)
-        #use JS to change the layout of the navbar according to Cust or Staff account
         if validateCustLogin==True:
             custDetails = validated_Cust_Details(form.email.data,form.password.data)
             session['custID'] = (custDetails[0][0])
             session['custName'] = (custDetails[0][1])
             session['emailAddr'] = (custDetails[0][3])
             session['role'] = 'Customer'
-            return render_template('customer/customerPage.html') # change to customer page
+            return redirect(url_for('custhome')) # change to customer page
         elif validateStaffLogin == True:
             staffDetails = validated_Staff_Details(form.email.data,form.password.data)
             session['staffID'] = (staffDetails[0][0])
@@ -90,11 +95,28 @@ def loginValidate():
             session['role'] = 'Staff'
             return render_template('./staff.html', staffDetails = staffDetails)  # change to staff page
         else:
-            return render_template('usersLogin/loginPage.html', form=loginPage)
+            return redirect(url_for('login'))
+
+#route for sign up form to be seen on signupPage.html
+@app.route('/Signup',methods=['GET','POST'])
+def signUp():
+    signupPage = forms.signupForm(csrf_enabled=False)
+    if request.method == 'POST':
+        form = signupForm(request.form)
+        if (validate_signUp_email(form.email.data) == False):
+            create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data, form.address.data, form.postalCode.data) #conhtact num and postal code not in form
+        else:
+            return render_template('usersLogin/signupPage.html',form=signupPage) #if email exists in database, return back to sign up page
+    return render_template('usersLogin/signupPage.html',form=signupPage)
+
+#route for users to do change their password
+@app.route('/ForgetPassword') 
+def ForgetPassword():
+    return render_template('forgetPassword.html')
 
 
 #route to go customer's settings 
-@app.route('/CustomerSettings', methods=['GET', 'POST'])
+@app.route('/customerSettings', methods=['GET', 'POST'])
 def ViewCustSettings():
     if (session['role'] == "Customer"):
         cust_details = CustDetails(session['custID'])
@@ -104,7 +126,7 @@ def ViewCustSettings():
 
 
 #route to go purchase history in customer's settings
-@app.route('/CustomerPurchase', methods=['GET', 'POST'])
+@app.route('/customerPurchase', methods=['GET', 'POST'])
 def ViewCustPurchase():
     custPurchaseList = CustomerPurchase(session["custID"])
     return render_template('customer/customerPurchase.html', custPurchaseList = custPurchaseList)
@@ -132,6 +154,7 @@ def ViewCustMembership():
     return render_template('customer/customerMembership.html', cust_details = cust_details)
 
 
+#route for staff website such that they are able to see the company's insights
 @app.route('/inventory', methods=['GET', 'POST'])
 def inventoryStats():
     oosList = checkOOS_items()
@@ -155,6 +178,7 @@ def signUp():
 @app.route('/ForgetPassword') #viona: TBC
 def ForgetPassword():
     return render_template('forgetPassword.html')
+# end of Viona's code
 
 
 @app.route('/AboutUs')   # added but havent push
@@ -206,17 +230,26 @@ def retrieve_contact_us():
 
 @app.route('/Grains')
 def grains_cat():
-    return render_template('products/grains.html')
+    to_send = grains_products() # loop
+    # insert if else here using '.pop'
+    # create another list to store wo yao de discounted items -> different,, go through the product list
+    return render_template('products/grains.html', to_send=to_send)
 
 
 @app.route('/Frozen')
 def frozen_cat():
-    return render_template('products/frozen.html')
+    to_send = frozen_products() # loop
+    # insert if else here using '.pop'
+    # create another list to store wo yao de discounted items -> different,, go through the product list
+    return render_template('products/frozen.html', to_send=to_send)
 
 
 @app.route('/Household')
-def houshold_cat():
-    return render_template('products/houseHold.html')
+def household_cat():
+    to_send = household_products() # loop
+    # insert if else here using '.pop'
+    # create another list to store wo yao de discounted items -> different,, go through the product list
+    return render_template('products/houseHold.html', to_send=to_send)
 
 
 @app.route('/ShopCategories')   # added but havent push
@@ -239,7 +272,7 @@ def TopSellingItems():
 
 @app.route('/NewlyRestockedItems', methods=['GET', 'POST'])   # added but havent push
 def NewlyRestockedItems():
-    to_send = discounted_products() # loop
+    to_send = newlyrestocked_products() # loop
     # insert if else here using '.pop'
     # create another list to store wo yao de discounted items -> different,, go through the product list
     return render_template('products/newlyRestockedItems.html', to_send=to_send)
@@ -250,7 +283,6 @@ def NewlyRestockedItems():
 def logout():
     session.clear()
     return redirect(url_for('home'))
-
 
 @app.route('/StaffSettings', methods=['GET', 'POST'])
 #staff account display - anna
@@ -316,7 +348,7 @@ def update_staff(id):
         for i in StaffList:
             update_staff_form.name.data = StaffList[0][1]
             update_staff_form.email.data = StaffList[0][2]
-            update_staff_form.remarks.data = StaffList[0][4]
+            update_staff_form.remarks.data = StaffList[0][5]
 
 
         return render_template('staff/updateStaff.html', form=update_staff_form)
@@ -343,8 +375,8 @@ def update_user(id):
             update_user_form.name.data = CustDetail[0][1]
             update_user_form.email.data = CustDetail[0][3]
             update_user_form.membership.data = CustDetail[0][2]
-            update_user_form.contactNum.data = CustDetail[0][5]
-            update_user_form.address.data = CustDetail[0][6]
+            update_user_form.contactNum.data = CustDetail[0][6]
+            update_user_form.address.data = CustDetail[0][7]
 
 
         return render_template('staff/updateUsers.html', form=update_user_form)

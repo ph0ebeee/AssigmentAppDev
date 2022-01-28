@@ -1,7 +1,7 @@
 #import database from sql server
 import pyodbc
-
 from forms.forms import signupForm
+import bcrypt
 
 conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                       'Server=(localdb)\MSSQLLocalDB;'
@@ -9,7 +9,7 @@ conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                       'Trusted_Connection=yes;')
 
 #function to validate whether email input by user has recorded in the database
-def validate_signUp_email():
+def validate_signUp_email(email):
     emailList = []
     form = signupForm(csrf_enabled=False)
     user_email = form.email
@@ -29,18 +29,21 @@ def validate_signUp_email():
     for i in cursor_data1:
         emailList.append(i)
     
-    if i in emailList:
-        print("email existed")
-    else:
-        validate_signUp_password()
+    for i in emailList:
+        if (email == i):
+            return True
+            break
+        return False
 
-def validate_signUp_password():
+def create_new_customer(name, email, passwd, contactnum, addr, postalCode):
     passwordList = []
     form = signupForm(csrf_enabled=False)
-    user_password = bcrypt.generate_password_hash(form.password).decode("utf-8")
-
-    # yeet back to sql
-
-validate_signUp_email()
-#retrieve every single email in database and store it in a list
-#use for loop to check if the email user entered for login matches the email addresses in the database
+    password = form.password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password, salt)
+    salt = salt.decode('UTF-8')
+    hashed = hashed.decode('UTF-8')
+    print(hashed) #try
+    # update the new information onto the SQL
+    query = "INSERT INTO Customer (CustomerName, EmailAddr, Password, passwordSalt, ContactNum, ShippingAddr, PostalCode) OUTPUT INSERTED.CustomerID VALUES('{}','{}', '{}', '{}' , {}, '{}', {})".format(name, email, hashed, salt, contactnum, addr, postalCode)
+    

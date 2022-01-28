@@ -1,4 +1,6 @@
 import pyodbc
+from forms.forms import createStaff
+import bcrypt
 
 conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                       'Server=(localdb)\MSSQLLocalDB;'
@@ -82,8 +84,14 @@ def updatestaffsettings(StaffName,EmailAddr,StaffID):
     conn.commit()
 
 def createstaff(StaffName,EmailAddr,Password,Remarks):
+    form = createStaff(csrf_enabled=False)
+    password = Password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password, salt)
+    salt = salt.decode('UTF-8')
+    hashed = hashed.decode('UTF-8')
     cursor = conn.cursor()
-    query = "INSERT INTO Staff (StaffName,EmailAddr,Password,Remarks) VALUES ('{}', '{}','{}','{}')".format(StaffName,EmailAddr,Password,Remarks)
+    query = "INSERT INTO Staff (StaffName,EmailAddr,Password,passwordSalt,Remarks) VALUES ('{}', '{}','{}','{}','{}')".format(StaffName,EmailAddr,hashed,salt,Remarks)
     cursor.execute(query)
     conn.commit()
 
