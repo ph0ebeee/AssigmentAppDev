@@ -62,7 +62,6 @@ def staffhome():
     return render_template('./staff.html')
 
 
-
 #route for login form to be seen on loginPage.html  - viona
 
 # start of Viona's code 
@@ -163,22 +162,6 @@ def inventoryStats():
     topCustList = top_customer()
     topCustList = topCustList[:3]
     return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList)
-
-
-#route for sign up form to be seen on loginPage.html viona: TBC
-@app.route('/Signup',methods=['GET','POST'])
-def signUp():
-    signupPage = forms.signupForm(csrf_enabled=False)
-    if request.method == 'POST' and signupPage.validate():
-        return redirect(url_for('###'))
-        #use JS to change the layout of the navbar according to Cust or Staff account
-    return render_template('signupPage.html', form=signupPage)
-
-
-@app.route('/ForgetPassword') #viona: TBC
-def ForgetPassword():
-    return render_template('forgetPassword.html')
-# end of Viona's code
 
 
 @app.route('/AboutUs')   # added but havent push
