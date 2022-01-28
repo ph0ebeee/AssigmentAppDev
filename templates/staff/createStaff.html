@@ -4,31 +4,35 @@
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
 
-<div class="container-fluid h-100">
-    <div class="row h-100">
-            <div class="col-2" id="green">
-                    <a class="dropdown-item" href="/MainPage">Announcement</a>
-                    <a class="dropdown-item" href="#">Create Staff</a>
-                    <a class="dropdown-item" href="/retrieveStaff">Staff Management</a>
-                </div>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/createstaff.css') }}">
+</head>
 
-        <h1 class="display-4">Create Staff</h1>
-        <div>
-        <form method="POST" action="">
-           <div class="form-group">
-            {{ render_field(form.name, class="form-control") }}
-          </div>
-            <div class="form-group">
-            {{ render_field(form.email, class="form-control") }}
-          </div>
-            <div class="form-group">
-            {{ render_field(form.password, class="form-control") }}
-          </div>
-          <input type="submit" value="Submit" class="btn btn-primary"/>
-        </form>
-    </div>
+<div class="container-fluid h-100">
+
+               <div class="section-title">
+                   <h2>Create Staff</h2>
+               </div>
+
+<div class="form-style-9">
+<form method="POST" action="">
+   <div class="form-group">
+    {{ render_field(form.name, class="form-control") }}
+  </div>
+    <div class="form-group">
+    {{ render_field(form.email, class="form-control") }}
+  </div>
+    <div class="form-group">
+    {{ render_field(form.password, class="form-control") }}
+  </div>
+    <div class="form-group">
+    {{ render_field(form.remarks, class="form-control") }}
+  </div><br/>
+  <input type="submit" value="Submit" class="btn btn-primary"/>
+</form>
 </div>
-        </div>
+</div>
 {% endblock %}
 
 

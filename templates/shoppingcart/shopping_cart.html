@@ -4,6 +4,7 @@ Library Loan System - HomeDen
 {% endblock %}
 
  {% block content %}
+
 <div>
 		{% with messages = get_flashed_messages() %}
 		  {% if messages %}
@@ -19,7 +20,8 @@ Library Loan System - HomeDen
 	<div id="shopping-cart">
 		<h1><div class="txt-heading">Cart</div></h1>
 		{% if 'cart_item' in session %}
-			<a id="btnEmpty" href="{{ url_for('.empty_cart') }}">Empty Cart</a>			<table class="tbl-cart" cellpadding="10" cellspacing="1">
+			<a id="btnEmpty" href="{{ url_for('.empty_cart') }}">Empty Cart</a>
+		<table class="tbl-cart" cellpadding="10" cellspacing="1">
 			<tbody>
 				<tr>
 					<th style="text-align:left;">Name</th>
@@ -50,7 +52,7 @@ Library Loan System - HomeDen
 			</tbody>
 			</table>
 				<button class = "btn-voucher" type = "button">VOUCHERS</button>
-				<input type ='submit' value="CHECKOUT" class = "btn btn-primary btn-purchase">
+				<button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/ShoppingCart/PaymentCreditCard">CHECKOUT</a></button>
 		{% else: %}
 			<div class="no-records">Your Cart is Empty</div>
 		{% endif %}

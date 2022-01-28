@@ -1,37 +1,31 @@
-from flask import Flask, render_template, request, session
 # from flask_session import Session
-import shelve
 # from flask_login import current_user, login_required
 import Feedback_class as Feedbacks
-from templates.products.SQLtoPython import discounted_products, topselling_products, newlyrestocked_products, \
-    frozen_products, grains_products, household_products
-from forms import forms
+from templates.products.SQLtoPython import discounted_products, topselling_products
 #from flask_bcrypt import Bcrypt
-from userAuthentication.loginValidation import *
-from script import *
-
-from forms.forms import feedbackForm
-
-import shelve
 from flask import Flask, render_template, request, session, jsonify
 # from flask_session import Session
 #from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import updateCust, updateStaff,CreditCardForm
+from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
-    deletestaff, createstaff
+    deletestaff, deletecust, createstaff, addpoints
 from userAuthentication.loginValidation import *
+from userAuthentication.signupValidation import *
 from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
 from templates.paypal.CustomerInfo import CustomerInfo
 import shelve
-# from chatbot.chat import get_response
+from templates.chatbot.chat import get_response
+from flask_cors import CORS
 #from templates.Forms import CreateUserForm,CreateCustomerForm
+from templates.shoppingcart.Shopping_cart import Product
 
 app = Flask(__name__,template_folder="./templates")
 app.secret_key = "secret key"
+CORS(app)
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -59,10 +53,12 @@ def custhome():
     return render_template('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 @app.route('/staffHome')
+#render staff.html template - anna
 def staffhome():
     return render_template('./staff.html')
 
-#route for login form to be seen on loginPage.html  - viona
+# start of Viona's code 
+#route for login form to be seen on loginPage.html
 @app.route('/Login', methods=['GET', 'POST'])
 def login():
     loginPage = loginForm()
@@ -75,7 +71,6 @@ def loginValidate():
         form = loginForm(request.form)
         validateCustLogin = validate_cust_login(form.email.data,form.password.data)
         validateStaffLogin = validate_staff_login(form.email.data,form.password.data)
-        #use JS to change the layout of the navbar according to Cust or Staff account
         if validateCustLogin==True:
             custDetails = validated_Cust_Details(form.email.data,form.password.data)
             session['custID'] = (custDetails[0][0])
@@ -91,7 +86,24 @@ def loginValidate():
             session['role'] = 'Staff'
             return render_template('./staff.html', staffDetails = staffDetails)  # change to staff page
         else:
-            return render_template('usersLogin/loginPage.html', form=loginPage)
+            return redirect(url_for('login'))
+
+#route for sign up form to be seen on signupPage.html
+@app.route('/Signup',methods=['GET','POST'])
+def signUp():
+    signupPage = forms.signupForm(csrf_enabled=False)
+    if request.method == 'POST':
+        form = signupForm(request.form)
+        if (validate_signUp_email(form.email.data) == False):
+            create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data, form.address.data, form.postalCode.data) #conhtact num and postal code not in form
+        else:
+            return render_template('usersLogin/signupPage.html',form=signupPage) #if email exists in database, return back to sign up page
+    return render_template('usersLogin/signupPage.html',form=signupPage)
+
+#route for users to do change their password
+@app.route('/ForgetPassword') 
+def ForgetPassword():
+    return render_template('forgetPassword.html')
 
 #route to go customer's settings 
 @app.route('/CustomerSettings', methods=['GET', 'POST'])
@@ -127,6 +139,7 @@ def ViewCustMembership():
     cust_details = CustDetails(session['custID'])
     return render_template('customer/customerMembership.html', cust_details = cust_details)
 
+#route for staff website such that they are able to see the company's insights
 @app.route('/inventory', methods=['GET', 'POST'])
 def inventoryStats():
     oosList = checkOOS_items()
@@ -135,19 +148,7 @@ def inventoryStats():
     topCustList = top_customer()
     topCustList = topCustList[:3]
     return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList)
-
-#route for sign up form to be seen on loginPage.html viona: TBC
-@app.route('/Signup',methods=['GET','POST'])
-def signUp():
-    signupPage = forms.signupForm(csrf_enabled=False)
-    if request.method == 'POST' and signupPage.validate():
-        return redirect(url_for('###'))
-        #use JS to change the layout of the navbar according to Cust or Staff account
-    return render_template('signupPage.html', form=signupPage)
-
-@app.route('/ForgetPassword') #viona: TBC
-def ForgetPassword():
-    return render_template('forgetPassword.html')
+# end of Viona's code
 
 @app.route('/AboutUs')   # added but havent push
 def AboutUs():
@@ -196,26 +197,17 @@ def retrieve_contact_us():
 
 @app.route('/Grains')
 def grains_cat():
-    to_send = grains_products() # loop
-    # insert if else here using '.pop'
-    # create another list to store wo yao de discounted items -> different,, go through the product list
-    return render_template('products/grains.html', to_send=to_send)
+    return render_template('products/grains.html')
 
 
 @app.route('/Frozen')
 def frozen_cat():
-    to_send = frozen_products() # loop
-    # insert if else here using '.pop'
-    # create another list to store wo yao de discounted items -> different,, go through the product list
-    return render_template('products/frozen.html', to_send=to_send)
+    return render_template('products/frozen.html')
 
 
 @app.route('/Household')
-def household_cat():
-    to_send = household_products() # loop
-    # insert if else here using '.pop'
-    # create another list to store wo yao de discounted items -> different,, go through the product list
-    return render_template('products/houseHold.html', to_send=to_send)
+def houshold_cat():
+    return render_template('products/houseHold.html')
 
 
 @app.route('/ShopCategories')   # added but havent push
@@ -235,20 +227,20 @@ def TopSellingItems():
 
 @app.route('/NewlyRestockedItems', methods=['GET', 'POST'])   # added but havent push
 def NewlyRestockedItems():
-    to_send = newlyrestocked_products() # loop
+    to_send = discounted_products() # loop
     # insert if else here using '.pop'
     # create another list to store wo yao de discounted items -> different,, go through the product list
     return render_template('products/newlyRestockedItems.html', to_send=to_send)
-
 
 
 #logout
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('home'))
+    return render_template('home.html')
 
 @app.route('/StaffSettings', methods=['GET', 'POST'])
+#staff account display - anna
 def StaffSettings():
     if (session['role'] == "Staff"):
         staff_details = StaffDetails(session['staffID'])
@@ -257,55 +249,62 @@ def StaffSettings():
         return render_template('usersLogin/loginPage.html')
 
 @app.route('/MainPage')
+#staff home page return template - anna
 def MainPage():
     return render_template('staff.html')
 
-
 @app.route('/retrieveCustomers', methods=['GET', 'POST'])
+#customer management retrieval - anna
 def retrieve_customers():
     custList = checkCust()
     return render_template('staff/staff_cust.html', custList = custList)
 
 @app.route('/retrieveStaff', methods=['GET', 'POST'])
+#staff management retrieval - anna
 def retrieve_staff():
     StaffList = checkStaff()
     return render_template('staff/retrieveStaff.html', StaffList = StaffList)
 
-
 @app.route('/createStaff', methods=['GET', 'POST'])
+#create staff, forms included - anna
 def create_staff():
-    create_staff_form = updateStaff(request.form)
+    create_staff_form = createStaff(request.form)
     if request.method == 'POST' and create_staff_form.validate():
 
         createstaff(create_staff_form.name.data,
                     create_staff_form.email.data,
-                    create_staff_form.password.data)
+                    create_staff_form.password.data,
+                    create_staff_form.remarks.data)
 
         return redirect(url_for('retrieve_staff'))
 
     return render_template('staff/createStaff.html', form=create_staff_form)
 
-
 @app.route('/updateStaff/<int:id>/', methods=['GET', 'POST'])
+#update staff, forms included - anna
 def update_staff(id):
     update_staff_form = updateStaff(request.form)
     if request.method == 'POST' and update_staff_form.validate():
 
         updatestaff(update_staff_form.name.data,
                     update_staff_form.email.data,
+                    update_staff_form.remarks.data,
                     id)
         return redirect(url_for('retrieve_staff'))
 
     else:
-        StaffDetail = StaffDetails(id)
+        StaffList = StaffDetails(id)
 
-        for i in StaffDetail:
-            update_staff_form.name.data = StaffDetail[0][1]
-            update_staff_form.email.data = StaffDetail[0][2]
+        for i in StaffList:
+            update_staff_form.name.data = StaffList[0][1]
+            update_staff_form.email.data = StaffList[0][2]
+            update_staff_form.remarks.data = StaffList[0][4]
+
 
         return render_template('staff/updateStaff.html', form=update_staff_form)
 
 @app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
+#update customer details, forms included - anna
 def update_user(id):
     update_user_form = updateCust(request.form)
     if request.method == 'POST' and update_user_form.validate():
@@ -332,20 +331,20 @@ def update_user(id):
         return render_template('staff/updateUsers.html', form=update_user_form)
 
 
-@app.route('/deleteUser/<int:id>', methods=['POST'])
+@app.route('/deleteUser/<int:id>', methods=['GET'])
+#delete function for customer management - anna
 def delete_user(id):
-    pass
-
+    deletecust(id)
     return redirect(url_for('retrieve_customers'))
 
-@app.route('/deleteStaff/<int:id>', methods=['POST'])
+@app.route('/deleteStaff/<int:id>', methods=['GET'])
+#delete function for staff management - anna
 def delete_staff(id):
-
     deletestaff(id)
-
     return redirect(url_for('retrieve_staff'))
 
 @app.route('/updateStaffaccount/<int:id>/', methods=['GET', 'POST'])
+#update staff account - username, email, password - anna
 def update_staff_account(id):
     update_staff_account_form = updateStaff(request.form)
     if request.method == 'POST' and update_staff_account_form.validate():
@@ -367,22 +366,31 @@ def update_staff_account(id):
 
         return render_template('staff/updatesetting.html', form=update_staff_account_form)
 
-
 @app.route('/game2')
+#game 2 app route
 def game2():
     return render_template('game2/game2.html')
 
+@app.route('/aftergame2',methods=['POST'])
+#adding of points 100 when victory
+def claimpoints():
+    addpoints(int(session['custID']))
+    return render_template('game2/Reedem.html')
+
+@app.route('/game2/redeem')
+#render template for proof of victory and membership points earned
+def redeem():
+    return render_template('game2/Reedem.html')
+
+
+
 # chatbot done by Phoebe
-
-# @app.route("/Chatbot", methods=['POST'])
-# def chatbot():
-#     text = request.get_json().get("message")
-#     response = get_response(text)
-#     message = {"answer": response}
-#     return jsonify(message)
-#
-
-
+@app.route('/chatbot',methods=['POST'])
+def predict():
+    text = request.get_json().get('message')
+    response = get_response(text)
+    message = {"answer": response}
+    return jsonify(message)
 
 # retrieve for receipt - phoebe
 
@@ -397,6 +405,7 @@ def retrieve_database_receipt():
         cursor = conn.cursor()
         cursor.execute('SELECT OrderID,TotalPrice,POSDate from CustOrder')
         cursor_data = cursor.fetchall()
+        session.clear()
         return render_template("paypal/success_payment.html", to_send= cursor_data)
     except Exception as e:
         print(e)
@@ -413,6 +422,7 @@ def open_cart():
     cursor = conn.cursor()
     cursor.execute('SELECT ProductID,ProductName,ProductPrice from Product')
     cursor_data = cursor.fetchall()
+
     return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data)
 
 
@@ -431,6 +441,7 @@ def add_product():
             cursor.execute('SELECT ProductID, ProductName, ProductPrice from Product WHERE  ProductID = ?', _code)
             cursor_data = cursor.fetchone()
             selectedItem = { _code : {'name': cursor_data.ProductName, 'code': cursor_data.ProductID, 'price' : cursor_data.ProductPrice, 'quantity' : _quantity, 'total_price': _quantity * cursor_data.ProductPrice}}
+            print(selectedItem)
             all_total_price = 0
             all_total_quantity = 0
 
@@ -451,6 +462,7 @@ def add_product():
                     individual_price = float(session['cart_item'][key]['total_price'])
                     all_total_quantity = all_total_quantity + individual_quantity
                     all_total_price = all_total_price + individual_price
+
             else:
                 session['cart_item'] = selectedItem
                 all_total_quantity = all_total_quantity + _quantity
@@ -465,8 +477,24 @@ def add_product():
     except Exception as e:
         print(e)
     finally:
+        shopping_cart_dict = {}
+        db = shelve.open('ShoppingCart.db','c')
+
+        try:
+            shopping_cart_dict = db['ShoppingCart']
+
+        except:
+            print("Error in retrieving shopping cart from ShoppingCart.db")
+
+
+
+        itemsSelect = Product(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPrice, all_total_price)
+        shopping_cart_dict[itemsSelect.get_product_id()] = itemsSelect
+        db['ShoppingCart'] = shopping_cart_dict
+        db.close()
         cursor.close()
         conn.close()
+        return redirect(url_for('open_cart'))
 
 
 @app.route('/delete/<string:code>')
@@ -485,15 +513,31 @@ def delete_product(code):
                         individual_price = float(session['cart_item'][key]['total_price'])
                         all_total_quantity = all_total_quantity + individual_quantity
                         all_total_price = all_total_price + individual_price
+
                 break
 
         if all_total_quantity == 0:
+            shopping_cart_dict = {}
+            db = shelve.open('ShoppingCart.db', 'w')
+            shopping_cart_dict = db['ShoppingCart']
+
+            shopping_cart_dict.clear()
+
+            db['ShoppingCart'] = shopping_cart_dict
+            db.close()
             session.clear()
         else:
+            shopping_cart_dict = {}
+            db = shelve.open('ShoppingCart.db', 'w')
+            shopping_cart_dict = db['ShoppingCart']
+            shopping_cart_dict.pop(int(code))
+            db['ShoppingCart'] = shopping_cart_dict
+            db.close()
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
 
         return redirect(url_for('.open_cart'))
+
     except Exception as e:
         print(e)
 
@@ -501,15 +545,30 @@ def delete_product(code):
 @app.route('/ShoppingCart/empty')
 def empty_cart():
     try:
+        shopping_cart_dict = {}
+        db = shelve.open('ShoppingCart.db', 'w')
+        shopping_cart_dict = db['ShoppingCart']
+        shopping_cart_dict.clear()
+
+        db['ShoppingCart'] = shopping_cart_dict
+        db.close()
         session.clear()
         return redirect(url_for('.open_cart'))
     except Exception as e:
         print(e)
 
 
-@app.route('/PaymentCreditCard', methods=['GET', 'POST'])
+@app.route('/ShoppingCart/PaymentCreditCard', methods=['GET', 'POST'])
 def credit_card_form():
     CreditCard = CreditCardForm(request.form)
+    shopping_list = []
+    shopping_cart_dict = {}
+    db = shelve.open('ShoppingCart.db', 'r')
+    shopping_cart_dict = db['ShoppingCart']
+    db.close()
+    for key in shopping_cart_dict:
+        cart = shopping_cart_dict.get(key)
+        shopping_list.append(cart)
     if request.method == 'POST' and CreditCard.validate():
         customers_info_dict = {}
         db = shelve.open('customerInfo.db', 'c')
@@ -526,7 +585,9 @@ def credit_card_form():
         db.close()
 
         return redirect(url_for('retrieve_database_receipt'))
-    return render_template('paypal/customer_credit_form.html', form=CreditCard)
+    return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list)
+
+    
 
 
 if __name__ == '__main__':

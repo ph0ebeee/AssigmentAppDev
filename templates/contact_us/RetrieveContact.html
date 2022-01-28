@@ -1,8 +1,11 @@
-{% extends "base.html" %}
+{% extends "base_s.html" %}
 {% block title %}Library Loan System - Retrieve Customers{% endblock %}
 
 {% block content %}
-<h1 class="display-4">Retrieve Feedback</h1>
+<div class="container-fluid h-100">
+    <div class="section-title">
+                   <h2>Feedbacks</h2>
+               </div>
 <div>
   {% if count == 0 %}
   <p>There are no feedback.</p>
@@ -34,6 +37,7 @@
     {%endfor%}
     </tbody>
   </table>
+</div>
 </div>
 {% endblock %}
 

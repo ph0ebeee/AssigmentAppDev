@@ -5,6 +5,7 @@ Library Loan System - HomeDen
 
 {% block content %}
 <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/style.css') }}">
 
   <meta charset="utf-8"/>
 
@@ -14,49 +15,140 @@ Library Loan System - HomeDen
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
   <!-- Sample CSS styles for demo purposes. You can override these styles to match your web page's branding. -->
-  <link rel="stylesheet" type="text/css" href="https://www.paypalobjects.com/webstatic/en_US/developer/docs/css/cardfields.css"/>
+  <script>
+function togglePopup(idname){
+  document.getElementById(idname).classList.toggle("active");
+}
+  </script>
+  <style>
+.popup .close-btn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  cursor:pointer;
+}
+.popup .overlay {
+  position: fixed;
+  top:0px;
+  left:0px;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+  z-index:1;
+  display:none;
+}
 
+.popup .content {
+  position: fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background:white;
+  width:95%;
+  max-width:700px;
+  height:450px;
+  z-index:2;
+  text-align:center;
+  padding:20px;
+  box-sizing:border-box;
+  overflow: scroll
+}
+
+.popup.active .overlay {
+  display:block;
+}
+
+.popup.active .content {
+  transition:all 300ms ease-in-out;
+  transform:translate(-50%,-50%) scale(1);
+}
+
+
+  </style>
 </head>
 <body>
+    <button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/ShoppingCart">BACK</a></button>
+    <h1><div class="txt-heading">Cart Overview</div></h1>
+		<table class="tbl-cart" cellpadding="10" cellspacing="1" style="width:80%">
+				<tr>
+					<th style="text-align:left;">Name</th>
+					<th style="text-align:right;" width="10%">Quantity</th>
+					<th style="text-align:right;" width="10%">Price</th>
+				</tr>
+        </table>
+ {% for cart in shopping_list %}
+    <table class="tbl-cart" cellpadding="10" cellspacing="1" style="width:80%">
+					<tr>
+						<td style="text-align:left;">{{ cart.get_product_name()}}</td>
+						<td  style="text-align:right;"> {{ cart.get_product_price() }}</td>
+					</tr>
 
-<!-- JavaScript SDK -->
- <script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&client-id=AfRIwzrYKNDDjzhwa6wx4MAuoKf-7j0t76lAYyH-OEAC_XwtpxZmWX_VQ7M4INH10LUrIsESHWDFcUmm" data-client-token= "eyJicmFpbnRyZWUiOnsiYXV0aG9yaXphdGlvbkZpbmdlcnByaW50IjoiZTcwYWNjYmYxYzg5MmUyODhiYTk2NGI0MzY4OThkMDVlNWE0YzU2ZWFhNmFlMjIxMzRjMDExMGZmNTc5NGI3ZXxtZXJjaGFudF9pZD1yd3dua3FnMnhnNTZobTJuJnB1YmxpY19rZXk9NjNrdm4zN3Z0MjlxYjRkZiZjcmVhdGVkX2F0PTIwMjItMDEtMThUMDg6MjY6MDUuODEwWiIsInZlcnNpb24iOiIzLXBheXBhbCJ9LCJwYXlwYWwiOnsiaWRUb2tlbiI6ImV5SnJhV1FpT2lKbE5EQTJOakE0WWpVMFlUazBORGd4WWprMVl6YzFOREkwT0dOak1USXpaaUlzSW5SNWNDSTZJa3BYVkNJc0ltRnNaeUk2SWxKVE1qVTJJbjAuZXlKcGMzTWlPaUpvZEhSd2N6b3ZMMkZ3YVM1ellXNWtZbTk0TG5CaGVYQmhiQzVqYjIwaUxDSmhZM0lpT2xzaVkyeHBaVzUwSWwwc0ltRjFaQ0k2SWtGbVVrbDNlbkpaUzA1RVJHcDZhSGRoTm5kNE5FMUJkVzlMWmkwM2FqQjBOelpzUVZsNVNDMVBSVUZEWDFoM2RIQjRXbTFYV0Y5V1VUZE5ORWxPU0RFd1RGVnlTWE5GVTBoWFJFWmpWVzF0SWl3aWNtOXNaU0k2SWsxRlVrTklRVTVVSWl3aVlYVjBhRjkwYVcxbElqb3hOalF5TkRrME16WTJMQ0poZWlJNkltZGpjQzV6YkdNaUxDSnpZMjl3WlhNaU9sc2lRbkpoYVc1MGNtVmxPbFpoZFd4MElsMHNJbVY0Y0NJNk1UWTBNalE1TlRJMk5pd2ljMlZ6YzJsdmJsOXBibVJsZUNJNklrRnlVbFJQTFdWdVdtRlpTSE5QV0hWTVJHTmljelpIVEc1NWJTSXNJbWxoZENJNk1UWTBNalE1TkRNMk5pd2lhblJwSWpvaVZUSkJRVXRuWTBobVpHbzNhVXR0YXpGR1gyRm1aR2s1UjI5eGJrWkhVbk4wUjJkMFQwY3hZWEYyT0RRdGNYUTJVREZKWWxoT2Eza3pTVUkwZDA4ek1FOVlSa1Z5UWw5TWVYbHZOV2N5TlhOU05IWmZXV0owVFU1dGVWOXVPRzVTWjFkRlNrbHVVM0JZVDB0RWNWOWtVRUZGVFRsaloxVktUV0pPWDB4Q09WRWlMQ0pqYkdsbGJuUmZhV1FpT2lKQlpsSkpkM3B5V1V0T1JFUnFlbWgzWVRaM2VEUk5RWFZ2UzJZdE4yb3dkRGMyYkVGWmVVZ3RUMFZCUTE5WWQzUndlRnB0VjFoZlZsRTNUVFJKVGtneE1FeFZja2x6UlZOSVYwUkdZMVZ0YlNKOS5KZVVpNGRUMEFPdHVwa0ttaWVRZHJYZ3lLRlVkVkhzVC1CVXdzSzVrNkJNVl9wMlZiZU9EeHUwRm1NMUhudlJzSlFNSWJ2dDEtYkVwZ0FTbDdGX0NXcjVieUpqemRWdGRZUk90VW1sVGExR2w5dUVqYkpTYjU4NnhoWlloSGFxNTBGUDR2Z3JMSERiWEU4eDlfV1hzR0FFanBBcnRZNXBuNnQtY2FLUGVMSjdBbEFGcGRrcDJCSGE2S3JaYngxUUhJelZucURCc3prS2FmeV93RGNrZVNZcXdBRGx3NjNDcXl6MHNsb05zZTVYWlgxNFZMS3g2MENhS3pTaTRLemFLbVdNVTFMTEpTRG0wdmk1ZzhlX0pvam96TDJfbXdObFBFeGpYWHIxVkM3UmpXUFhRMW5COG00WGY2WU13emdwdVNfa2I0QlN4WllCcXZzTURPV1NubVEiLCJhY2Nlc3NUb2tlbiI6IkEyMUFBS05Sd0dfcXN6QWtaX3hTX3JpTURNcEszUGg5TXVsSWhiVXJIaWdfLVpfMDJnZVJHUHFYMUtYSHZsWjdWLS1Hb1dCN0N1dnR2cGFSYkpIeGdITVNPc0M0RFVEX1EifX0="></script>
+				<tr>
+					<td colspan="2" align="right">Total:</td>
+					<td align="right"><bold> {{ cart.get_price() }}</bold></td>
+				</tr>
+			</table>
+  {% endfor %}
 
-   <!-- Buttons container -->
-   <table border="0" align="center" valign="top" bgcolor="#FFFFFF" style="width: 39%">
-     <tr>
-       <td colspan="2">
-         <div id="paypal-button-container"></div>
-       </td>
-     </tr>
-     <tr><td colspan="2">&nbsp;</td></tr>
-   </table>
-   <div align="center"> or </div>
-
-{% from "includes/_formHelper.html" import render_field %}
+    <button class="popupbuttons" onclick="togglePopup('payment')" >CONFIRM</button>
 
 
-<form method="POST" action="">
-  <div class="form-group">
-    {{ render_field(form.name, class="form-control") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.email, class="form-control ") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.address, class="form-control") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.card_no, class="form-control") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.expiry, class="form-control datapicker") }}
-  </div>
-  <div class="form-group">
-    {{ render_field(form.cvv, class="form-control ") }}
-  </div>
-  <input type="submit" value="CONFIRM" class="btn btn-primary"/>
-</form>
+  <script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&client-id=AfRIwzrYKNDDjzhwa6wx4MAuoKf-7j0t76lAYyH-OEAC_XwtpxZmWX_VQ7M4INH10LUrIsESHWDFcUmm" data-client-token= "eyJicmFpbnRyZWUiOnsiYXV0aG9yaXphdGlvbkZpbmdlcnByaW50IjoiZTcwYWNjYmYxYzg5MmUyODhiYTk2NGI0MzY4OThkMDVlNWE0YzU2ZWFhNmFlMjIxMzRjMDExMGZmNTc5NGI3ZXxtZXJjaGFudF9pZD1yd3dua3FnMnhnNTZobTJuJnB1YmxpY19rZXk9NjNrdm4zN3Z0MjlxYjRkZiZjcmVhdGVkX2F0PTIwMjItMDEtMThUMDg6MjY6MDUuODEwWiIsInZlcnNpb24iOiIzLXBheXBhbCJ9LCJwYXlwYWwiOnsiaWRUb2tlbiI6ImV5SnJhV1FpT2lKbE5EQTJOakE0WWpVMFlUazBORGd4WWprMVl6YzFOREkwT0dOak1USXpaaUlzSW5SNWNDSTZJa3BYVkNJc0ltRnNaeUk2SWxKVE1qVTJJbjAuZXlKcGMzTWlPaUpvZEhSd2N6b3ZMMkZ3YVM1ellXNWtZbTk0TG5CaGVYQmhiQzVqYjIwaUxDSmhZM0lpT2xzaVkyeHBaVzUwSWwwc0ltRjFaQ0k2SWtGbVVrbDNlbkpaUzA1RVJHcDZhSGRoTm5kNE5FMUJkVzlMWmkwM2FqQjBOelpzUVZsNVNDMVBSVUZEWDFoM2RIQjRXbTFYV0Y5V1VUZE5ORWxPU0RFd1RGVnlTWE5GVTBoWFJFWmpWVzF0SWl3aWNtOXNaU0k2SWsxRlVrTklRVTVVSWl3aVlYVjBhRjkwYVcxbElqb3hOalF5TkRrME16WTJMQ0poZWlJNkltZGpjQzV6YkdNaUxDSnpZMjl3WlhNaU9sc2lRbkpoYVc1MGNtVmxPbFpoZFd4MElsMHNJbVY0Y0NJNk1UWTBNalE1TlRJMk5pd2ljMlZ6YzJsdmJsOXBibVJsZUNJNklrRnlVbFJQTFdWdVdtRlpTSE5QV0hWTVJHTmljelpIVEc1NWJTSXNJbWxoZENJNk1UWTBNalE1TkRNMk5pd2lhblJwSWpvaVZUSkJRVXRuWTBobVpHbzNhVXR0YXpGR1gyRm1aR2s1UjI5eGJrWkhVbk4wUjJkMFQwY3hZWEYyT0RRdGNYUTJVREZKWWxoT2Eza3pTVUkwZDA4ek1FOVlSa1Z5UWw5TWVYbHZOV2N5TlhOU05IWmZXV0owVFU1dGVWOXVPRzVTWjFkRlNrbHVVM0JZVDB0RWNWOWtVRUZGVFRsaloxVktUV0pPWDB4Q09WRWlMQ0pqYkdsbGJuUmZhV1FpT2lKQlpsSkpkM3B5V1V0T1JFUnFlbWgzWVRaM2VEUk5RWFZ2UzJZdE4yb3dkRGMyYkVGWmVVZ3RUMFZCUTE5WWQzUndlRnB0VjFoZlZsRTNUVFJKVGtneE1FeFZja2x6UlZOSVYwUkdZMVZ0YlNKOS5KZVVpNGRUMEFPdHVwa0ttaWVRZHJYZ3lLRlVkVkhzVC1CVXdzSzVrNkJNVl9wMlZiZU9EeHUwRm1NMUhudlJzSlFNSWJ2dDEtYkVwZ0FTbDdGX0NXcjVieUpqemRWdGRZUk90VW1sVGExR2w5dUVqYkpTYjU4NnhoWlloSGFxNTBGUDR2Z3JMSERiWEU4eDlfV1hzR0FFanBBcnRZNXBuNnQtY2FLUGVMSjdBbEFGcGRrcDJCSGE2S3JaYngxUUhJelZucURCc3prS2FmeV93RGNrZVNZcXdBRGx3NjNDcXl6MHNsb05zZTVYWlgxNFZMS3g2MENhS3pTaTRLemFLbVdNVTFMTEpTRG0wdmk1ZzhlX0pvam96TDJfbXdObFBFeGpYWHIxVkM3UmpXUFhRMW5COG00WGY2WU13emdwdVNfa2I0QlN4WllCcXZzTURPV1NubVEiLCJhY2Nlc3NUb2tlbiI6IkEyMUFBS05Sd0dfcXN6QWtaX3hTX3JpTURNcEszUGg5TXVsSWhiVXJIaWdfLVpfMDJnZVJHUHFYMUtYSHZsWjdWLS1Hb1dCN0N1dnR2cGFSYkpIeGdITVNPc0M0RFVEX1EifX0="></script>
+      <div class ="popup" id='payment'>
+        <div class = "overlay"></div>
+        <div class = "content">
+          <div class="close-btn" onclick="togglePopup('payment')">&times;</div>
+     <table border="0" align="center"  bgcolor="#FFFFFF" style="width: 39%">
+       <tr>
+         <td colspan="2">
+           <div id="paypal-button-container"></div>
+         </td>
+       </tr>
+       <tr><td colspan="2">&nbsp;</td></tr>
+     </table>
+    <button class="popupbuttons" onclick="togglePopup('creditcard')">Credit Card/ Debit Card</button>
+        </div>
+      </div>
+
+  {% from "includes/_formHelper.html" import render_field %}
+      <div class ="popup" id='creditcard'>
+        <div class = "overlay"></div>
+        <div class = "content">
+          <div class="close-btn" onclick="togglePopup('creditcard')">&times;</div>
+  <form method="POST" action="">
+    <div class="form-group">
+      {{ render_field(form.name, class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ render_field(form.email, class="form-control ") }}
+    </div>
+    <div class="form-group">
+      {{ render_field(form.address, class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ render_field(form.card_no, class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ render_field(form.expiry, class="form-control datapicker") }}
+    </div>
+    <div class="form-group">
+      {{ render_field(form.cvv, class="form-control ") }}
+    </div>
+    <input type="submit" value="CONFIRM" class="btn btn-primary"/>
+  </form>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
 </body>
    <script>
      let orderId;
@@ -76,112 +168,17 @@ Library Loan System - HomeDen
            });
          },
          onApprove: function(data, actions) {
-           return actions.order.capture().then(function(details) {
+          return actions.order.capture().then(function(orderData) {
+            // Successful capture! For dev/demo purposes:
+                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                var transaction = orderData.purchase_units[0].payments.captures[0];
+                alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
              window.location.href = '/SuccessReceipt';
            });
          }
      }).render("#paypal-button-container");
 
-     // If this returns false or the card fields aren't visible, see Step #1.
-     if (paypal.HostedFields.isEligible()) {
 
-       // Renders card fields
-       paypal.HostedFields.render({
-         // Call your server to set up the transaction
-         createOrder: function () {
-           return fetch('/your-server/paypal/order', {
-            method: 'post'
-          }).then(function(res) {
-              return res.json();
-          }).then(function(orderData) {
-            orderId = orderData.id;
-            return orderId;
-          });
-         },
-
-         styles: {
-           '.valid': {
-            'color': 'green'
-           },
-           '.invalid': {
-            'color': 'red'
-           }
-         },
-
-         fields: {
-           number: {
-             selector: "#card-number",
-             placeholder: "4111 1111 1111 1111"
-           },
-           cvv: {
-             selector: "#cvv",
-             placeholder: "123"
-           },
-           expirationDate: {
-             selector: "#expiration-date",
-             placeholder: "MM/YY"
-           }
-         }
-       }).then(function (cardFields) {
-         document.querySelector("#card-form").addEventListener('submit', (event) => {
-           event.preventDefault();
-
-           cardFields.submit({
-             // Cardholder's first and last name
-             cardholderName: document.getElementById('card-holder-name').value,
-             // Billing Address
-             billingAddress: {
-               // Street address, line 1
-               streetAddress: document.getElementById('card-billing-address-street').value,
-               // Street address, line 2 (Ex: Unit, Apartment, etc.)
-               extendedAddress: document.getElementById('card-billing-address-unit').value,
-               // State
-               region: document.getElementById('card-billing-address-state').value,
-               // City
-               locality: document.getElementById('card-billing-address-city').value,
-               // Postal Code
-               postalCode: document.getElementById('card-billing-address-zip').value,
-               // Country Code
-               countryCodeAlpha2: document.getElementById('card-billing-address-country').value
-             }
-           }).then(function () {
-             fetch('/your-server/api/order/' + orderId + '/capture/', {
-               method: 'post'
-             }).then(function(res) {
-                return res.json();
-             }).then(function (orderData) {
-                // Three cases to handle:
-                //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                //   (2) Other non-recoverable errors -> Show a failure message
-                //   (3) Successful transaction -> Show confirmation or thank you
-
-                // This example reads a v2/checkout/orders capture response, propagated from the server
-                // You could use a different API or structure for your 'orderData'
-                var errorDetail = Array.isArray(orderData.details) && orderData.details[0];
-
-                if (errorDetail && errorDetail.issue === 'INSTRUMENT_DECLINED') {
-                  return actions.restart(); // Recoverable state, per:
-                  // https://developer.paypal.com/docs/checkout/integration-features/funding-failure/
-                }
-
-                if (errorDetail) {
-                    var msg = 'Sorry, your transaction could not be processed.';
-                    if (errorDetail.description) msg += '\n\n' + errorDetail.description;
-                    if (orderData.debug_id) msg += ' (' + orderData.debug_id + ')';
-                    return alert(msg); // Show a failure message
-                }
-
-                // Show a success message or redirect
-                alert('Transaction completed!');
-             })
-          }).catch(function (err) {
-            alert('Payment could not be captured! ' + JSON.stringify(err))
-          });
-         });
-       });
-     } else {
-       // Hides card fields if the merchant isn't eligible
-       document.querySelector("#card-form").style = 'display: none';
-     }
    </script>
 {% endblock %}

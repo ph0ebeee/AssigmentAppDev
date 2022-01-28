@@ -6,9 +6,10 @@ Library Loan System - Customer Management
 {% block content %}
 
 <div class="container-fluid h-100">
-            <div class="col-10" style="text-align: justify;">
-               <div class="mainContent" style="display: block;">
+
+               <div class="section-title">
                    <h2>Customer Management</h2>
+               </div>
                    <div class="table-responsive">
                    <table class="table table-striped table-bordered">
 
@@ -29,12 +30,13 @@ Library Loan System - Customer Management
                             <td>{{i[0]}}</td>
                             <td>{{i[1]}}</td>
                             <td>{{i[3]}}</td>
+                            <td>{{i[7]}}</td>
                             <td>{{i[6]}}</td>
-                            <td>{{i[5]}}</td>
                             <td>{{i[2]}}</td>
-                            <td><a href="/updateUser/{{i[0]}}" class="btn btn-warning">Update</a>
-                            <input type="submit" value="Delete" class="btn btn-danger"
-                                       onclick="return confirm('Are you sure you want to delete {{i[1]}}?');"></td>
+                            <td><a href="/updateUser/{{i[0]}}" class="btn btn-warning" style="margin:10px;">Update</a>
+                            <a href="/deleteUser/{{i[0]}}" class="btn btn-danger"
+                                   onclick="return confirm('Are you sure you want to delete {{i[1]}}?');">Delete</a>
+                            </td>
                         </tr>
                      {%endfor%}
                     </tbody>
@@ -42,7 +44,4 @@ Library Loan System - Customer Management
                 </table>
             </div>
         </div>
-            </div>
-</div>
-
 {% endblock %}
