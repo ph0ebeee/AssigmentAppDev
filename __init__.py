@@ -33,6 +33,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 # Session(app)
 #bcrypt = Bcrypt(app)
 
+
 @app.route('/')
 #function for images selected to be seen on image slideshow  - viona
 def home():
@@ -42,6 +43,7 @@ def home():
     image4 = './static/Assets/images/imageCarousel_4.jpg' 
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
     return render_template('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+
 
 @app.route('/custHome')
 #function for images selected to be seen on image slideshow  - viona
@@ -53,10 +55,15 @@ def custhome():
     image5 = './static/Assets/images/imageCarousel_5.jpg' 
     return render_template('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
+
 @app.route('/staffHome')
 #render staff.html template - anna
 def staffhome():
     return render_template('./staff.html')
+
+
+
+#route for login form to be seen on loginPage.html  - viona
 
 # start of Viona's code 
 #route for login form to be seen on loginPage.html
@@ -64,6 +71,7 @@ def staffhome():
 def login():
     loginPage = loginForm()
     return render_template('usersLogin/loginPage.html', form=loginPage)
+
 
 #validate users login details to respective customer / staff page
 @app.route('/LoginValidate', methods=['GET', 'POST'])
@@ -106,6 +114,7 @@ def signUp():
 def ForgetPassword():
     return render_template('forgetPassword.html')
 
+
 #route to go customer's settings 
 @app.route('/customerSettings', methods=['GET', 'POST'])
 def ViewCustSettings():
@@ -115,11 +124,13 @@ def ViewCustSettings():
     else:
         return render_template('usersLogin/loginPage.html') 
 
+
 #route to go purchase history in customer's settings
 @app.route('/customerPurchase', methods=['GET', 'POST'])
 def ViewCustPurchase():
     custPurchaseList = CustomerPurchase(session["custID"])
     return render_template('customer/customerPurchase.html', custPurchaseList = custPurchaseList)
+
 
 #route to go available vouchers display page in customer's settings
 @app.route('/customerVouchers', methods=['GET', 'POST'])
@@ -128,17 +139,20 @@ def ViewCustVouchers():
     dateNow = datetime.now()
     return render_template('customer/customerVouchers.html', custVoucherList = custVoucherList, dateNow=dateNow)
 
+
 #route to go faq page in customer's settings
 @app.route('/customerFAQ', methods=['GET', 'POST'])
 def ViewFAQ():
     faqList = viewFAQ()
     return render_template('customer/customerFaq.html', faqList = faqList)
 
+
 #route to go membership page in customer's settings
 @app.route('/customerMembership', methods=['GET', 'POST'])
 def ViewCustMembership():
     cust_details = CustDetails(session['custID'])
     return render_template('customer/customerMembership.html', cust_details = cust_details)
+
 
 #route for staff website such that they are able to see the company's insights
 @app.route('/inventory', methods=['GET', 'POST'])
@@ -149,11 +163,28 @@ def inventoryStats():
     topCustList = top_customer()
     topCustList = topCustList[:3]
     return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList)
+
+
+#route for sign up form to be seen on loginPage.html viona: TBC
+@app.route('/Signup',methods=['GET','POST'])
+def signUp():
+    signupPage = forms.signupForm(csrf_enabled=False)
+    if request.method == 'POST' and signupPage.validate():
+        return redirect(url_for('###'))
+        #use JS to change the layout of the navbar according to Cust or Staff account
+    return render_template('signupPage.html', form=signupPage)
+
+
+@app.route('/ForgetPassword') #viona: TBC
+def ForgetPassword():
+    return render_template('forgetPassword.html')
 # end of Viona's code
+
 
 @app.route('/AboutUs')   # added but havent push
 def AboutUs():
     return render_template('about_us/aboutUs.html')
+
 
 # the contact_us form !
 @app.route('/CreateContactUs', methods=['GET', 'POST'])
@@ -180,6 +211,7 @@ def create_contact_us():
         db.close()
         return redirect(url_for('home'))
     return render_template('contact_us/contactUs.html', form=create_contact_form)
+
 
 @app.route('/RetrieveContactUs', methods=['GET', 'POST'])
 def retrieve_contact_us():
@@ -224,16 +256,19 @@ def household_cat():
 def ShopCategories():
     return render_template('products/shopCategories.html')
 
+
 @app.route('/DiscountedItems', methods=['GET', 'POST'])   # added but havent push
 def DiscountedItems():
     to_send = discounted_products()
     # to_send = to_send[:5]
     return render_template('products/discountedItems.html', to_send=to_send)
 
+
 @app.route('/TopSellingItems', methods=['GET', 'POST'])   # added but havent push
 def TopSellingItems():
     to_send = topselling_products()
     return render_template('products/topSellingItems.html', to_send=to_send)
+
 
 @app.route('/NewlyRestockedItems', methods=['GET', 'POST'])   # added but havent push
 def NewlyRestockedItems():
@@ -258,10 +293,12 @@ def StaffSettings():
     else:
         return render_template('usersLogin/loginPage.html')
 
+
 @app.route('/MainPage')
 #staff home page return template - anna
 def MainPage():
     return render_template('staff.html')
+
 
 @app.route('/retrieveCustomers', methods=['GET', 'POST'])
 #customer management retrieval - anna
@@ -269,11 +306,13 @@ def retrieve_customers():
     custList = checkCust()
     return render_template('staff/staff_cust.html', custList = custList)
 
+
 @app.route('/retrieveStaff', methods=['GET', 'POST'])
 #staff management retrieval - anna
 def retrieve_staff():
     StaffList = checkStaff()
     return render_template('staff/retrieveStaff.html', StaffList = StaffList)
+
 
 @app.route('/createStaff', methods=['GET', 'POST'])
 #create staff, forms included - anna
@@ -289,6 +328,7 @@ def create_staff():
         return redirect(url_for('retrieve_staff'))
 
     return render_template('staff/createStaff.html', form=create_staff_form)
+
 
 @app.route('/updateStaff/<int:id>/', methods=['GET', 'POST'])
 #update staff, forms included - anna
@@ -312,6 +352,7 @@ def update_staff(id):
 
 
         return render_template('staff/updateStaff.html', form=update_staff_form)
+
 
 @app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
 #update customer details, forms included - anna
@@ -347,11 +388,13 @@ def delete_user(id):
     deletecust(id)
     return redirect(url_for('retrieve_customers'))
 
+
 @app.route('/deleteStaff/<int:id>', methods=['GET'])
 #delete function for staff management - anna
 def delete_staff(id):
     deletestaff(id)
     return redirect(url_for('retrieve_staff'))
+
 
 @app.route('/updateStaffaccount/<int:id>/', methods=['GET', 'POST'])
 #update staff account - username, email, password - anna
@@ -376,10 +419,12 @@ def update_staff_account(id):
 
         return render_template('staff/updatesetting.html', form=update_staff_account_form)
 
+
 @app.route('/game2')
 #game 2 app route
 def game2():
     return render_template('game2/game2.html')
+
 
 @app.route('/aftergame2',methods=['POST'])
 #adding of points 100 when victory
@@ -387,14 +432,16 @@ def claimpoints():
     addpoints(int(session['custID']))
     return render_template('game2/Reedem.html')
 
+
 @app.route('/game2/redeem')
 #render template for proof of victory and membership points earned
 def redeem():
     return render_template('game2/Reedem.html')
 
 
-
 # chatbot done by Phoebe
+
+
 @app.route('/chatbot',methods=['POST'])
 def predict():
     text = request.get_json().get('message')
@@ -420,7 +467,8 @@ def retrieve_database_receipt():
     except Exception as e:
         print(e)
 
-#shopping cart - phoebe
+
+# shopping cart - phoebe
 
 
 @app.route('/ShoppingCart', methods = ['GET','POST'])           #product for testing
@@ -588,7 +636,7 @@ def credit_card_form():
         except:
             print("Error in retrieving Customers Information from customerInfo.db.")
 
-        customerInfo = CustomerInfo(CreditCard.name.data,CreditCard.email.data,  CreditCard.address.data, CreditCard.card_no.data, CreditCard.expiry.data, CreditCard.cvv.data)
+        customerInfo = CustomerInfo(CreditCard.name.data, CreditCard.email.data,  CreditCard.address.data, CreditCard.card_no.data, CreditCard.expiry.data, CreditCard.cvv.data)
         customers_info_dict[customerInfo.get_customer_id()] = customerInfo
         db['CustomersInfo'] = customers_info_dict
 
@@ -596,8 +644,6 @@ def credit_card_form():
 
         return redirect(url_for('retrieve_database_receipt'))
     return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list)
-
-    
 
 
 if __name__ == '__main__':
