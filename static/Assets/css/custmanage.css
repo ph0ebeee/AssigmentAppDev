@@ -1,0 +1,56 @@
+.home-content{
+ position: relative;
+ padding-top: 100px;
+}
+
+.home-content .overview-boxes{
+ display: flex;
+ width: 100%;
+ justify-content: space-between;
+}
+.home-content .overview-boxes .box{
+ width: calc(100% / 4-15px);
+ display: flex;
+ align-items: center;
+ padding: 15px 14px;
+ background: #fff;
+}
+
+.home-content .overview-boxes .box_topic{
+ font-size: 20px;
+ font-weight: 500;
+}
+
+.home-content .overview-boxes .number {
+ font-size: 35px;
+ font-weight: 500;
+ margin-top: -5px;
+ display: inline-block;
+}
+
+.overview-boxes .indicator i{
+ height: 20px;
+ width: 20px;
+ background: #8FDACB;
+ color: #fff;
+ border-radius: 50%;
+ font-size: 20px;
+ margin-right: 5px;
+}
+
+.overview-boxes .indicator .text{
+ font-size: 12px;
+}
+
+.home-content .box .people{
+ display: inline-block;
+ font-size: 32px;
+ height: 50px;
+ width: 50px;
+ background: #cce5ff
+ line-height: 50px;
+ text-align: center;
+ color: #66b0ff;
+ border-radius: 12px;
+ margin: -15px 0 0 6px;
+}

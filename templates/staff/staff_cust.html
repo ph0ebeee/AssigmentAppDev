@@ -4,7 +4,27 @@ Library Loan System - Customer Management
 {% endblock %}
 
 {% block content %}
-
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/custmanage.css') }}">
+</head>
+<div class="home-content">
+    <div class="overview-boxes">
+        <div class="box">
+            <div class="left-side">
+                <div class="box_topic">Total Customers</div>
+                {% for i in custList %}
+                <div class="number">{{i[0]}}
+                </div>
+                {%endfor%}
+                <div class="indicator">
+                    <i class="bx bx-up-arrow-alt"></i>
+                    <span class="text">Up from yesterday</span>
+                </div>
+            </div>
+            <i class='bx bxs-user-check people'></i>
+        </div>
+</div>
+</div>
 <div class="container-fluid h-100">
 
                <div class="section-title">
@@ -44,4 +64,7 @@ Library Loan System - Customer Management
                 </table>
             </div>
         </div>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
 {% endblock %}
