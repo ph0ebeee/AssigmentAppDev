@@ -3,9 +3,7 @@ from wtforms.fields import EmailField, DateField
 
 
 class signupForm(Form):
-    full_name = StringField('First Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
     username = StringField('Username:', [validators.Length(min=1, max=150), validators.DataRequired()])
-    gender = SelectField('Gender:', [validators.DataRequired()], choices=[('', 'Select'), ('F', 'Female'), ('M', 'Male')], default='')
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
     password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
     contactNum = IntegerField('Contact Number:', [validators.length(min=8, max=8), validators.DataRequired()])

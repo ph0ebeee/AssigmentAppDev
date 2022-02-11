@@ -28,22 +28,28 @@ def validate_signUp_email(email):
 
     for i in cursor_data1:
         emailList.append(i)
-    
     for i in emailList:
-        if (email == i):
+        print(i[0])
+        print(email)
+        print("")
+        if (email == i[0]):
             return True
             break
-        return False
+    return False
 
 def create_new_customer(name, email, passwd, contactnum, addr, postalCode):
     passwordList = []
-    form = signupForm(csrf_enabled=False)
-    password = form.password.encode("utf-8")
+    password = passwd.encode("utf-8")
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password, salt)
     salt = salt.decode('UTF-8')
     hashed = hashed.decode('UTF-8')
-    print(hashed) #try
+    print("INSERT INTO Customer (CustomerName, MembershipPoints, EmailAddr, Password, passwordSalt, ContactNum, ShippingAddr, PostalCode) OUTPUT INSERTED.CustomerID VALUES('"+name+"',0,'"+email+"', '"+hashed+"', '"+salt+"' , "+str(contactnum)+", '"+addr+"', "+str(postalCode)+")")
     # update the new information onto the SQL
-    query = "INSERT INTO Customer (CustomerName, EmailAddr, Password, passwordSalt, ContactNum, ShippingAddr, PostalCode) OUTPUT INSERTED.CustomerID VALUES('{}','{}', '{}', '{}' , {}, '{}', {})".format(name, email, hashed, salt, contactnum, addr, postalCode)
-    
+    query = "INSERT INTO Customer (CustomerName, MembershipPoints, EmailAddr, Password, passwordSalt, ContactNum, ShippingAddr, PostalCode) OUTPUT INSERTED.CustomerID VALUES('"+name+"',0,'"+email+"', '"+hashed+"', '"+salt+"' , "+str(contactnum)+", '"+addr+"', "+str(postalCode)+")"
+    cursor = conn.cursor()
+    cursor.execute(query)
+    cursor_data = cursor.fetchall()
+    print(cursor_data[0][0])
+    conn.commit()
+    return cursor_data[0][0]
