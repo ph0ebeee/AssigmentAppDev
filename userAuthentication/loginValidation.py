@@ -43,12 +43,9 @@ try:
         except:
             return False
 
-    def validated_Cust_Details(email, password):
+    def validated_Cust_Details(email):
         #declaration of variables
         customerDetails = []
-        passwordEncode = password.encode("utf-8")
-        hashedPw = bcrypt.hashpw(passwordEncode, bcrypt.gensalt())
-        hashedPw = hashedPw.decode('UTF-8')
         #code to execute SQL code for Customer's email    
         cursor = conn.cursor()
         query = "SELECT * from Customer WHERE EmailAddr='{}'".format(email)
@@ -91,12 +88,9 @@ try:
         except:
             return False
 
-    def validated_Staff_Details(email, password):
+    def validated_Staff_Details(email):
         #declaration of variables
         staffDetails = []
-        passwordEncode = password.encode("utf-8")
-        hashedPw = bcrypt.hashpw(passwordEncode, bcrypt.gensalt())
-        hashedPw = hashedPw.decode('UTF-8')
         #code to execute SQL code for Customer's email    
         cursor = conn.cursor()
         query = "SELECT * from Staff WHERE EmailAddr='{}'".format(email)

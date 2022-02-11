@@ -85,14 +85,14 @@ def loginValidate():
         validateCustLogin = validate_cust_login(form.email.data,form.password.data)
         validateStaffLogin = validate_staff_login(form.email.data,form.password.data)
         if validateCustLogin==True:
-            custDetails = validated_Cust_Details(form.email.data,form.password.data)
+            custDetails = validated_Cust_Details(form.email.data)
             session['custID'] = (custDetails[0][0])
             session['custName'] = (custDetails[0][1])
             session['emailAddr'] = (custDetails[0][3])
             session['role'] = 'Customer'
             return redirect(url_for('custhome')) # change to customer page
         elif validateStaffLogin == True:
-            staffDetails = validated_Staff_Details(form.email.data,form.password.data)
+            staffDetails = validated_Staff_Details(form.email.data)
             session['staffID'] = (staffDetails[0][0])
             session['staffName'] = (staffDetails[0][1])
             session['emailAddr'] = (staffDetails[0][2])
@@ -109,6 +109,15 @@ def registerCust():
         form = signupForm(request.form)
         if (validate_signUp_email(form.email.data) == False):
             create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data, form.address.data, form.postalCode.data) #conhtact num and postal code not in form
+            custDetails = validated_Cust_Details(form.email.data)
+            if len(custDetails) != 0:
+                session['custID'] = (custDetails[0][0])
+                session['custName'] = (custDetails[0][1])
+                session['emailAddr'] = (custDetails[0][3])
+                session['role'] = 'Customer'
+                return redirect(url_for('custhome'))
+            else:
+                return render_template('usersLogin/signupPage.html',form=signupPage) # error validation
         else:
             return render_template('usersLogin/signupPage.html',form=signupPage) #if email exists in database, return back to sign up page
     return render_template('usersLogin/signupPage.html',form=signupPage)
