@@ -108,16 +108,13 @@ def registerCust():
     if request.method == 'POST':
         form = signupForm(request.form)
         if (validate_signUp_email(form.email.data) == False):
-            create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data, form.address.data, form.postalCode.data) #conhtact num and postal code not in form
-            custDetails = validated_Cust_Details(form.email.data)
-            if len(custDetails) != 0:
-                session['custID'] = (custDetails[0][0])
-                session['custName'] = (custDetails[0][1])
-                session['emailAddr'] = (custDetails[0][3])
+            try:
+                session['custID'] = create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data,form.address.data, form.postalCode.data) #conhtact num and postal code not in form
                 session['role'] = 'Customer'
+                print(session['custID'])
                 return redirect(url_for('custhome'))
-            else:
-                return render_template('usersLogin/signupPage.html',form=signupPage) # error validation
+            except:
+                return render_template('usersLogin/signupPage.html',form=signupPage)
         else:
             return render_template('usersLogin/signupPage.html',form=signupPage) #if email exists in database, return back to sign up page
     return render_template('usersLogin/signupPage.html',form=signupPage)

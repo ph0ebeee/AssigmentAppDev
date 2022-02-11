@@ -42,10 +42,11 @@ def create_new_customer(name, email, passwd, contactnum, addr, postalCode):
     hashed = bcrypt.hashpw(password, salt)
     salt = salt.decode('UTF-8')
     hashed = hashed.decode('UTF-8')
-    print(hashed) #try
+    print("INSERT INTO Customer (CustomerName, MembershipPoints, EmailAddr, Password, passwordSalt, ContactNum, ShippingAddr, PostalCode) OUTPUT INSERTED.CustomerID VALUES('"+name+"',0,'"+email+"', '"+hashed+"', '"+salt+"' , "+str(contactnum)+", '"+addr+"', "+str(postalCode)+")")
     # update the new information onto the SQL
-    query = "INSERT INTO Customer (CustomerName, MembershipPoints, EmailAddr, Password, passwordSalt, ContactNum, ShippingAddr, PostalCode) OUTPUT INSERTED.CustomerID VALUES('{}',0,'{}', '{}', '{}' , {}, '{}', {})".format(name, email, hashed, salt, contactnum, addr, postalCode)
+    query = "INSERT INTO Customer (CustomerName, MembershipPoints, EmailAddr, Password, passwordSalt, ContactNum, ShippingAddr, PostalCode) OUTPUT INSERTED.CustomerID VALUES('"+name+"',0,'"+email+"', '"+hashed+"', '"+salt+"' , "+str(contactnum)+", '"+addr+"', "+str(postalCode)+")"
     cursor = conn.cursor()
     cursor.execute(query)
     cursor_data = cursor.fetchall()
-    print(cursor_data)
+    print(cursor_data[0][0])
+    return cursor_data[0][0]

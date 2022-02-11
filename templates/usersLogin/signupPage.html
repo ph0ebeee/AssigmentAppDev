@@ -14,27 +14,27 @@ Library Loan System - Sign Up
             <!--Form for users to create an account-->
             <form method="post" action="/SignupCustomer" style="background-color: white;" class='signupForm'>
                 <div class="form-group">
-                    {{ render_field(form.username, class="signupForm") }}
+                    {{ render_field(form.username, class="form-control") }}
                 </div>
                 <br />
                 <div class="form-group">
-                    {{ render_field(form.email, class="signupForm") }}
+                    {{ render_field(form.email, class="form-control") }}
                 </div>
                 <br />
                 <div class="form-group">
-                    {{ render_field(form.password, class="signupForm") }}
+                    {{ render_field(form.password, class="form-control") }}
                 </div>
                 <br />
                 <div class="form-group">
-                    {{ render_field(form.contactNum, class="signupForm") }}
+                    {{ render_field(form.contactNum, class="form-control") }}
                 </div>
                 <br />
                 <div class="form-group">
-                    {{ render_field(form.address, class="signupForm") }}
+                    {{ render_field(form.address, class="form-control") }}
                 </div>
                 <br />
                 <div class="form-group">
-                    {{ render_field(form.postalCode, class="signupForm") }}
+                    {{ render_field(form.postalCode, class="form-control") }}
                 </div><br />
                 <input type="submit" value="Register" class="submitBtn btn-primary"
                        style="text-align:center; border-color: #5cb874; display: inline-block; background-color: #5cb874; color: floralwhite; font-size: small; padding: 10px 20px; border-radius: 4px; justify-content:center;  " />
