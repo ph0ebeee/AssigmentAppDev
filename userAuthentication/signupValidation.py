@@ -28,12 +28,14 @@ def validate_signUp_email(email):
 
     for i in cursor_data1:
         emailList.append(i)
-    
     for i in emailList:
-        if (email == i):
+        print(i[0])
+        print(email)
+        print("")
+        if (email == i[0]):
             return True
             break
-        return False
+    return False
 
 def create_new_customer(name, email, passwd, contactnum, addr, postalCode):
     passwordList = []

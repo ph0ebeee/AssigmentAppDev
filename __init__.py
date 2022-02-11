@@ -114,9 +114,11 @@ def registerCust():
                 print(session['custID'])
                 return redirect(url_for('custhome'))
             except:
-                return render_template('usersLogin/signupPage.html',form=signupPage)
+                errorMessage = "Failed to register"
+                return render_template('usersLogin/signupPage.html',form=signupPage, errorMessage = errorMessage)
         else:
-            return render_template('usersLogin/signupPage.html',form=signupPage) #if email exists in database, return back to sign up page
+            errorMessage = "Email exists in database"
+            return render_template('usersLogin/signupPage.html',form=signupPage, errorMessage = errorMessage) #if email exists in database, return back to sign up page
     return render_template('usersLogin/signupPage.html',form=signupPage)
 
 #route for users to do change their password
