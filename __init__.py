@@ -171,7 +171,13 @@ def inventoryStats():
 
 @app.route('/AboutUs')   # added but havent push
 def AboutUs():
-    return render_template('about_us/aboutUs.html')
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
+    return render_template('about_us/aboutUs.html', navbar = navbar)
 
 
 # the contact_us form !
@@ -248,28 +254,52 @@ def household_cat():
 
 @app.route('/ShopCategories')   # added but havent push
 def ShopCategories():
-    return render_template('products/shopCategories.html')
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
+    return render_template('products/shopCategories.html', navbar = navbar)
 
 
 @app.route('/DiscountedItems', methods=['GET', 'POST'])   # added but havent push
 def DiscountedItems():
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     to_send = discounted_products()
     # to_send = to_send[:5]
-    return render_template('products/discountedItems.html', to_send=to_send)
+    return render_template('products/discountedItems.html', to_send=to_send, navbar = navbar)
 
 
 @app.route('/TopSellingItems', methods=['GET', 'POST'])   # added but havent push
 def TopSellingItems():
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     to_send = topselling_products()
-    return render_template('products/topSellingItems.html', to_send=to_send)
+    return render_template('products/topSellingItems.html', to_send=to_send, navbar = navbar)
 
 
 @app.route('/NewlyRestockedItems', methods=['GET', 'POST'])   # added but havent push
 def NewlyRestockedItems():
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     to_send = newlyrestocked_products() # loop
     # insert if else here using '.pop'
     # create another list to store wo yao de discounted items -> different,, go through the product list
-    return render_template('products/newlyRestockedItems.html', to_send=to_send)
+    return render_template('products/newlyRestockedItems.html', to_send=to_send, navbar = navbar)
 
 
 #logout
@@ -467,6 +497,12 @@ def retrieve_database_receipt():
 
 @app.route('/ShoppingCart', methods = ['GET','POST'])           #product for testing
 def open_cart():
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
                           'Server=(localdb)\MSSQLLocalDB;'
                           'Database=EcoDen;'
@@ -475,7 +511,7 @@ def open_cart():
     cursor.execute('SELECT ProductID,ProductName,ProductPrice from Product')
     cursor_data = cursor.fetchall()
 
-    return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data)
+    return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data, navbar = navbar)
 
 
 @app.route('/ShoppingCart/add', methods = ['POST'])
