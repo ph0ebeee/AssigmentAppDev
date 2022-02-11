@@ -8,10 +8,11 @@ class Customers(Users.Users):
                       'Database=EcoDen;'
                       'Trusted_Connection=yes;')
 
-    def __init__(self, id, name, email, password, membership, contactNum, address):
+    def __init__(self, id, name, email, password, membership, contactNum, address, postalcode):
         super().__init__(id, name, email, password, membership)
         self.__address = address
         self.__contactNum = contactNum
+        self.__postalCode = postalcode
 
     def get_address(self):
         return self.__address
@@ -30,3 +31,9 @@ class Customers(Users.Users):
 
     def set_contactNum(self, contactNum):
         self.__contactNum = contactNum
+
+    def get_postalCode(self):
+        return self.__postalCode
+
+    def get_postalCode(self):
+        return self.__postalCode
