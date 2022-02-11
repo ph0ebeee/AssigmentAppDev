@@ -49,4 +49,5 @@ def create_new_customer(name, email, passwd, contactnum, addr, postalCode):
     cursor.execute(query)
     cursor_data = cursor.fetchall()
     print(cursor_data[0][0])
+    conn.commit()
     return cursor_data[0][0]
