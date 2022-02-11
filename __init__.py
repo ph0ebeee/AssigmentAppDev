@@ -71,6 +71,11 @@ def login():
     loginPage = loginForm()
     return render_template('usersLogin/loginPage.html', form=loginPage)
 
+#route for sign up form to be seen on loginPage.html
+@app.route('/Signup', methods=['GET', 'POST'])
+def signUp():
+    signUpPage = signupForm()
+    return render_template('usersLogin/signupPage.html', form=signUpPage)
 
 #validate users login details to respective customer / staff page
 @app.route('/LoginValidate', methods=['GET', 'POST'])
@@ -97,8 +102,8 @@ def loginValidate():
             return redirect(url_for('login'))
 
 #route for sign up form to be seen on signupPage.html
-@app.route('/Signup',methods=['GET','POST'])
-def signUp():
+@app.route('/SignupCustomer',methods=['GET','POST'])
+def registerCust():
     signupPage = forms.signupForm(csrf_enabled=False)
     if request.method == 'POST':
         form = signupForm(request.form)
@@ -173,6 +178,12 @@ def AboutUs():
 @app.route('/CreateContactUs', methods=['GET', 'POST'])
 def create_contact_us():
     create_contact_form = feedbackForm(request.form)
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     if request.method == 'POST' and create_contact_form.validate():
         contact_dict = {}
         db = shelve.open('contact.db', 'c')
@@ -193,7 +204,7 @@ def create_contact_us():
 
         db.close()
         return redirect(url_for('home'))
-    return render_template('contact_us/contactUs.html', form=create_contact_form)
+    return render_template('contact_us/contactUs.html', form=create_contact_form, navbar = navbar)
 
 
 @app.route('/RetrieveContactUs', methods=['GET', 'POST'])
