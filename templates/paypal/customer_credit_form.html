@@ -69,27 +69,31 @@ function togglePopup(idname){
 </head>
 <body>
     <button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/ShoppingCart">BACK</a></button>
-    <h1><div class="txt-heading">Cart Overview</div></h1>
+    <h1><div class="txt-heading" style="text-align:center">Cart Overview</div></h1>
 		<table class="tbl-cart" cellpadding="10" cellspacing="1" style="width:80%">
 				<tr>
-					<th style="text-align:left;">Name</th>
-					<th style="text-align:right;" width="10%">Quantity</th>
-					<th style="text-align:right;" width="10%">Price</th>
+					<th style="text-align:left;width: 70%">Name</th>
+					<th style="text-align:right;width: 5%" >Price</th>
+					<th style="text-align:right; width:10%"></th>
 				</tr>
-        </table>
- {% for cart in shopping_list %}
-    <table class="tbl-cart" cellpadding="10" cellspacing="1" style="width:80%">
-					<tr>
-						<td style="text-align:left;">{{ cart.get_product_name()}}</td>
-						<td  style="text-align:right;"> {{ cart.get_product_price() }}</td>
-					</tr>
+            {% for cart in shopping_list %}
+                <tr>
+                    <td><img style="text-align:left;width:15%"src="{{cart.get_product_image()}}">{{ cart.get_product_name()}}</td>
+                    <td style="text-align:right;width: 10%"> {{ cart.get_product_price() }}</td>
+                    <td></td>
+                </tr>
+            {%endfor%}
+            {%for cart in shopping_list[-1:]%}
+                <tr>
+                    <td></td>
+                    <td>Total Price</td>
+                    <td id="total_price" align="right"><bold> {{ cart.get_price() }}</bold></td>
 
-				<tr>
-					<td colspan="2" align="right">Total:</td>
-					<td align="right"><bold> {{ cart.get_price() }}</bold></td>
-				</tr>
-			</table>
-  {% endfor %}
+                </tr>
+          {% endfor %}
+
+        </table>
+
 
     <button class="popupbuttons" onclick="togglePopup('payment')" >CONFIRM</button>
 
@@ -162,13 +166,23 @@ function togglePopup(idname){
            return actions.order.create({
              purchase_units: [{
                amount: {
-                 value: "1.00"
+                 value: document.getElementById('total_price').value
                }
              }]
            });
          },
          onApprove: function(data, actions) {
           return actions.order.capture().then(function(orderData) {
+                    $.ajax({
+              url: "/ReceiptDetails",
+              type: "POST",
+              data: {value},
+              success: function( result ) {
+                window.location.href = '/SuccessReceipt'
+              }
+            });
+
+
             // Successful capture! For dev/demo purposes:
                 console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
                 var transaction = orderData.purchase_units[0].payments.captures[0];
