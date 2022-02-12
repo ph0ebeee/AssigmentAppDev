@@ -10,7 +10,7 @@ from flask import Flask, render_template, request, session, jsonify
 from forms import forms
 #from flask_bcrypt import Bcrypt
 from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, checkOrder, checkProduct, checkManager, checkIntern, checkAss, updatestaff, updatecust, updatestaffsettings, \
     deletestaff, deletecust, createstaff, addpoints
 from userAuthentication.loginValidation import *
 from userAuthentication.signupValidation import *
@@ -337,14 +337,19 @@ def MainPage():
 #customer management retrieval - anna
 def retrieve_customers():
     custList = checkCust()
-    return render_template('staff/staff_cust.html', custList = custList)
+    OrderList = checkOrder()
+    productList = checkProduct()
+    return render_template('staff/staff_cust.html', custList = custList, OrderList = OrderList, productList = productList)
 
 
 @app.route('/retrieveStaff', methods=['GET', 'POST'])
 #staff management retrieval - anna
 def retrieve_staff():
     StaffList = checkStaff()
-    return render_template('staff/retrieveStaff.html', StaffList = StaffList)
+    ManagerList = checkManager()
+    InternList = checkIntern()
+    AssList = checkAss()
+    return render_template('staff/retrieveStaff.html', StaffList = StaffList, ManagerList = ManagerList, InternList = InternList, AssList = AssList)
 
 
 @app.route('/createStaff', methods=['GET', 'POST'])

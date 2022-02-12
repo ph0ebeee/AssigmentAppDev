@@ -32,6 +32,35 @@ def CustDetails(customerID):
 
     return custList
 
+def checkOrder():
+
+    OrderList = []
+
+    cursor = conn.cursor()
+    query = "SELECT * from CustOrderDetails"
+    cursor.execute(query)
+
+    cursor_data = cursor.fetchall()
+    for i in cursor_data:
+        OrderList.append(i)
+
+    return OrderList
+
+def checkProduct():
+
+    productList = []
+
+    cursor = conn.cursor()
+    query = "SELECT * from Product"
+    cursor.execute(query)
+
+    cursor_data = cursor.fetchall()
+    for i in cursor_data:
+        productList.append(i)
+
+    return productList
+
+
 def checkCust():
 
     custList = []
@@ -61,6 +90,68 @@ def checkStaff():
         StaffList.append(i)
 
     return StaffList
+
+def checkManager():
+
+    ManagerList = []
+
+    cursor = conn.cursor()
+    query = "SELECT * from Staff WHERE Remarks = 'manager'"
+    cursor.execute(query)
+
+    cursor_data = cursor.fetchall()
+
+    for i in cursor_data:
+        ManagerList.append(i)
+
+    return ManagerList
+
+def checkIntern():
+
+    InternList = []
+
+    cursor = conn.cursor()
+    query = "SELECT * from Staff WHERE Remarks = 'intern'"
+    cursor.execute(query)
+
+    cursor_data = cursor.fetchall()
+
+    for i in cursor_data:
+        InternList.append(i)
+
+    return InternList
+
+def checkAss():
+
+    AssList = []
+
+    cursor = conn.cursor()
+    query = "SELECT * from Staff WHERE Remarks = 'assistant'"
+    cursor.execute(query)
+
+    cursor_data = cursor.fetchall()
+
+    for i in cursor_data:
+        AssList.append(i)
+
+    return AssList
+
+def checkPoints():
+
+    cursor = conn.cursor()
+    query = "SELECT * FROM Customer WHERE (CustomerID, MembershipPoints) IN " \
+            "( SELECT CustomerID, MAX(MembershipPoints)" \
+            "FROM Customer" \
+            "GROUP BY CustomerID"
+
+    cursor.execute(query)
+
+    cursor_data = cursor.fetchall()
+    PointList = []
+    for i in cursor_data:
+        PointList.append(i)
+
+    return PointList
 
 def updatestaff(StaffName,EmailAddr,Remarks,StaffID):
 
