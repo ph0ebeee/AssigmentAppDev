@@ -43,12 +43,9 @@ try:
         except:
             return False
 
-    def validated_Cust_Details(email, password):
+    def validated_Cust_Details(email):
         #declaration of variables
         customerDetails = []
-        passwordEncode = password.encode("utf-8")
-        hashedPw = bcrypt.hashpw(passwordEncode, bcrypt.gensalt())
-        hashedPw = hashedPw.decode('UTF-8')
         #code to execute SQL code for Customer's email    
         cursor = conn.cursor()
         query = "SELECT * from Customer WHERE EmailAddr='{}'".format(email)
@@ -63,6 +60,22 @@ try:
 
         return customerDetails
 
+    def validated_Cust_Details_id(id):
+        #declaration of variables
+        customerDetails = []
+        #code to execute SQL code for Customer's email    
+        cursor = conn.cursor()
+        query = "SELECT * from Customer WHERE CustomerID='{}'".format(id)
+        cursor.execute(query) #error pyodbc.ProgrammingError: ('42000', "[42000] [Microsoft][SQL Server Native Client 11.0][SQL Server]Incorrect syntax near '$2'. (102) (SQLExecDirectW)"
+
+        #code to fetch result of the SQL code output for Customer's email
+        cursor_data = cursor.fetchall()
+
+        #change the Customer data format in dictionary form
+        for i in cursor_data:
+            customerDetails.append(i)    
+
+        return customerDetails
 
     def validate_staff_login(email, password):
         #declaration of variables
@@ -91,12 +104,9 @@ try:
         except:
             return False
 
-    def validated_Staff_Details(email, password):
+    def validated_Staff_Details(email):
         #declaration of variables
         staffDetails = []
-        passwordEncode = password.encode("utf-8")
-        hashedPw = bcrypt.hashpw(passwordEncode, bcrypt.gensalt())
-        hashedPw = hashedPw.decode('UTF-8')
         #code to execute SQL code for Customer's email    
         cursor = conn.cursor()
         query = "SELECT * from Staff WHERE EmailAddr='{}'".format(email)

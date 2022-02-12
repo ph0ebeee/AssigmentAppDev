@@ -1,35 +1,55 @@
 {% extends "base.html" %}
-{% block title %}Library Loan System - Sign Up67890-/*-{% endblock %}
+{% block title %}
+Library Loan System - Sign Up
+{% endblock %}
 
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
-
-<h1 class="display-4">Sign Up</h1>
-
-<!--Form for users to create an account-->
-<form method="POST" action="">
-    <div action style="background-color: white;" class='signupForm'>
-        {{ render_field(form.full_name, class="signupForm") }}
+<div class="d-flex align-content-center justify-content-center" style="background-color: white; font-family:'Raleway', Tahoma, Geneva, Verdana, sans-serif; ">
+    <div class="card my-5 shadow" style="width:500px;">
+        <h3 class="card-title card-header bg-custom navbar-dark mb-3 text-center" style="background-color: #5cb874; font-family: 'Raleway', Tahoma, Geneva, Verdana, sans-serif; color: floralwhite;  ">
+            Sign Up
+        </h3>
+        <div class="card-body">
+            <!--Form for users to create an account-->
+            <form method="post" action="/SignupCustomer" style="background-color: white;" class='signupForm'>
+                <div class="form-group">
+                    {{ render_field(form.username, class="form-control") }}
+                </div>
+                <br />
+                <div class="form-group">
+                    {{ render_field(form.email, class="form-control") }}
+                </div>
+                <br />
+                <div class="form-group">
+                    {{ render_field(form.password, class="form-control") }}
+                </div>
+                <br />
+                <div class="form-group">
+                    {{ render_field(form.contactNum, class="form-control") }}
+                </div>
+                <br />
+                <div class="form-group">
+                    {{ render_field(form.address, class="form-control") }}
+                </div>
+                <br />
+                <div class="form-group">
+                    {{ render_field(form.postalCode, class="form-control") }}
+                </div><br />
+                <input type="submit" value="Register" class="submitBtn btn-primary"
+                       style="text-align:center; border-color: #5cb874; display: inline-block; background-color: #5cb874; color: floralwhite; font-size: small; padding: 10px 20px; border-radius: 4px; justify-content:center;  " />
+                <br />
+                <span style="color:red">{{errorMessage}}</span>
+            </form>
+            <p style="font-size:12px; text-align:left; display:inline;">
+                Forgot your password? Click <a href="/ForgetPassword" style="color: #5cb874;">here</a><br />
+                Have an account? Click <a href="/Login" style="color: #5cb874;">here</a> to sign up
+            </p>
+            <b style="text-align:center;">or</b>
+            <!--google API that allows customers to sign in with google-->
+            <div style="align-content:center; align-items:center;" class="g-signin2" data-onsuccess="onSignIn"></div>
+        </div>
     </div>
-    <div class="form-group">
-        {{ render_field(form.username, class="signupForm") }}
-    </div>
-    <div class="form-group">
-        {{ render_field(form.gender, class="signupForm") }}
-    </div>
-    <div class="form-group">
-        {{ render_field(form.email, class="signupForm") }}
-    </div>
-    <div class="form-group">
-        {{ render_field(form.password, class="signupForm") }}
-    </div>
-    <div class="form-group">
-        {{ render_field(form.streetname, class="signupForm") }}
-    </div>
-    <div class="form-group">
-        {{ render_field(form.postalcode, class="signupForm") }}
-    </div>
-    <br />
-    <input type="submit" value="Submit" class="btn btn-primary" />
-</form>
+</div>
+{% from "includes/_footer.html" import render_field %}
 {% endblock %}

@@ -63,7 +63,6 @@ def staffhome():
     return render_template('./staff.html')
 
 
-
 #route for login form to be seen on loginPage.html  - viona
 
 # start of Viona's code 
@@ -73,6 +72,11 @@ def login():
     loginPage = loginForm()
     return render_template('usersLogin/loginPage.html', form=loginPage)
 
+#route for sign up form to be seen on loginPage.html
+@app.route('/Signup', methods=['GET', 'POST'])
+def signUp():
+    signUpPage = signupForm()
+    return render_template('usersLogin/signupPage.html', form=signUpPage)
 
 #validate users login details to respective customer / staff page
 @app.route('/LoginValidate', methods=['GET', 'POST'])
@@ -82,14 +86,14 @@ def loginValidate():
         validateCustLogin = validate_cust_login(form.email.data,form.password.data)
         validateStaffLogin = validate_staff_login(form.email.data,form.password.data)
         if validateCustLogin==True:
-            custDetails = validated_Cust_Details(form.email.data,form.password.data)
+            custDetails = validated_Cust_Details(form.email.data)
             session['custID'] = (custDetails[0][0])
             session['custName'] = (custDetails[0][1])
             session['emailAddr'] = (custDetails[0][3])
             session['role'] = 'Customer'
             return redirect(url_for('custhome')) # change to customer page
         elif validateStaffLogin == True:
-            staffDetails = validated_Staff_Details(form.email.data,form.password.data)
+            staffDetails = validated_Staff_Details(form.email.data)
             session['staffID'] = (staffDetails[0][0])
             session['staffName'] = (staffDetails[0][1])
             session['emailAddr'] = (staffDetails[0][2])
@@ -99,15 +103,23 @@ def loginValidate():
             return redirect(url_for('login'))
 
 #route for sign up form to be seen on signupPage.html
-@app.route('/Signup',methods=['GET','POST'])
-def signUp():
+@app.route('/SignupCustomer',methods=['GET','POST'])
+def registerCust():
     signupPage = forms.signupForm(csrf_enabled=False)
     if request.method == 'POST':
         form = signupForm(request.form)
         if (validate_signUp_email(form.email.data) == False):
-            create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data, form.address.data, form.postalCode.data) #conhtact num and postal code not in form
+            try:
+                session['custID'] = create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data,form.address.data, form.postalCode.data) #conhtact num and postal code not in form
+                session['role'] = 'Customer'
+                print(session['custID'])
+                return redirect(url_for('custhome'))
+            except:
+                errorMessage = "Failed to register"
+                return render_template('usersLogin/signupPage.html',form=signupPage, errorMessage = errorMessage)
         else:
-            return render_template('usersLogin/signupPage.html',form=signupPage) #if email exists in database, return back to sign up page
+            errorMessage = "Email exists in database"
+            return render_template('usersLogin/signupPage.html',form=signupPage, errorMessage = errorMessage) #if email exists in database, return back to sign up page
     return render_template('usersLogin/signupPage.html',form=signupPage)
 
 #route for users to do change their password
@@ -166,16 +178,27 @@ def inventoryStats():
     return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList)
 
 
-
 @app.route('/AboutUs')   # added but havent push
 def AboutUs():
-    return render_template('about_us/aboutUs.html')
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
+    return render_template('about_us/aboutUs.html', navbar = navbar)
 
 
 # the contact_us form !
 @app.route('/CreateContactUs', methods=['GET', 'POST'])
 def create_contact_us():
     create_contact_form = feedbackForm(request.form)
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     if request.method == 'POST' and create_contact_form.validate():
         contact_dict = {}
         db = shelve.open('contact.db', 'c')
@@ -196,7 +219,7 @@ def create_contact_us():
 
         db.close()
         return redirect(url_for('home'))
-    return render_template('contact_us/contactUs.html', form=create_contact_form)
+    return render_template('contact_us/contactUs.html', form=create_contact_form, navbar = navbar)
 
 
 @app.route('/RetrieveContactUs', methods=['GET', 'POST'])
@@ -240,28 +263,52 @@ def household_cat():
 
 @app.route('/ShopCategories')   # added but havent push
 def ShopCategories():
-    return render_template('products/shopCategories.html')
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
+    return render_template('products/shopCategories.html', navbar = navbar)
 
 
 @app.route('/DiscountedItems', methods=['GET', 'POST'])   # added but havent push
 def DiscountedItems():
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     to_send = discounted_products()
     # to_send = to_send[:5]
-    return render_template('products/discountedItems.html', to_send=to_send)
+    return render_template('products/discountedItems.html', to_send=to_send, navbar = navbar)
 
 
 @app.route('/TopSellingItems', methods=['GET', 'POST'])   # added but havent push
 def TopSellingItems():
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     to_send = topselling_products()
-    return render_template('products/topSellingItems.html', to_send=to_send)
+    return render_template('products/topSellingItems.html', to_send=to_send, navbar = navbar)
 
 
 @app.route('/NewlyRestockedItems', methods=['GET', 'POST'])   # added but havent push
 def NewlyRestockedItems():
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     to_send = newlyrestocked_products() # loop
     # insert if else here using '.pop'
     # create another list to store wo yao de discounted items -> different,, go through the product list
-    return render_template('products/newlyRestockedItems.html', to_send=to_send)
+    return render_template('products/newlyRestockedItems.html', to_send=to_send, navbar = navbar)
 
 
 #logout
@@ -475,7 +522,21 @@ def retrieve_database_receipt():
 
 @app.route('/ShoppingCart', methods = ['GET','POST'])           #product for testing
 def open_cart():
-    return render_template("shoppingcart/shopping_cart.html")
+    navbar ="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
+    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
+                          'Server=(localdb)\MSSQLLocalDB;'
+                          'Database=EcoDen;'
+                          'Trusted_Connection=yes;')
+    cursor = conn.cursor()
+    cursor.execute('SELECT ProductID,ProductName,ProductPrice from Product')
+    cursor_data = cursor.fetchall()
+
+    return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data, navbar = navbar)
 
 
 @app.route('/add', methods = ['POST'])
@@ -588,7 +649,6 @@ def delete_product(code):
 
     except Exception as e:
         print(e)
-        return redirect(url_for('.error_page'))
 
 
 @app.route('/ShoppingCart/empty')
@@ -636,10 +696,6 @@ def credit_card_form():
         return redirect(url_for('retrieve_database_receipt'))
     return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list)
 
-
-@app.route('/Error', methods=['GET', 'POST'])
-def error_page():
-    render_template('shoppingcart/error_page.html')
 
 
 if __name__ == '__main__':
