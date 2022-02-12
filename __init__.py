@@ -18,11 +18,12 @@ from script import *
 from templates.shoppingcart.arrangeMerge import array_merge
 from datetime import datetime
 from templates.paypal.CustomerInfo import CustomerInfo
+from templates.paypal.receiptDetails import send_receipt_details
 import shelve
 from templates.chatbot.chat import get_response
 from flask_cors import CORS
 #from templates.Forms import CreateUserForm,CreateCustomerForm
-from templates.shoppingcart.Shopping_cart import Product
+from templates.shoppingcart.Shopping_cart import cart_items
 
 app = Flask(__name__,template_folder="./templates")
 app.secret_key = "secret key"
@@ -164,21 +165,6 @@ def inventoryStats():
     topCustList = topCustList[:3]
     return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList)
 
-
-#route for sign up form to be seen on loginPage.html viona: TBC
-@app.route('/Signup',methods=['GET','POST'])
-def signUp():
-    signupPage = forms.signupForm(csrf_enabled=False)
-    if request.method == 'POST' and signupPage.validate():
-        return redirect(url_for('###'))
-        #use JS to change the layout of the navbar according to Cust or Staff account
-    return render_template('signupPage.html', form=signupPage)
-
-
-@app.route('/ForgetPassword') #viona: TBC
-def ForgetPassword():
-    return render_template('forgetPassword.html')
-# end of Viona's code
 
 
 @app.route('/AboutUs')   # added but havent push
@@ -452,6 +438,14 @@ def predict():
 # retrieve for receipt - phoebe
 
 
+@app.route('/ReceiptDetails', methods =['POST'])
+def receiptDetails():
+    now = datetime.now()
+    current_time = now.strftime("%d-%m-%Y %H:%M:%S")
+    send_receipt_details('1', int(session['custID']), '2', current_time)
+    return render_template('paypal/success_payment.html')
+
+
 @app.route('/SuccessReceipt', methods =['GET','POST'])
 def retrieve_database_receipt():
     try:
@@ -462,6 +456,14 @@ def retrieve_database_receipt():
         cursor = conn.cursor()
         cursor.execute('SELECT OrderID,TotalPrice,POSDate from CustOrder')
         cursor_data = cursor.fetchall()
+        shopping_cart_dict = {}
+        db = shelve.open('ShoppingCart.db', 'w')
+        shopping_cart_dict = db['ShoppingCart']
+
+        shopping_cart_dict.clear()
+
+        db['ShoppingCart'] = shopping_cart_dict
+        db.close()
         session.clear()
         return render_template("paypal/success_payment.html", to_send= cursor_data)
     except Exception as e:
@@ -473,20 +475,11 @@ def retrieve_database_receipt():
 
 @app.route('/ShoppingCart', methods = ['GET','POST'])           #product for testing
 def open_cart():
-    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
-                          'Server=(localdb)\MSSQLLocalDB;'
-                          'Database=EcoDen;'
-                          'Trusted_Connection=yes;')
-    cursor = conn.cursor()
-    cursor.execute('SELECT ProductID,ProductName,ProductPrice from Product')
-    cursor_data = cursor.fetchall()
-
-    return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data)
+    return render_template("shoppingcart/shopping_cart.html")
 
 
-@app.route('/ShoppingCart/add', methods = ['POST'])
+@app.route('/add', methods = ['POST'])
 def add_product():
-    cursor = None
     try:
         _quantity = int(request.form['quantity'])
         _code = request.form['code']
@@ -496,9 +489,9 @@ def add_product():
                               'Database=EcoDen;'
                               'Trusted_Connection=yes;')
             cursor = conn.cursor()
-            cursor.execute('SELECT ProductID, ProductName, ProductPrice from Product WHERE  ProductID = ?', _code)
+            cursor.execute('SELECT ProductID, ProductName, ProductPicture, ProductPrice from Product WHERE  ProductID = ?', _code)
             cursor_data = cursor.fetchone()
-            selectedItem = { _code : {'name': cursor_data.ProductName, 'code': cursor_data.ProductID, 'price' : cursor_data.ProductPrice, 'quantity' : _quantity, 'total_price': _quantity * cursor_data.ProductPrice}}
+            selectedItem = { _code : {'name': cursor_data.ProductName, 'code': cursor_data.ProductID, 'image': cursor_data.ProductPicture, 'price' : cursor_data.ProductPrice, 'quantity' : _quantity, 'total_price': _quantity * cursor_data.ProductPrice}}
             print(selectedItem)
             all_total_price = 0
             all_total_quantity = 0
@@ -528,6 +521,20 @@ def add_product():
 
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
+            shopping_cart_dict = {}
+            db = shelve.open('ShoppingCart.db','c')
+
+            try:
+                shopping_cart_dict = db['ShoppingCart']
+
+            except:
+                print("Error in retrieving shopping cart from ShoppingCart.db")
+
+            itemsSelect = cart_items(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPicture, cursor_data.ProductPrice, all_total_price,'','')
+            shopping_cart_dict[itemsSelect.get_product_id()] = itemsSelect
+            db['ShoppingCart'] = shopping_cart_dict
+            db.close()
+
             return redirect(url_for('.open_cart'))
 
         else:
@@ -535,23 +542,6 @@ def add_product():
     except Exception as e:
         print(e)
     finally:
-        shopping_cart_dict = {}
-        db = shelve.open('ShoppingCart.db','c')
-
-        try:
-            shopping_cart_dict = db['ShoppingCart']
-
-        except:
-            print("Error in retrieving shopping cart from ShoppingCart.db")
-
-
-
-        itemsSelect = Product(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPrice, all_total_price)
-        shopping_cart_dict[itemsSelect.get_product_id()] = itemsSelect
-        db['ShoppingCart'] = shopping_cart_dict
-        db.close()
-        cursor.close()
-        conn.close()
         return redirect(url_for('open_cart'))
 
 
@@ -571,6 +561,12 @@ def delete_product(code):
                         individual_price = float(session['cart_item'][key]['total_price'])
                         all_total_quantity = all_total_quantity + individual_quantity
                         all_total_price = all_total_price + individual_price
+                        shopping_cart_dict = {}
+                        db = shelve.open('ShoppingCart.db', 'w')
+                        shopping_cart_dict = db['ShoppingCart']
+                        shopping_cart_dict.pop(int(code))
+                        db['ShoppingCart'] = shopping_cart_dict
+                        db.close()
 
                 break
 
@@ -585,12 +581,6 @@ def delete_product(code):
             db.close()
             session.clear()
         else:
-            shopping_cart_dict = {}
-            db = shelve.open('ShoppingCart.db', 'w')
-            shopping_cart_dict = db['ShoppingCart']
-            shopping_cart_dict.pop(int(code))
-            db['ShoppingCart'] = shopping_cart_dict
-            db.close()
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
 
@@ -598,6 +588,7 @@ def delete_product(code):
 
     except Exception as e:
         print(e)
+        return redirect(url_for('.error_page'))
 
 
 @app.route('/ShoppingCart/empty')
@@ -616,7 +607,7 @@ def empty_cart():
         print(e)
 
 
-@app.route('/ShoppingCart/PaymentCreditCard', methods=['GET', 'POST'])
+@app.route('/PaymentCreditCard', methods=['GET', 'POST'])
 def credit_card_form():
     CreditCard = CreditCardForm(request.form)
     shopping_list = []
@@ -644,6 +635,11 @@ def credit_card_form():
 
         return redirect(url_for('retrieve_database_receipt'))
     return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list)
+
+
+@app.route('/Error', methods=['GET', 'POST'])
+def error_page():
+    render_template('shoppingcart/error_page.html')
 
 
 if __name__ == '__main__':

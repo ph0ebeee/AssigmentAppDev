@@ -8,7 +8,8 @@
         "How are you",
         "Is anyone there?",
         "Hello",
-        "Good day"
+        "Good day",
+        "Harlo"
       ],
       "responses": [
         "Hi thank you for contacting us! How can we assist you?"
@@ -87,6 +88,83 @@
       "responses": [
         "You can redeem your vouchers by going to your profile's voucher page. You can claim vouchers by playing our games or return our reusable bags during delivery "
       ]
+    },
+    {
+      "tag": "complains",
+      "patterns": [
+        "Such horrible service",
+        "wtf",
+        "This service is terrible",
+        "omg",
+        "oh my god",
+        "what in the world",
+        "walao",
+        "what the hell",
+        "Such shitty service"
+      ],
+      "responses": [
+        "Hi customer we are so sorry for providing a service that you are not satisfied with, do email us the issue or continue chatting with us"
+      ]
+    },
+
+
+    {
+      "tag": "membership points expiry",
+      "patterns": [
+        "Does membership points expiry after some time",
+        "Does the points expire",
+        "Is there a due date for the membership points"
+      ],
+      "responses": [
+        "Our membership points does not expiry"
+      ]
+    },
+
+    {
+      "tag": "game update",
+      "patterns": [
+        "will there be future updates for the games",
+        "will there be more games",
+        "are you coming up with more games",
+        "why are there so little games"
+      ],
+      "responses": [
+        "There are currently 2 games in progress. We seek for your patience"
+      ]
+    },
+    {
+      "tag": "staff hours",
+      "patterns": [
+        "how long are the staff hours",
+        "what are the staff operating hours",
+        "when will the staff be able to reply to me",
+        "what time does your staff work"
+      ],
+      "responses": [
+        "Our staff working hours are from 6am to 11pm "
+      ]
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   ]
 }

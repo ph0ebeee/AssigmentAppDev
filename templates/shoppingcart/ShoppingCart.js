@@ -110,3 +110,46 @@ function updateCartTotal() {
 function togglePopup(idname){
   document.getElementById(idname).classList.toggle("active");
 }
+
+
+
+     let orderId;
+
+     // Displays PayPal buttons
+     paypal.Buttons({
+       style: {
+         layout: 'horizontal'
+       },
+        createOrder: function(data, actions) {
+           return actions.order.create({
+             purchase_units: [{
+               amount: {
+                 value: document.getElementById('total_price').value
+               }
+             }]
+           });
+         },
+         onApprove: function(data, actions) {
+          return actions.order.capture().then(function(orderData) {
+
+            // Successful capture! For dev/demo purposes:
+                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                var transaction = orderData.purchase_units[0].payments.captures[0];
+                alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+             window.location.href = '/SuccessReceipt';
+           });
+         }
+         recordReceipt: function(data, actions){
+            $.ajax({
+              url: "/SuccessReceipt",
+              type: "POST",
+              data: {value},
+              success: function( result ) {
+                window.location.href = '/success_payment'
+          }
+        });
+
+         }
+     }).render("#paypal-button-container");
+
