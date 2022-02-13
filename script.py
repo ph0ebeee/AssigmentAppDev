@@ -122,16 +122,12 @@ def getCustId(email):
 
     return custDetails[0][0]
 
-def send_password_reset_link(user_email,salt, app):
-    password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    password_reset_url = url_for(
-        'reset_token',
-        token = password_reset_serializer.dumps(user_email, salt=salt))
+def send_password_reset_link(user_email,id, salt, app):
     expires = datetime.timedelta(hours=24)
-    reset_token = create_access_token(str(user.id), expires_delta=expires)
+    reset_token = create_access_token(str(id), expires_delta=expires)
     html = render_template(
         'forgetPassword/password_reset.html',
-        password_reset_url=password_reset_url)
+        token=reset_token)
     msg = Message('Password Reset Requested', sender = app.config['MAIL_USERNAME'],recipients = [user_email])
     mail = Mail(app)
     msg.body = html
@@ -247,4 +243,8 @@ def validated_Cust_Exists(email):
     elif len(customerDetails) == 0:
         return False
 
-RetrieveMonthlyOverallSalesRevenue(2021)
+now = datetime.datetime.now()
+
+# convert to string
+date_time_str = now.strftime("%d-%b-%y %H:%M:%S")
+print(date_time_str)
