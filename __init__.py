@@ -223,16 +223,39 @@ def ViewCustMembership():
     return render_template('customer/customerMembership.html', cust_details = cust_details)
 
 
-#route for staff website such that they are able to see the company's insights
+#viona :route for staff website such that they are able to see the company's insights
 @app.route('/inventory', methods=['GET', 'POST'])
 def inventoryStats():
+    #data tables
     oosList = checkOOS_items()
     topProductList = top_product()
     topProductList = topProductList[:10]
     topCustList = top_customer()
-    topCustList = topCustList[:3]
-    return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList)
+    topCustList = topCustList[:3] #only select top 3
+    monthList = [1,2,3,4,5,6,7,8,9,10,11,12]  #drop down list
+    yearList = [2021,2022] #drop down list
+    revenue_year = request.form.get("revYear")
+    if revenue_year == None:
+        revenue_year = 2021
 
+    cat_year = request.form.get("catYear")
+    if cat_year == None:
+        cat_year = 2021
+
+    cat_month = request.form.get("catMonth")
+    if cat_month == None:
+        cat_month = 11
+    #lists of data
+    revenue = RetrieveMonthlyOverallSalesRevenue(revenue_year)
+    topCategories = RetrieveTopSellingProductCategory(cat_month,cat_year)
+    topCategories = topCategories[:5] #only select top 3
+    #to plot graph
+    MonthlyRevenuelabel = [row[0] for row in revenue]
+    MonthlyRevenuevalues = [float(row[1]) for row in revenue]
+    
+    topCatlabel = [row[0] for row in topCategories]
+    topCatvalues = [float(row[1]) for row in topCategories]
+    return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList,monthList=monthList,yearList=yearList,MonthlyRevenuelabel=MonthlyRevenuelabel, MonthlyRevenuevalues=MonthlyRevenuevalues, topCatlabel=topCatlabel, topCatvalues=topCatvalues,revenue_year=revenue_year,cat_year=cat_year,cat_month=cat_month)
 
 @app.route('/AboutUs')   # added but havent push
 def AboutUs():
