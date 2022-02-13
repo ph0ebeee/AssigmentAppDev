@@ -18,7 +18,7 @@
  align-items: center;
  justify-content: space-between;
  flex-wrap: wrap;
- padding: 0 300px;
+ padding: 0 200px;
  margin-bottom: 26px;
 }
 
@@ -84,44 +84,49 @@
 }
 
 .home-content .box .people.three{
+ color: #009900;
+ background: #b3ffb3;
+}
+
+.home-content .box .people.four{
  color: #e68000;
  background: #ffe8b3;
 }
 
-.home-section .customer-boxes{
+.home-section .staff-boxes{
  display: flex;
  justify-content: space-between;
 }
 
 /* Left Box*/
-.home-section .customer-boxes .total-customer box{
+.home-section .staff-boxes .total-staff box{
  width: 100%;
  padding: 20px 30px;
  margin: 0 20px;
 
 }
 
-.home-section .customer-boxes .customer-details{
+.home-section .staff-boxes .staff-details{
  display: flex;
  align-items: center;
  justify-content: space-between;
- margin-left: 150px;
+ margin-left: 400px;
  background: #fff;
  border-radius: 12px;
  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
 
-.customer-boxes .customer-details li.topic{
+.staff-boxes .staff-details li.topic{
  font-size: 20px;
  font-weight: 500;
 }
 
-.customer-boxes .customer-details li{
+.staff-boxes .staff-details li{
  list-style: none;
  margin: 20px 0;
 }
 
-.customer-boxes .customer-details li a{
+.staff-boxes .staff-details li a{
  font-size: 18px;
  color: #333;
  font-size: 400;
@@ -129,22 +134,22 @@
 
 }
 
-.customer-boxes .customer-details .update-button{
- margin:15px -25px 17px;
+.staff-boxes .staff-details .update-button{
+ margin:15px -2px 17px;
 
 }
 
-.customer-boxes .customer-details .delete-button{
-  margin:15px -45px 17px;
+.staff-boxes .staff-details .delete-button{
+  margin:15px -30px 17px;
 }
 
-.customer-boxes .box .button{
+.staff-boxes .box .button{
  width: 100%
  display:flex;
  justify-content: flex-end;
 }
 
-.customer-boxes .box .button a{
+.staff-boxes .box .button a{
  color: #fff;
  background: #0A2558
  padding: 4px 12px;
@@ -155,21 +160,21 @@
  transition: all 0.3s ease;
 }
 
-.customer-boxes .box .button a:hover{
+.satff-boxes .box .button a:hover{
  background: #0d3073;
 }
 
 /* Responsive Media Query */
 @media (max-width: 1150px){
- .home-content .customer-boxes{
+ .home-content .staff-boxes{
   flex-direction: column;
  }
- .home-content .customer-boxes .box{
+ .home-content .staff-boxes .box{
   width: 100%;
   overflow-x: scroll;
   margin-bottom: 30px;
  }
- .home-content .customer-boxes .recent-customer{
+ .home-content .staff-boxes .recent-staff{
   margin:0;
  }
 }

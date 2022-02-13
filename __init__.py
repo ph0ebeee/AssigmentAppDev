@@ -9,8 +9,8 @@ from flask import Flask, render_template, request, session, jsonify, flash
 #from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
+from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff, updateStaffaccount
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, checkOrder, checkProduct, checkManager, checkIntern, checkAss, updatestaff, updatecust, updatestaffsettings, \
     deletestaff, deletecust, createstaff, addpoints
 from userAuthentication.loginValidation import *
 from userAuthentication.signupValidation import *
@@ -393,14 +393,19 @@ def MainPage():
 #customer management retrieval - anna
 def retrieve_customers():
     custList = checkCust()
-    return render_template('staff/staff_cust.html', custList = custList)
+    OrderList = checkOrder()
+    productList = checkProduct()
+    return render_template('staff/staff_cust.html', custList = custList, OrderList = OrderList, productList = productList)
 
 
 @app.route('/retrieveStaff', methods=['GET', 'POST'])
 #staff management retrieval - anna
 def retrieve_staff():
     StaffList = checkStaff()
-    return render_template('staff/retrieveStaff.html', StaffList = StaffList)
+    ManagerList = checkManager()
+    InternList = checkIntern()
+    AssList = checkAss()
+    return render_template('staff/retrieveStaff.html', StaffList = StaffList, ManagerList = ManagerList, InternList = InternList, AssList = AssList)
 
 
 @app.route('/createStaff', methods=['GET', 'POST'])
@@ -488,23 +493,21 @@ def delete_staff(id):
 @app.route('/updateStaffaccount/<int:id>/', methods=['GET', 'POST'])
 #update staff account - username, email, password - anna
 def update_staff_account(id):
-    update_staff_account_form = updateStaff(request.form)
+    update_staff_account_form = updateStaffaccount(request.form)
     if request.method == 'POST' and update_staff_account_form.validate():
 
         updatestaffsettings(update_staff_account_form.name.data,
                     update_staff_account_form.email.data,
-                    #update_staff_account_form.password.data,
                     id)
 
         return redirect(url_for('StaffSettings'))
 
     else:
-        StaffDetail = StaffDetails(id)
+        StaffList = StaffDetails(id)
 
-        for i in StaffDetail:
-            update_staff_account_form.name.data = StaffDetail[0][1]
-            update_staff_account_form.email.data = StaffDetail[0][2]
-            #update_staff_account_form.password.data = StaffDetail[0][3]
+        for i in StaffList:
+            update_staff_account_form.name.data = StaffList[0][1]
+            update_staff_account_form.email.data = StaffList[0][2]
 
         return render_template('staff/updatesetting.html', form=update_staff_account_form)
 
