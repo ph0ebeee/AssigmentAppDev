@@ -4,13 +4,13 @@ import Feedback_class as Feedbacks
 from templates.products.SQLtoPython import discounted_products, topselling_products, newlyrestocked_products, \
     household_products, frozen_products, grains_products
 #from flask_bcrypt import Bcrypt
-from flask import Flask, render_template, request, session, jsonify
+from flask import Flask, render_template, request, session, jsonify, flash
 # from flask_session import Session
 #from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
+from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff, updateStaffaccount
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, checkOrder, checkProduct, checkManager, checkIntern, checkAss, updatestaff, updatecust, updatestaffsettings, \
     deletestaff, deletecust, createstaff, addpoints
 from userAuthentication.loginValidation import *
 from userAuthentication.signupValidation import *
@@ -22,8 +22,11 @@ from templates.paypal.receiptDetails import send_receipt_details
 import shelve
 from templates.chatbot.chat import get_response
 from flask_cors import CORS
+import secrets
 #from templates.Forms import CreateUserForm,CreateCustomerForm
 from templates.shoppingcart.Shopping_cart import cart_items
+from threading import Thread
+from itsdangerous.url_safe import URLSafeTimedSerializer
 
 app = Flask(__name__,template_folder="./templates")
 app.secret_key = "secret key"
@@ -31,6 +34,12 @@ CORS(app)
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config['SECRET_KEY'] = secrets.token_urlsafe(16)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = "homeden123@gmail.com"
+app.config['MAIL_PASSWORD'] = "appDevAssignment123"
 # Session(app)
 #bcrypt = Bcrypt(app)
 
@@ -111,8 +120,10 @@ def registerCust():
         if (validate_signUp_email(form.email.data) == False):
             try:
                 session['custID'] = create_new_customer(form.username.data,form.email.data, form.password.data,form.contactNum.data,form.address.data, form.postalCode.data) #conhtact num and postal code not in form
+                custDetails = validated_Cust_Details(form.email.data)
+                session['custName'] = (custDetails[0][1])
+                session['emailAddr'] = (custDetails[0][3])
                 session['role'] = 'Customer'
-                print(session['custID'])
                 return redirect(url_for('custhome'))
             except:
                 errorMessage = "Failed to register"
@@ -123,10 +134,55 @@ def registerCust():
     return render_template('usersLogin/signupPage.html',form=signupPage)
 
 #route for users to do change their password
-@app.route('/ForgetPassword') 
+@app.route('/ForgetPassword',methods=['GET','POST']) 
 def ForgetPassword():
-    return render_template('forgetPassword.html')
+    emailForm = forms.emailForm(csrf_enabled=False)
+    return render_template('forgetPassword/send_resetLink_form.html', form = emailForm)
 
+#route for users to do change their password
+@app.route('/reset_password',methods=['GET','POST']) 
+def sendForgetEmail():
+    emailForm = forms.emailForm(csrf_enabled=False)
+    if request.method == 'POST':
+        form = forms.emailForm(request.form)
+        if form.validate():
+            #try:
+            email = form.email.data
+            if validated_Cust_Exists(email) == True:
+                salt = CustPwSalt(email)
+                print("yes before")
+                send_password_reset_link(email, salt, app)
+                print("yes after")
+                flash('Please check your email for a password reset link.', 'success')
+            #except:
+            #    print("no")
+            #    return render_template('forgetPassword/send_resetLink_form.html', form = emailForm)
+        else:
+            return render_template('forgetPassword/forgetPassword.html', form = emailForm) #if email exists in database, return back to sign up page
+    return render_template('forgetPassword.html', form = emailForm)
+
+@app.route("/reset_password/<token>", methods=['GET','POST'])
+def reset_token(token):
+    try:
+        password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+        email = password_reset_serializer.loads(token, salt='password-reset-salt', max_age=3600)
+    except:
+        flash('The password reset link is invalid or has expired.', 'error')
+        return redirect(url_for('Login'))
+
+    form = forms.passwordForm()
+
+    if form.validate():
+        salt = CustPwSalt(email)
+        passwordEncode = form.password.data.encode("utf-8")
+        passwordSalt = salt.encode("utf-8")
+        hashedPw = bcrypt.hashpw(passwordEncode, passwordSalt)
+        hashedPw = hashedPw.decode('UTF-8')
+        updatePassword(email, hashedPw)
+        flash('Your password has been updated!', 'success')
+        return redirect(url_for('Login'))
+
+    return render_template('forgetPassword/reset_password_form.html',token=token, form=form)
 
 #route to go customer's settings 
 @app.route('/customerSettings', methods=['GET', 'POST'])
@@ -167,16 +223,39 @@ def ViewCustMembership():
     return render_template('customer/customerMembership.html', cust_details = cust_details)
 
 
-#route for staff website such that they are able to see the company's insights
+#viona :route for staff website such that they are able to see the company's insights
 @app.route('/inventory', methods=['GET', 'POST'])
 def inventoryStats():
+    #data tables
     oosList = checkOOS_items()
     topProductList = top_product()
     topProductList = topProductList[:10]
     topCustList = top_customer()
-    topCustList = topCustList[:3]
-    return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList)
+    topCustList = topCustList[:3] #only select top 3
+    monthList = [1,2,3,4,5,6,7,8,9,10,11,12]  #drop down list
+    yearList = [2021,2022] #drop down list
+    revenue_year = request.form.get("revYear")
+    if revenue_year == None:
+        revenue_year = 2021
 
+    cat_year = request.form.get("catYear")
+    if cat_year == None:
+        cat_year = 2021
+
+    cat_month = request.form.get("catMonth")
+    if cat_month == None:
+        cat_month = 11
+    #lists of data
+    revenue = RetrieveMonthlyOverallSalesRevenue(revenue_year)
+    topCategories = RetrieveTopSellingProductCategory(cat_month,cat_year)
+    topCategories = topCategories[:5] #only select top 3
+    #to plot graph
+    MonthlyRevenuelabel = [row[0] for row in revenue]
+    MonthlyRevenuevalues = [float(row[1]) for row in revenue]
+    
+    topCatlabel = [row[0] for row in topCategories]
+    topCatvalues = [float(row[1]) for row in topCategories]
+    return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList,monthList=monthList,yearList=yearList,MonthlyRevenuelabel=MonthlyRevenuelabel, MonthlyRevenuevalues=MonthlyRevenuevalues, topCatlabel=topCatlabel, topCatvalues=topCatvalues,revenue_year=revenue_year,cat_year=cat_year,cat_month=cat_month)
 
 @app.route('/AboutUs')   # added but havent push
 def AboutUs():
@@ -337,14 +416,19 @@ def MainPage():
 #customer management retrieval - anna
 def retrieve_customers():
     custList = checkCust()
-    return render_template('staff/staff_cust.html', custList = custList)
+    OrderList = checkOrder()
+    productList = checkProduct()
+    return render_template('staff/staff_cust.html', custList = custList, OrderList = OrderList, productList = productList)
 
 
 @app.route('/retrieveStaff', methods=['GET', 'POST'])
 #staff management retrieval - anna
 def retrieve_staff():
     StaffList = checkStaff()
-    return render_template('staff/retrieveStaff.html', StaffList = StaffList)
+    ManagerList = checkManager()
+    InternList = checkIntern()
+    AssList = checkAss()
+    return render_template('staff/retrieveStaff.html', StaffList = StaffList, ManagerList = ManagerList, InternList = InternList, AssList = AssList)
 
 
 @app.route('/createStaff', methods=['GET', 'POST'])
@@ -432,23 +516,21 @@ def delete_staff(id):
 @app.route('/updateStaffaccount/<int:id>/', methods=['GET', 'POST'])
 #update staff account - username, email, password - anna
 def update_staff_account(id):
-    update_staff_account_form = updateStaff(request.form)
+    update_staff_account_form = updateStaffaccount(request.form)
     if request.method == 'POST' and update_staff_account_form.validate():
 
         updatestaffsettings(update_staff_account_form.name.data,
                     update_staff_account_form.email.data,
-                    #update_staff_account_form.password.data,
                     id)
 
         return redirect(url_for('StaffSettings'))
 
     else:
-        StaffDetail = StaffDetails(id)
+        StaffList = StaffDetails(id)
 
-        for i in StaffDetail:
-            update_staff_account_form.name.data = StaffDetail[0][1]
-            update_staff_account_form.email.data = StaffDetail[0][2]
-            #update_staff_account_form.password.data = StaffDetail[0][3]
+        for i in StaffList:
+            update_staff_account_form.name.data = StaffList[0][1]
+            update_staff_account_form.email.data = StaffList[0][2]
 
         return render_template('staff/updatesetting.html', form=update_staff_account_form)
 

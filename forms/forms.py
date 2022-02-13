@@ -14,10 +14,11 @@ class loginForm(Form):
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
     password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
 
-class forgetPassword(Form):
+class emailForm(Form):
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
-    oldPassword = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
-    newPassword = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
+
+class passwordForm(Form):
+    password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
 
 class feedbackForm(Form):
     cust_name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
@@ -52,6 +53,10 @@ class createStaff(Form):
     email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
     password = PasswordField('Password:', [validators.length(max=100), validators.DataRequired()])
     remarks = TextAreaField('Remarks:', [validators.length(max=200), validators.DataRequired()])
+
+class updateStaffaccount(Form):
+    name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = EmailField('Email:', [validators.Email(), validators.DataRequired()])
 
 class CreditCardForm(Form):
     name = StringField('Name:', [validators.Length(min=1, max=150), validators.DataRequired()])

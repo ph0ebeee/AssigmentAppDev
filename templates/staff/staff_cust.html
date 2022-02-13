@@ -15,7 +15,7 @@ Library Loan System - Customer Management
                 <div class="box_topic">Total Customers</div>
                 <div class="number">{{ custList | length }}</div>
                 <div class="indicator">
-                    <i class="bx bx-up-arrow-alt"></i>
+                    <i class='bx bx-check-square'></i>
                     <span class="text">Up from yesterday</span>
                 </div>
             </div>
@@ -23,45 +23,25 @@ Library Loan System - Customer Management
         </div>
         <div class="box">
             <div class="right-side">
-                <div class="box_topic">Top Membership Points</div>
-                {% for i in custList %}
-                <div class="number">{{i[0]}}
-                </div>
-                {%endfor%}
+                <div class="box_topic">Total Products</div>
+                <div class="number">{{ productList | length }}</div>
                 <div class="indicator">
-                    <i class="bx bx-up-arrow-alt"></i>
+                    <i class='bx bx-check-square'></i>
                     <span class="text">Up from yesterday</span>
                 </div>
             </div>
-            <i class='bx bxs-user-check people two'></i>
+            <i class='bx bx-store people two'></i>
         </div>
         <div class="box">
             <div class="right-side">
-                <div class="box_topic">Total Customers</div>
-                {% for i in custList %}
-                <div class="number">{{i[0]}}
-                </div>
-                {%endfor%}
+                <div class="box_topic">Total Orders</div>
+                <div class="number">{{ OrderList | length }}</div>
                 <div class="indicator">
-                    <i class="bx bx-up-arrow-alt"></i>
+                    <i class='bx bx-check-square'></i>
                     <span class="text">Up from yesterday</span>
                 </div>
             </div>
-            <i class='bx bxs-user-check people three'></i>
-        </div>
-        <div class="box">
-            <div class="right-side">
-                <div class="box_topic">Total Customers</div>
-                {% for i in custList %}
-                <div class="number">{{i[0]}}
-                </div>
-                {%endfor%}
-                <div class="indicator">
-                    <i class="bx bx-up-arrow-alt"></i>
-                    <span class="text">Up from yesterday</span>
-                </div>
-            </div>
-            <i class='bx bxs-user-check people four'></i>
+            <i class='bx bxs-cart people three'></i>
         </div>
 </div>
 </div>
@@ -109,13 +89,13 @@ Library Loan System - Customer Management
             {% endfor %}
         </ul>
         <ul class="details">
-            <li class="topic">gfdgfd</li>
+            <li class="topic" style="color:#fff;">gfdgfd</li>
             {% for i in custList %}
              <li class="update-button"><a href="/updateUser/{{i[0]}}" class="btn btn-warning" style="padding:5px;font-size:13px;">Update</a></li>
             {% endfor %}
         </ul>
         <ul class="details">
-            <li class="topic">gjfgdf</li>
+            <li class="topic" style="color:#fff;">gjfgdf</li>
             {% for i in custList %}
             <li class="delete-button"><a href="/deleteUser/{{i[0]}}" class="btn btn-danger" style="padding:5px;font-size:13px;" onclick="return confirm('Are you sure you want to delete {{i[1]}}?');">Delete</a></li>
             {% endfor %}
