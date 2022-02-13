@@ -2,12 +2,15 @@
 import pyodbc
 import jwt
 import bcrypt
+from flask_jwt_extended import create_access_token, decode_token
 from itsdangerous.url_safe import URLSafeSerializer, URLSafeTimedSerializer
+from sqlalchemy.sql.functions import user
+
 from templates.customer.Customers import Customers
 from flask import Flask ,url_for,render_template
-from django.core.mail import send_mail
-from can import Message
+from flask_mail import Mail, Message
 import threading 
+import datetime
 
 conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                       'Server=(localdb)\MSSQLLocalDB;'
@@ -105,28 +108,30 @@ def CustPwSalt(email):
 
     return custDetails[0][0]
 
-def send_password_reset_link(user_email, salt, app):
-    password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    password_reset_url = url_for(
-        'reset_token',
-        token = password_reset_serializer.dumps(user_email, salt=salt))
-    print("2")
+def getCustId(email):
+    #code to execute SQL code for Customer's email & password
+    cursor = conn.cursor()
+    query = "SELECT CustomerID from Customer WHERE EmailAddr = '{}'".format(email)
+    cursor.execute(query)
+
+    #code to fetch result of the SQL code output for Customer's email
+    cursor_data = cursor.fetchall()
+    custDetails = []
+    for i in cursor_data:
+        custDetails.append(i)
+
+    return custDetails[0][0]
+
+def send_password_reset_link(user_email,id, salt, app):
+    expires = datetime.timedelta(hours=24)
+    reset_token = create_access_token(str(id), expires_delta=expires)
     html = render_template(
         'forgetPassword/password_reset.html',
-        password_reset_url=password_reset_url)
-    print("3")
-    send_mail('Password Reset Requested',html,[app.config['MAIL_USERNAME']], [user_email])
-
-def send_email_thread(msg, app,recipients):
-    with app.app_context():
-        print(recipients)
-        send_mail(msg, (app.config['MAIL_USERNAME']),[recipients])
-
-def send_email(subject, recipients, html_body, app):
-    msg = Message(subject, recipients)
-    msg.html = html_body
-    thr = threading.Thread(target=send_email_thread(msg, app,recipients), args=[msg])
-    thr.start()
+        token=reset_token)
+    msg = Message('Password Reset Requested', sender = app.config['MAIL_USERNAME'],recipients = [user_email])
+    mail = Mail(app)
+    msg.body = html
+    mail.send(msg)
 
 def CustomerVoucher(customerID):
     #declaration of variables
@@ -238,4 +243,8 @@ def validated_Cust_Exists(email):
     elif len(customerDetails) == 0:
         return False
 
-RetrieveMonthlyOverallSalesRevenue(2021)
+now = datetime.datetime.now()
+
+# convert to string
+date_time_str = now.strftime("%d-%b-%y %H:%M:%S")
+print(date_time_str)

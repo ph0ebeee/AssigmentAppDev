@@ -8,6 +8,7 @@ from flask import Flask, render_template, request, session, jsonify, flash
 # from flask_session import Session
 #from products.SQLtoPython import products
 from forms import forms
+import jwt
 #from flask_bcrypt import Bcrypt
 from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff, updateStaffaccount
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, checkOrder, checkProduct, checkManager, checkIntern, checkAss, updatestaff, updatecust, updatestaffsettings, \
@@ -27,6 +28,8 @@ import secrets
 from templates.shoppingcart.Shopping_cart import cart_items
 from threading import Thread
 from itsdangerous.url_safe import URLSafeTimedSerializer
+from flask_mail import Mail, Message
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__,template_folder="./templates")
 app.secret_key = "secret key"
@@ -37,9 +40,11 @@ app.config["SESSION_TYPE"] = "filesystem"
 app.config['SECRET_KEY'] = secrets.token_urlsafe(16)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = "homeden123@gmail.com"
 app.config['MAIL_PASSWORD'] = "appDevAssignment123"
+jwt = JWTManager(app)
 # Session(app)
 #bcrypt = Bcrypt(app)
 
@@ -137,7 +142,8 @@ def registerCust():
 @app.route('/ForgetPassword',methods=['GET','POST']) 
 def ForgetPassword():
     emailForm = forms.emailForm(csrf_enabled=False)
-    return render_template('forgetPassword/send_resetLink_form.html', form = emailForm)
+    message = "Email will only be sent if you have an account!"
+    return render_template('forgetPassword/send_resetLink_form.html', form = emailForm,message = message)
 
 #route for users to do change their password
 @app.route('/reset_password',methods=['GET','POST']) 
@@ -145,21 +151,22 @@ def sendForgetEmail():
     emailForm = forms.emailForm(csrf_enabled=False)
     if request.method == 'POST':
         form = forms.emailForm(request.form)
+        message = "Email will only be sent if you have an account!"
         if form.validate():
-            #try:
             email = form.email.data
             if validated_Cust_Exists(email) == True:
                 salt = CustPwSalt(email)
-                print("yes before")
-                send_password_reset_link(email, salt, app)
-                print("yes after")
-                flash('Please check your email for a password reset link.', 'success')
-            #except:
-            #    print("no")
-            #    return render_template('forgetPassword/send_resetLink_form.html', form = emailForm)
+                cust_id = getCustId(email)
+                send_password_reset_link(email,cust_id, salt, app)
+                message = "Email has been sent! Please check your Gmail Inbox"
+                return render_template('forgetPassword/send_resetLink_form.html', form = emailForm, message = message)
+            else:
+                message = "Account associated with Email entered not found"
+                return render_template('forgetPassword/send_resetLink_form.html', form = emailForm, message = message)
         else:
-            return render_template('forgetPassword/forgetPassword.html', form = emailForm) #if email exists in database, return back to sign up page
-    return render_template('forgetPassword.html', form = emailForm)
+            return render_template('forgetPassword/send_resetLink_form.html', form = emailForm, message = message) #if email exists in database, return back to sign up page
+
+    return render_template('forgetPassword/send_resetLink_form.html', form = emailForm)
 
 @app.route("/reset_password/<token>", methods=['GET','POST'])
 def reset_token(token):
@@ -579,7 +586,7 @@ def receiptDetails():
         cursor_data = cursor.fetchval()
         order_id = int(cursor_data) + 1
         now = datetime.now()
-        current_time = now.strftime("%d-%m-%Y %H:%M:%S")
+        current_time = now.strftime("%d-%b-%y %H:%M:%S")
         if request.method == 'POST':
             price = request.form['totalprice']
             send_receipt_details('3',price, current_time,order_id)
