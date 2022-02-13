@@ -29,6 +29,7 @@ from templates.shoppingcart.Shopping_cart import cart_items
 from threading import Thread
 from itsdangerous.url_safe import URLSafeTimedSerializer
 from flask_mail import Mail, Message
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__,template_folder="./templates")
 app.secret_key = "secret key"
@@ -43,6 +44,7 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = "homeden123@gmail.com"
 app.config['MAIL_PASSWORD'] = "appDevAssignment123"
+jwt = JWTManager(app)
 # Session(app)
 #bcrypt = Bcrypt(app)
 
@@ -154,7 +156,8 @@ def sendForgetEmail():
             email = form.email.data
             if validated_Cust_Exists(email) == True:
                 salt = CustPwSalt(email)
-                send_password_reset_link(email, salt, app)
+                cust_id = getCustId(email)
+                send_password_reset_link(email,cust_id, salt, app)
                 message = "Email has been sent! Please check your Gmail Inbox"
                 return render_template('forgetPassword/send_resetLink_form.html', form = emailForm, message = message)
             else:
@@ -583,7 +586,7 @@ def receiptDetails():
         cursor_data = cursor.fetchval()
         order_id = int(cursor_data) + 1
         now = datetime.now()
-        current_time = now.strftime("%d-%m-%Y %H:%M:%S")
+        current_time = now.strftime("%d-%b-%y %H:%M:%S")
         if request.method == 'POST':
             price = request.form['totalprice']
             send_receipt_details('3',price, current_time,order_id)
