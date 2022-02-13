@@ -50,22 +50,22 @@ app.config['MAIL_PASSWORD'] = "appDevAssignment123"
 @app.route('/')
 #function for images selected to be seen on image slideshow  - viona
 def home():
-    image1 = './static/Assets/images/imageCarousel_1.jpg' 
-    image2 = './static/Assets/images/imageCarousel_2.jpg' 
-    image3 = './static/Assets/images/imageCarousel_3.jpg' 
-    image4 = './static/Assets/images/imageCarousel_4.jpg' 
-    image5 = './static/Assets/images/imageCarousel_5.jpg' 
+    image1 = './static/Assets/images/staff_working.png'
+    image2 = './static/Assets/images/eggs.png'
+    image3 = './static/Assets/images/lemons.png'
+    image4 = './static/Assets/images/game.png'
+    image5 = './static/Assets/images/voucher.png'
     return render_template('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 
 @app.route('/custHome')
 #function for images selected to be seen on image slideshow  - viona
 def custhome():
-    image1 = './static/Assets/images/imageCarousel_1.jpg' 
-    image2 = './static/Assets/images/imageCarousel_2.jpg' 
-    image3 = './static/Assets/images/imageCarousel_3.jpg' 
-    image4 = './static/Assets/images/imageCarousel_4.jpg' 
-    image5 = './static/Assets/images/imageCarousel_5.jpg' 
+    image1 = './static/Assets/images/staff_working.png'
+    image2 = './static/Assets/images/eggs.png'
+    image3 = './static/Assets/images/lemons.png'
+    image4 = './static/Assets/images/game.png'
+    image5 = './static/Assets/images/voucher.png'
     return render_template('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
 
 
@@ -573,10 +573,24 @@ def predict():
 
 @app.route('/ReceiptDetails', methods =['POST'])
 def receiptDetails():
-    now = datetime.now()
-    current_time = now.strftime("%d-%m-%Y %H:%M:%S")
-    send_receipt_details('1', int(session['custID']), '2', current_time)
-    return render_template('paypal/success_payment.html')
+    try:
+        conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                              'Server=(localdb)\MSSQLLocalDB;'
+                              'Database=EcoDen;'
+                              'Trusted_Connection=yes;')
+        cursor = conn.cursor()
+        cursor.execute('SELECT max(OrderID) FROM CustOrder')
+        cursor_data = cursor.fetchval()
+        order_id = int(cursor_data) + 1
+        now = datetime.now()
+        current_time = now.strftime("%d-%m-%Y %H:%M:%S")
+        if request.method == 'POST':
+            price = request.form['totalprice']
+            send_receipt_details('3',price, current_time,order_id)
+            return redirect(url_for(retrieve_database_receipt))
+    except Exception as e:
+        print('prob is',e)
+        return redirect(url_for('.login'))
 
 
 @app.route('/SuccessReceipt', methods =['GET','POST'])
@@ -597,7 +611,7 @@ def retrieve_database_receipt():
 
         db['ShoppingCart'] = shopping_cart_dict
         db.close()
-        session.clear()
+        session.pop('cart_item')
         return render_template("paypal/success_payment.html", to_send= cursor_data)
     except Exception as e:
         print(e)
@@ -712,6 +726,16 @@ def delete_product(code):
                         db = shelve.open('ShoppingCart.db', 'w')
                         shopping_cart_dict = db['ShoppingCart']
                         shopping_cart_dict.pop(int(code))
+
+                        dictionary = shopping_cart_dict
+                        new_total = dictionary.get_price()
+
+                        for key,value in shopping_cart_dict.items():
+                            print(key,value)
+
+                        print(new_total)
+                        # shopping_cart_dict.update(new_total)
+
                         db['ShoppingCart'] = shopping_cart_dict
                         db.close()
 
@@ -726,7 +750,7 @@ def delete_product(code):
 
             db['ShoppingCart'] = shopping_cart_dict
             db.close()
-            session.clear()
+            session.pop('cart_item')
         else:
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
@@ -747,7 +771,7 @@ def empty_cart():
 
         db['ShoppingCart'] = shopping_cart_dict
         db.close()
-        session.clear()
+        session.pop('cart_item')
         return redirect(url_for('.open_cart'))
     except Exception as e:
         print(e)
@@ -755,6 +779,12 @@ def empty_cart():
 
 @app.route('/PaymentCreditCard', methods=['GET', 'POST'])
 def credit_card_form():
+    navbar ="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     CreditCard = CreditCardForm(request.form)
     shopping_list = []
     shopping_cart_dict = {}
@@ -780,8 +810,7 @@ def credit_card_form():
         db.close()
 
         return redirect(url_for('retrieve_database_receipt'))
-    return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list)
-
+    return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list,navbar = navbar)
 
 
 if __name__ == '__main__':

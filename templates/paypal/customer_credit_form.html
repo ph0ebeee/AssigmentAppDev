@@ -1,4 +1,4 @@
-{% extends "base_customer.html" %}
+{% extends navbar %}
 {% block title %}
 Library Loan System - HomeDen
 {% endblock %}
@@ -78,7 +78,7 @@ function togglePopup(idname){
 				</tr>
             {% for cart in shopping_list %}
                 <tr>
-                    <td><img style="text-align:left;width:15%"src="{{cart.get_product_image()}}">{{ cart.get_product_name()}}</td>
+                    <td><img style="text-align:left;width:15%" src="{{cart.get_product_image()}}">{{ cart.get_product_name()}}</td>
                     <td style="text-align:right;width: 10%"> {{ cart.get_product_price() }}</td>
                     <td></td>
                 </tr>
@@ -87,7 +87,7 @@ function togglePopup(idname){
                 <tr>
                     <td></td>
                     <td>Total Price</td>
-                    <td id="total_price" align="right"><bold> {{ cart.get_price() }}</bold></td>
+                    <td id="total_price" name = "totalprice" align="right"><bold> {{ cart.get_price() }}</bold></td>
 
                 </tr>
           {% endfor %}
@@ -166,17 +166,19 @@ function togglePopup(idname){
            return actions.order.create({
              purchase_units: [{
                amount: {
-                 value: document.getElementById('total_price').value
+                 value: document.getElementById('total_price').innerText
                }
              }]
            });
          },
          onApprove: function(data, actions) {
           return actions.order.capture().then(function(orderData) {
-                    $.ajax({
+            var overallprice = document.getElementById('total_price').innerText
+            $.ajax({
               url: "/ReceiptDetails",
+
               type: "POST",
-              data: {value},
+              data: {'totalprice' : overallprice},
               success: function( result ) {
                 window.location.href = '/SuccessReceipt'
               }
@@ -184,11 +186,11 @@ function togglePopup(idname){
 
 
             // Successful capture! For dev/demo purposes:
-                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                var transaction = orderData.purchase_units[0].payments.captures[0];
-                alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+<!--                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));-->
+<!--                var transaction = orderData.purchase_units[0].payments.captures[0];-->
+<!--                alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');-->
 
-             window.location.href = '/SuccessReceipt';
+<!--             window.location.href = '/SuccessReceipt';-->
            });
          }
      }).render("#paypal-button-container");

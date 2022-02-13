@@ -37,7 +37,7 @@ def checkOrder():
     OrderList = []
 
     cursor = conn.cursor()
-    query = "SELECT * from CustOrderDetails"
+    query = "SELECT * from CustOrder"
     cursor.execute(query)
 
     cursor_data = cursor.fetchall()
