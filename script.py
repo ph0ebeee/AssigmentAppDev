@@ -4,6 +4,8 @@ import jwt
 import bcrypt
 from flask_jwt_extended import create_access_token, decode_token
 from itsdangerous.url_safe import URLSafeSerializer, URLSafeTimedSerializer
+from sqlalchemy.sql.functions import user
+
 from templates.customer.Customers import Customers
 from flask import Flask ,url_for,render_template
 from flask_mail import Mail, Message
@@ -120,7 +122,7 @@ def getCustId(email):
 
     return custDetails[0][0]
 
-def send_password_reset_link(user_email,, salt, app):
+def send_password_reset_link(user_email,salt, app):
     password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     password_reset_url = url_for(
         'reset_token',
