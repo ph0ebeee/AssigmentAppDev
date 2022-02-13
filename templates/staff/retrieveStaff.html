@@ -90,13 +90,13 @@ Library Loan System - Staff Management
         <ul class="details">
             <li class="topic" style="color:#fff;">gfdgfd</li>
             {% for i in StaffList %}
-             <li class="update-button"><a href="/updateUser/{{i[0]}}" class="btn btn-warning" style="padding:5px;font-size:13px;">Update</a></li>
+             <li class="update-button"><a href="/updateStaff/{{i[0]}}" class="btn btn-warning" style="padding:5px;font-size:13px;">Update</a></li>
             {% endfor %}
         </ul>
         <ul class="details">
             <li class="topic" style="color:#fff;">gjfgdf</li>
             {% for i in StaffList %}
-            <li class="delete-button"><a href="/deleteUser/{{i[0]}}" class="btn btn-danger" style="padding:5px;font-size:13px;" onclick="return confirm('Are you sure you want to delete {{i[1]}}?');">Delete</a></li>
+            <li class="delete-button"><a href="/deleteStaff/{{i[0]}}" class="btn btn-danger" style="padding:5px;font-size:13px;" onclick="return confirm('Are you sure you want to delete {{i[1]}}?');">Delete</a></li>
             {% endfor %}
         </ul>
     </div>
