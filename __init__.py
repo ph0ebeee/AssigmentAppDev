@@ -11,7 +11,8 @@ from flask import Flask, render_template, request, session, jsonify, flash
 from forms import forms
 import jwt
 #from flask_bcrypt import Bcrypt
-from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff, updateStaffaccount
+from forms.forms import updateCust, updateStaff, CreditCardForm, feedbackForm, createStaff, updateStaffaccount, \
+    createProduct, updateProduct
 from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, checkOrder, checkProduct, checkManager, checkIntern, checkAss, updatestaff, updatecust, updatestaffsettings, \
     deletestaff, deletecust, createstaff, addpoints
 from userAuthentication.loginValidation import *
