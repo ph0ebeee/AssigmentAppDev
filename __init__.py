@@ -13,8 +13,9 @@ import jwt
 #from flask_bcrypt import Bcrypt
 from forms.forms import updateCust, updateStaff, CreditCardForm, feedbackForm, createStaff, updateStaffaccount, \
     createProduct, updateProduct
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, checkOrder, checkProduct, checkManager, checkIntern, checkAss, updatestaff, updatecust, updatestaffsettings, \
-    deletestaff, deletecust, createstaff, addpoints
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, checkOrder, checkProduct, checkManager, \
+    checkIntern, checkAss, updatestaff, updatecust, updatestaffsettings, \
+    deletestaff, deletecust, createstaff, addpoints, deductpoints
 from userAuthentication.loginValidation import *
 from userAuthentication.signupValidation import *
 from script import *
@@ -671,7 +672,7 @@ def receiptDetails():
             send_receipt_details('3',price, current_time,order_id)
             if 'cart_item' in session:
                 session.pop('cart_item')
-                return redirect(url_for(retrieve_database_receipt))
+                return redirect(url_for('retrieve_database_receipt'))
 
     except Exception as e:
         print('prob is',e)
@@ -874,9 +875,18 @@ def empty_cart():
     except Exception as e:
         print(e)
 
+@app.route('/removepoints')
+def removepoints():
+    try:
+        deductpoints(int(session['custID']))
+        return redirect(url_for('credit_card_form'))
+    except ValueError:
+        return render_template('errorpage')
+
 
 @app.route('/PaymentCreditCard', methods=['GET', 'POST'])
 def credit_card_form():
+    cust_details = CustDetails(session['custID'])
     navbar ="base.html"
     role = session.get('role')
     if (role == 'Staff'):
@@ -892,6 +902,7 @@ def credit_card_form():
     for key in shopping_cart_dict:
         cart = shopping_cart_dict.get(key)
         shopping_list.append(cart)
+
     if request.method == 'POST' and CreditCard.validate():
         customers_info_dict = {}
         db = shelve.open('customerInfo.db', 'c')
@@ -908,7 +919,7 @@ def credit_card_form():
         db.close()
 
         return redirect(url_for('retrieve_database_receipt'))
-    return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list,navbar = navbar)
+    return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list,navbar = navbar, cust_details=cust_details)
 
 
 if __name__ == '__main__':

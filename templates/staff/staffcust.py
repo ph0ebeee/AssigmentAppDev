@@ -205,3 +205,10 @@ def addpoints(CustomerID):
     query = "UPDATE Customer SET MembershipPoints += 100 WHERE CustomerID = '{}'".format(CustomerID)
     cursor.execute(query)
     conn.commit()
+
+def deductpoints(CustomerID):
+    cursor = conn.cursor()
+    query = "UPDATE Customer SET MembershipPoints -= 100 WHERE CustomerID = '{}'".format(CustomerID)
+    cursor.execute(query)
+    conn.commit()
+
