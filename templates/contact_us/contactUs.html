@@ -17,9 +17,9 @@
                    <h2>Contact Us</h2>
                </div>
 
-<h5>Mail us at <a href="mailto:homeden@gmail.com">homeden@gmail.com</a> for further queries !</h5>
+<div class="form-style-9">
 <form method="POST" action="">
-
+<h5>Mail us at <a href="mailto:homeden@gmail.com">homeden@gmail.com</a> for further queries !</h5><br>
     <div class="form-group">
         {{ render_field(form.cust_name, class="form-control") }}
     </div>
@@ -29,7 +29,9 @@
     <div class="form-group">
         {{ render_field(form.feedback, class="form-control") }}
     </div>
+    <br>
     <input type="submit" value="Submit" class="btn btn-primary" />
 </form>
+</div>
 {% endblock %}
 
