@@ -627,23 +627,23 @@ def retrieve_database_receipt():
 
 @app.route('/ShoppingCart', methods = ['GET','POST'])           #product for testing
 def open_cart():
-    navbar ="base.html"
+    navbar="base.html"
     role = session.get('role')
     if (role == 'Staff'):
         navbar = "base_s.html"
     elif (role == 'Customer'):
         navbar = "base_nobot.html"
-    # else:
-    #     return redirect(url_for(login))
-    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
-                          'Server=(localdb)\MSSQLLocalDB;'
-                          'Database=EcoDen;'
-                          'Trusted_Connection=yes;')
-    cursor = conn.cursor()
-    cursor.execute('SELECT ProductID,ProductName,ProductPrice from Product')
-    cursor_data = cursor.fetchall()
+        conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
+                              'Server=(localdb)\MSSQLLocalDB;'
+                              'Database=EcoDen;'
+                              'Trusted_Connection=yes;')
+        cursor = conn.cursor()
+        cursor.execute('SELECT ProductID,ProductName,ProductPrice from Product')
+        cursor_data = cursor.fetchall()
 
-    return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data, navbar = navbar)
+        return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data, navbar = navbar)
+    return render_template('errorpage.html', navbar = navbar)
+
 
 
 @app.route('/add', methods = ['POST'])
@@ -718,6 +718,7 @@ def add_product():
             return 'Error while adding item to cart'
     except Exception as e:
         print(e)
+        return render_template('errorpage')
     finally:
         return redirect(url_for('open_cart'))
 
