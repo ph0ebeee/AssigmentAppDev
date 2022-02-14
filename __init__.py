@@ -671,7 +671,7 @@ def receiptDetails():
             send_receipt_details('3',price, current_time,order_id)
             if 'cart_item' in session:
                 session.pop('cart_item')
-            return redirect(url_for(retrieve_database_receipt))
+                return redirect(url_for(retrieve_database_receipt))
 
     except Exception as e:
         print('prob is',e)
@@ -757,13 +757,16 @@ def add_product():
             session.modified = True
             if 'cart_item' in session:
                 if cursor_data.ProductID in session['cart_item']:
+                    print(cursor_data.ProductID)
                     for key, value in session['cart_item'].items():
                         if cursor_data.ProductID == key:
                             old_quantity = session['cart_item'][key]['quantity']
                             total_quantity = old_quantity + _quantity
+                            print(old_quantity,total_quantity)
                             session['cart_item'][key]['quantity'] = total_quantity
                             session['cart_item'][key]['total_price'] = total_quantity * cursor_data.ProductPrice
                 else:
+                    print('shit')
                     session['cart_item'] = array_merge(session['cart_item'], selectedItem)
 
                 for key, value in session['cart_item'].items():
@@ -828,15 +831,6 @@ def delete_product(code):
                         shopping_cart_dict.pop(int(code))
                         price = cart_items(int(code),'','','',all_total_price,'','')
                         shopping_cart_dict[price.get_product_id()] = price
-
-                        # dictionary = shopping_cart_dict
-                        # new_total = dictionary.get_price()
-
-                        for key,value in shopping_cart_dict.items():
-                            print(key,value)
-
-                        # print(new_total)
-                        # shopping_cart_dict.update(new_total)
 
                         db['ShoppingCart'] = shopping_cart_dict
                         db.close()
@@ -907,7 +901,7 @@ def credit_card_form():
         except:
             print("Error in retrieving Customers Information from customerInfo.db.")
 
-        customerInfo = CustomerInfo(CreditCard.name.data, CreditCard.email.data,  CreditCard.address.data, CreditCard.card_no.data, CreditCard.expiry.data, CreditCard.cvv.data)
+        customerInfo = CustomerInfo(CreditCard.name.data, CreditCard.email.data,  CreditCard.address.data, CreditCard.card_no.data, CreditCard.expiry.data, CreditCard.expiry_month.data, CreditCard.cvv.data)
         customers_info_dict[customerInfo.get_customer_id()] = customerInfo
         db['CustomersInfo'] = customers_info_dict
 
