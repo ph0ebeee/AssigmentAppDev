@@ -884,8 +884,6 @@ def empty_cart():
 
 @app.route('/PaymentCreditCard', methods=['GET', 'POST'])
 def credit_card_form():
-    cust_details = CustDetails(session['custID'])
-    deductpoints(int(session['custID']))
     navbar ="base.html"
     role = session.get('role')
     if (role == 'Staff'):
@@ -917,7 +915,7 @@ def credit_card_form():
         db.close()
 
         return redirect(url_for('retrieve_database_receipt'))
-    return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list,navbar = navbar,cust_details=cust_details )
+    return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list,navbar = navbar)
 
 
 if __name__ == '__main__':
