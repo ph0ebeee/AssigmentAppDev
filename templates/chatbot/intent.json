@@ -143,10 +143,45 @@
       "responses": [
         "Our staff working hours are from 6am to 11pm "
       ]
+    },
+
+
+    {
+      "tag": "add points",
+      "patterns": [
+        "how do i add points to my membership",
+        "what can i do to increase my membership points",
+        "how do i increase my membership points",
+        "how does my membership points increase"
+      ],
+      "responses": [
+        "You can earn membership points by playing our games"
+      ]
+    },
+    {
+      "tag": "forgot password",
+      "patterns": [
+        "i forgot my password what should i do?",
+        "what to do if i have forgotten my password",
+        "how to forget password",
+        "i want to forget my password"
+      ],
+      "responses": [
+        "You can find a forget your password button below the login button"
+      ]
+    },
+    {
+      "tag": "find game",
+      "patterns": [
+        "how do i find the game",
+        "where is the game at",
+        "how to find the game",
+        "i cant find the game"
+      ],
+      "responses": [
+        "You can find it in the membership page in your settings once logged in "
+      ]
     }
-
-
-
 
 
 

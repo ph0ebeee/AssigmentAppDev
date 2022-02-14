@@ -54,10 +54,9 @@ jwt = JWTManager(app)
 def home():
     image1 = './static/Assets/images/staff_working.png'
     image2 = './static/Assets/images/eggs.png'
-    image3 = './static/Assets/images/lemons.png'
-    image4 = './static/Assets/images/game.png'
+    image4 = './static/Assets/images/game2.png'
     image5 = './static/Assets/images/voucher.png'
-    return render_template('./home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+    return render_template('./home.html',image1=image1,image2=image2,image4=image4,image5=image5)
 
 
 @app.route('/custHome')
@@ -65,10 +64,9 @@ def home():
 def custhome():
     image1 = './static/Assets/images/staff_working.png'
     image2 = './static/Assets/images/eggs.png'
-    image3 = './static/Assets/images/lemons.png'
-    image4 = './static/Assets/images/game.png'
+    image4 = './static/Assets/images/game2.png'
     image5 = './static/Assets/images/voucher.png'
-    return render_template('customer/home.html',image1=image1,image2=image2,image3=image3,image4=image4,image5=image5)
+    return render_template('customer/home.html',image1=image1,image2=image2,image4=image4,image5=image5)
 
 
 @app.route('/staffHome')
