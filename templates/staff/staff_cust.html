@@ -5,8 +5,10 @@ Library Loan System - Customer Management
 
 {% block content %}
 <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/custmanage.css') }}">
 </head>
+
 <section class="home-section">
 <div class="home-content">
     <div class="overview-boxes">
@@ -100,9 +102,6 @@ Library Loan System - Customer Management
             <li class="delete-button"><a href="/deleteUser/{{i[0]}}" class="btn btn-danger" style="padding:5px;font-size:13px;" onclick="return confirm('Are you sure you want to delete {{i[1]}}?');">Delete</a></li>
             {% endfor %}
         </ul>
-    </div>
-    <div class="button">
-        <a href="#">See All</a>
     </div>
     </div>
 </div>
