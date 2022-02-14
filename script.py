@@ -106,6 +106,20 @@ def CustPwSalt_byEmail(email):
 
     return custDetails[0][0]
 
+def StaffPwSalt_byEmail(email):
+    #code to execute SQL code for Customer's email & password
+    cursor = conn.cursor()
+    query = "SELECT PasswordSalt from Staff WHERE EmailAddr = '{}'".format(email)
+    cursor.execute(query)
+
+    #code to fetch result of the SQL code output for Customer's email
+    cursor_data = cursor.fetchall()
+    custDetails = []
+    for i in cursor_data:
+        custDetails.append(i)
+
+    return custDetails[0][0]
+
 def CustPwSalt_byID(id):
     #code to execute SQL code for Customer's email & password
     cursor = conn.cursor()
