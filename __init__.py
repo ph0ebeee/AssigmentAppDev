@@ -13,8 +13,9 @@ import jwt
 #from flask_bcrypt import Bcrypt
 from forms.forms import updateCust, updateStaff, CreditCardForm, feedbackForm, createStaff, updateStaffaccount, \
     createProduct, updateProduct
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, checkOrder, checkProduct, checkManager, checkIntern, checkAss, updatestaff, updatecust, updatestaffsettings, \
-    deletestaff, deletecust, createstaff, addpoints
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, checkOrder, checkProduct, checkManager, \
+    checkIntern, checkAss, updatestaff, updatecust, updatestaffsettings, \
+    deletestaff, deletecust, createstaff, addpoints, deductpoints
 from userAuthentication.loginValidation import *
 from userAuthentication.signupValidation import *
 from script import *
@@ -863,6 +864,8 @@ def empty_cart():
 
 @app.route('/PaymentCreditCard', methods=['GET', 'POST'])
 def credit_card_form():
+    cust_details = CustDetails(session['custID'])
+    deductpoints(int(session['custID']))
     navbar ="base.html"
     role = session.get('role')
     if (role == 'Staff'):
@@ -894,7 +897,7 @@ def credit_card_form():
         db.close()
 
         return redirect(url_for('retrieve_database_receipt'))
-    return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list,navbar = navbar)
+    return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list,navbar = navbar,cust_details=cust_details )
 
 
 if __name__ == '__main__':
