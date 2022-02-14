@@ -31,7 +31,7 @@ Library Loan System - HomeDen
                     <h5 class="card-title">{{i.get_product_Name()}}</h5>
                     <p class="card-text">Price: ${{i.get_product_Price()}}<br>Stock: {{i.get_product_Stock()}}</p>
                     <div class="cart-action">
-                    <input type="text" class="product-quantity" name="quantity" value="1" size="2" />
+                    <input type="number" class="product-quantity" name="quantity" value="1" size="2" />
                     <input type="hidden" name="code" value="{{i.get_product_Id() }}"/>
                     <input type="submit" value="Add to Cart"  class="btn btn-primary" />
                     </div>

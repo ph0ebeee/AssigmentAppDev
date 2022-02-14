@@ -669,7 +669,7 @@ def receiptDetails():
         current_time = now.strftime("%d-%b-%y %H:%M:%S")
         if request.method == 'POST':
             price = request.form['totalprice']
-            send_receipt_details('3',price, current_time,order_id)
+            send_receipt_details(int(session['custID']),price, current_time,order_id)
             if 'cart_item' in session:
                 session.pop('cart_item')
                 return redirect(url_for(retrieve_database_receipt))
@@ -742,6 +742,8 @@ def add_product():
     try:
         _quantity = int(request.form['quantity'])
         _code = request.form['code']
+        if _quantity <= 0:
+            _quantity = 1
         if _quantity and _code and request.method == 'POST':
             conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                               'Server=(localdb)\MSSQLLocalDB;'
@@ -771,6 +773,7 @@ def add_product():
                     session['cart_item'] = array_merge(session['cart_item'], selectedItem)
 
                 for key, value in session['cart_item'].items():
+                    print('ohmy')
                     individual_quantity = int(session['cart_item'][key]['quantity'])
                     individual_price = float(session['cart_item'][key]['total_price'])
                     all_total_quantity = all_total_quantity + individual_quantity
