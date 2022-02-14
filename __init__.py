@@ -384,26 +384,44 @@ def delete_productt(id):    # mis-spelled on purpose
 
 @app.route('/Grains')
 def grains_cat():
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     to_send = grains_products() # loop
     # insert if else here using '.pop'
     # create another list to store wo yao de discounted items -> different,, go through the product list
-    return render_template('products/grains.html', to_send=to_send)
+    return render_template('products/grains.html', to_send=to_send, navbar = navbar)
 
 
 @app.route('/Frozen')
 def frozen_cat():
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     to_send = frozen_products() # loop
     # insert if else here using '.pop'
     # create another list to store wo yao de discounted items -> different,, go through the product list
-    return render_template('products/frozen.html', to_send=to_send)
+    return render_template('products/frozen.html', to_send=to_send, navbar = navbar)
 
 
 @app.route('/Household')
 def household_cat():
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
     to_send = household_products() # loop
     # insert if else here using '.pop'
     # create another list to store wo yao de discounted items -> different,, go through the product list
-    return render_template('products/houseHold.html', to_send=to_send)
+    return render_template('products/houseHold.html', to_send=to_send, navbar = navbar)
 
 
 @app.route('/ShopCategories')   # added but havent push
@@ -717,6 +735,8 @@ def add_product():
     elif (role == 'Customer'):
         navbar = "base_customer.html"
     else:
+        message = "Error do sign in and try again"
+        flash(message)
         return redirect(url_for('login'))
     try:
         _quantity = int(request.form['quantity'])
