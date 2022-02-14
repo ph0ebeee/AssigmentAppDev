@@ -3,36 +3,78 @@
 
 {% block content %}
 <head>
-    <link rel="stylesheet" type="text/css" href="aboutUs.css"/>
+    <style>
+        .history {
+            margin: 10px 100px 20px;
+            padding: 20px;
+            background-color: seashell;
+            color: black;
+            justify-content: center;
+            text-align: left;
+            border-radius: 10px;
+            position: relative;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            word-wrap:hyphenate;
+            
+        }
+
+        .vision {
+            margin: 10px 100px 20px;
+            padding: 20px;
+            background-color: seashell;
+            color: black;
+            justify-content: center;
+            text-align: left;
+            border-radius: 10px;
+            position: relative;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            word-wrap: hyphenate;
+        }
+
+        h2 {
+            text-decoration: underline;
+            font-weight:bold;
+        }
+
+        h6 {
+            font-weight: bold;
+        }
+
+        .video{
+            justify-content:center;
+            position:relative;
+            display:block;
+
+        }
+    </style>
 </head>
 
 <body>
-    <div class="about">
-        <h2>About Home-Den Supermarket</h2>
-        <br>
+    <div class="history">
+        <b>
+            <h2>About Home-Den Supermarket</h2>
+        </b>
+        <p>
+            Home-Den Supermarket was founded in 2010 by Siew Moi, previously a small mini mart owner with a mission to provide easy access of products for the society and at the same
+            time build an eco-friendly shopping experience to contribute in saving the earth.
+        </p>
+        <h6>Our Supermarket Anthem</h6>
+        <iframe class="video" width="800" height="515" src="https://www.youtube.com/embed/cNpBYtcILv0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 
-    <div class="content">
-        <p>Home-Den Supermarket was founded in 2010 by Siew Moi, previously a small mini mart owner with a mission to provide easy access of products for the society and at the same
-time build an eco-friendly shopping experience to contribute in saving the earth.</p>
+    <div class="vision">
+        <h2>Our Vision & Values</h2>
+        <h6>Vision</h6>
+        <p>
+            Provide society with the best retail experience with the goal to saving the earth
+        </p>
+        <br />
+        <h6>Our Core Values</h6>
+        <ul>
+            <li>Customer's Satisfaction</li>
+            <li>Professionalism</li>
+            <li>Compassion</li>
+        </ul>
     </div>
-
-    <div class="others">
-        <div class="vision">
-            <br>
-           <h3>Our Vision</h3>
-            <p>Provide society with the best retail experience with the goal to saving the earth.</p>
-        </div>
-
-        <div class="corevalues">
-            <br>
-             <h3>Our Core Values</h3>
-                <ul>
-                    <li>Customer's Satisfaction</li>
-                    <li>Professionalism</li>
-                    <li>Compassion</li>
-                </ul>
-        </div>
-    </div>
-
-{% endblock %}
+</body>
+    {% endblock %}

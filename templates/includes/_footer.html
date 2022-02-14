@@ -9,22 +9,22 @@
     <style>
         .footer-clean {
             padding: 50px 0;
-            background-color: #fff;
-            color: #4b4c4d;
+            background-color: #5cb874;
+            color: white;
         }
 
             .footer-clean h3 {
                 margin-top: 0;
                 margin-bottom: 12px;
                 font-weight: bold;
-                font-size: 16px;
+                font-size: 36px;
             }
 
             .footer-clean ul {
                 padding: 0;
                 list-style: none;
                 line-height: 1.6;
-                font-size: 14px;
+                font-size: 25px;
                 margin-bottom: 0;
             }
 
@@ -38,93 +38,129 @@
                         opacity: 1;
                     }
 
-            .footer-clean .item.social {
-                text-align: right;
+            .footer-clean .item.iconify {
+                text-align: left;
             }
 
-        @media (max-width:767px) {
+        @media (min-width:500px) {
             .footer-clean .item {
-                text-align: center;
+                text-align: left;
                 padding-bottom: 20px;
+                width: 33%;
             }
         }
 
-        @media (max-width: 768px) {
-            .footer-clean .item.social {
-                text-align: center;
+        @media (min-width: 700px) {
+            .footer-clean .item.iconify {
+                text-align: left;
+                width: 33%;
             }
         }
 
-        .footer-clean .item.social > a {
-            font-size: 24px;
+        .footer-clean .item.iconify > a {
+            font-size: 40px;
             width: 40px;
             height: 40px;
             line-height: 40px;
             display: inline-block;
-            text-align: center;
+            text-align: left;
             border-radius: 50%;
             border: 1px solid #ccc;
             margin-left: 10px;
             margin-top: 22px;
-            color: inherit;
+            color: white;
             opacity: 0.75;
         }
 
-            .footer-clean .item.social > a:hover {
-                opacity: 0.9;
-            }
+        .footer-clean .item.iconify > a:hover {
+            opacity: 0.9;
+        }
 
-        @media (max-width:991px) {
-            .footer-clean .item.social > a {
+        @media (min-width:700px) {
+            .footer-clean .item.iconify > a {
                 margin-top: 40px;
             }
         }
 
-        @media (max-width:767px) {
-            .footer-clean .item.social > a {
+        @media (min-width:700px) {
+            .footer-clean .item.iconify > a {
                 margin-top: 10px;
             }
         }
 
-        .footer-clean .copyright {
-            margin-top: 14px;
-            margin-bottom: 0;
-            font-size: 13px;
-            opacity: 0.6;
+        .iconify{
+            width: 50px;
+            height:50px;
+            color:white;
+            position:relative;
         }
 
+        .contactDetails{
+            font-size:20px;
+            font-weight:600;
+            position:relative;
+            color:white;
+        }
+
+        .contactDetails:hover {
+            color: #5cb874;
+            background-color: white;
+            position:relative;
+        }
+
+        .gmap_canvas {
+            overflow: hidden;
+            background: none !important;
+            height: 350px;
+            width: 400px;
+            position:relative;
+        }
+
+        .mapouter {
+            position: relative;
+            text-align: right;
+            height: 350px;
+            width: 400px;
+        }
     </style>
 </head>
 <body>
     <div class="footer-clean">
         <footer>
             <div class="container">
-                <div class="row justify-content-center">
+                <div class="row justify-content-center" style="width: 100%;">
                     <div class="col-sm-4 col-md-3 item">
-                        <h3>Services</h3>
+                        <h3>Contents</h3>
                         <ul>
-                            <li><a href="#">Web design</a></li>
-                            <li><a href="#">Development</a></li>
-                            <li><a href="#">Hosting</a></li>
+                            <li><a href="/home">Home</a></li>
+                            <li><a href="/AboutUs">About Us</a></li>
+                            <li><a href="CreateContactUs">Contact Us</a></li>
                         </ul>
                     </div>
                     <div class="col-sm-4 col-md-3 item">
-                        <h3>About</h3>
+                        <h3>Shop</h3>
                         <ul>
-                            <li><a href="#">Company</a></li>
-                            <li><a href="#">Team</a></li>
-                            <li><a href="#">Legacy</a></li>
+                            <li><a href="/ShopCategories">Product Categories</a></li>
+                            <li><a href="/DiscountedItems">Discounted Items</a></li>
+                            <li><a href="/TopSellingItems">Top Selling Items</a></li>
+                            <li><a href="/NewlyRestockedItems">Restocked Items</a></li>
                         </ul>
                     </div>
-                    <div class="col-sm-4 col-md-3 item">
-                        <h3>Careers</h3>
+                    <div class="col-sm-4 col-md-5 item">
+                        <h3>Location</h3>
                         <ul>
-                            <li><a href="#">Job openings</a></li>
-                            <li><a href="#">Employee success</a></li>
-                            <li><a href="#">Benefits</a></li>
+                            <li>
+                                <div class="col-sm-4 col-md-4 item">
+                                    <div class="gmap_canvas" style="position:relative">
+                                        <iframe width="400" height="350" id="gmap_canvas" src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=15&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://www.embedgooglemap.net/blog/divi-discount-code-elegant-themes-coupon/"></a><br>
+                                        <a href="https://www.embedgooglemap.net">google maps embedded api</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li><span class="iconify" data-icon="ion:call"></span><a class="contactDetails">+65 1234 5678</a></li>
+                            <li><span class="iconify" data-icon="ion:mail"></span><a href="mailto:homeden123@gmail.com" class="contactDetails">homeden123@gmail.com</a></li>
                         </ul>
                     </div>
-
                 </div>
             </div>
         </footer>
@@ -132,5 +168,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
+    <script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
 </body>
 </html>
