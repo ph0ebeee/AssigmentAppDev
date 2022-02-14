@@ -41,7 +41,7 @@ padding:10px;
 					<tr>
 						<td><img src="{{ session['cart_item'][key]['image'] }}" style="width:15%" class="cart-item-image" />{{ session['cart_item'][key]['name'] }}</td>
 						<td style="text-align:right;">{{ quantity }}</td>
-						<td  style="text-align:right;"> {{ item_price }}</td>
+						<td  style="text-align:right;">  {{ item_price }} </td>
 						<td style="text-align:center;">
 						<a href="{{ url_for('.delete_product', code=session['cart_item'][key]['code']) }}" class="btnRemoveAction">
 							<input type="submit" value="REMOVE"/>
@@ -51,12 +51,17 @@ padding:10px;
 				{% endfor %}
 				<tr>
 					<td colspan="2" align="right">Total:</td>
-					<td align="right" colspan="2" ><bold> {{ session['all_total_price'] }}</bold></td>
+					<td align="right" colspan="2" ><bold> {{ session['all_total_price'] }} SGD</bold></td>
 					<td></td>
 				</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td><button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/PaymentCreditCard">CHECKOUT</a></button></td>
+			</tr>
 			</tbody>
 			</table>
-				<button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/PaymentCreditCard">CHECKOUT</a></button>
+
 		{% else: %}
 			<div class="no-records" style="text-align: center">Your Cart is Empty</div>
 		{% endif %}

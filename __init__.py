@@ -669,7 +669,7 @@ def receiptDetails():
         current_time = now.strftime("%d-%b-%y %H:%M:%S")
         if request.method == 'POST':
             price = request.form['totalprice']
-            send_receipt_details('3',price, current_time,order_id)
+            send_receipt_details(int(session['custID']), price, current_time, order_id)
             if 'cart_item' in session:
                 session.pop('cart_item')
                 return redirect(url_for('retrieve_database_receipt'))
@@ -702,6 +702,8 @@ def retrieve_database_receipt():
         return render_template("paypal/success_payment.html", to_send= cursor_data)
     except Exception as e:
         print(e)
+        return render_template('errorpage.html')
+
 
 
 # shopping cart - phoebe
@@ -742,6 +744,8 @@ def add_product():
     try:
         _quantity = int(request.form['quantity'])
         _code = request.form['code']
+        if _quantity <= 0:
+            _quantity = 1
         if _quantity and _code and request.method == 'POST':
             conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                               'Server=(localdb)\MSSQLLocalDB;'
@@ -757,17 +761,14 @@ def add_product():
 
             session.modified = True
             if 'cart_item' in session:
-                if cursor_data.ProductID in session['cart_item']:
-                    print(cursor_data.ProductID)
+                if _code in session['cart_item']:
                     for key, value in session['cart_item'].items():
-                        if cursor_data.ProductID == key:
+                        if _code == key:
                             old_quantity = session['cart_item'][key]['quantity']
                             total_quantity = old_quantity + _quantity
-                            print(old_quantity,total_quantity)
                             session['cart_item'][key]['quantity'] = total_quantity
                             session['cart_item'][key]['total_price'] = total_quantity * cursor_data.ProductPrice
                 else:
-                    print('shit')
                     session['cart_item'] = array_merge(session['cart_item'], selectedItem)
 
                 for key, value in session['cart_item'].items():
@@ -793,8 +794,8 @@ def add_product():
             except:
                 print("Error in retrieving shopping cart from ShoppingCart.db")
 
-            all_total_price = "{:.2f}".format(all_total_price)
-            itemsSelect = cart_items(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPicture, cursor_data.ProductPrice, all_total_price,'','')
+            all_total_price = "{:.2f}".format(session['all_total_price'])
+            itemsSelect = cart_items(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPicture, cursor_data.ProductPrice, all_total_price, int(session['cart_item'][_code]['quantity']),all_total_quantity)
             shopping_cart_dict[itemsSelect.get_product_id()] = itemsSelect
             db['ShoppingCart'] = shopping_cart_dict
             db.close()
@@ -805,7 +806,7 @@ def add_product():
             return 'Error while adding item to cart'
     except Exception as e:
         print(e)
-        return render_template('errorpage')
+        return render_template('errorpage.html')
     finally:
         return redirect(url_for('open_cart'))
 
@@ -830,7 +831,7 @@ def delete_product(code):
                         db = shelve.open('ShoppingCart.db', 'w')
                         shopping_cart_dict = db['ShoppingCart']
                         shopping_cart_dict.pop(int(code))
-                        price = cart_items(int(code),'','','',all_total_price,'','')
+                        price = cart_items(int(code),'','','',all_total_price,'',all_total_quantity)
                         shopping_cart_dict[price.get_product_id()] = price
 
                         db['ShoppingCart'] = shopping_cart_dict
@@ -874,6 +875,7 @@ def empty_cart():
         return redirect(url_for('.open_cart'))
     except Exception as e:
         print(e)
+        return render_template('errorpage.html')
 
 @app.route('/removepoints')
 def removepoints():
@@ -881,7 +883,7 @@ def removepoints():
         deductpoints(int(session['custID']))
         return redirect(url_for('credit_card_form'))
     except ValueError:
-        return render_template('errorpage')
+        return render_template('errorpage.html')
 
 
 @app.route('/PaymentCreditCard', methods=['GET', 'POST'])
