@@ -155,9 +155,9 @@ def sendForgetEmail():
         if form.validate():
             email = form.email.data
             if validated_Cust_Exists(email) == True:
-                salt = CustPwSalt(email)
+                salt = CustPwSalt_byEmail(email)
                 cust_id = getCustId(email)
-                send_password_reset_link(email,cust_id, salt, app)
+                send_password_reset_link(email,cust_id, salt, app, cust_id)
                 message = "Email has been sent! Please check your Gmail Inbox"
                 return render_template('forgetPassword/send_resetLink_form.html', form = emailForm, message = message)
             else:
@@ -168,28 +168,30 @@ def sendForgetEmail():
 
     return render_template('forgetPassword/send_resetLink_form.html', form = emailForm)
 
-@app.route("/reset_password/<token>", methods=['GET','POST'])
-def reset_token(token):
-    try:
-        password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-        email = password_reset_serializer.loads(token, salt='password-reset-salt', max_age=3600)
-    except:
-        flash('The password reset link is invalid or has expired.', 'error')
-        return redirect(url_for('Login'))
-
+@app.route("/reset_password/<token>/<int:user_id>", methods=['GET','POST'])
+def reset_token(token, user_id):
     form = forms.passwordForm()
+    #try:
+    reset_token = token
+    user_id = user_id
 
-    if form.validate():
-        salt = CustPwSalt(email)
-        passwordEncode = form.password.data.encode("utf-8")
+    if request.method == 'POST':
+        Passwordform = forms.passwordForm(request.form)
+        salt = CustPwSalt_byID(user_id)
+        passwordEncode = Passwordform.password.data.encode("utf-8")
         passwordSalt = salt.encode("utf-8")
         hashedPw = bcrypt.hashpw(passwordEncode, passwordSalt)
         hashedPw = hashedPw.decode('UTF-8')
-        updatePassword(email, hashedPw)
+        updatePassword(user_id, hashedPw)
         flash('Your password has been updated!', 'success')
-        return redirect(url_for('Login'))
+        return redirect(url_for('login'))
+    else:
+        return render_template('forgetPassword/reset_password_form.html', form=form)
 
-    return render_template('forgetPassword/reset_password_form.html',token=token, form=form)
+    return render_template('forgetPassword/reset_password_form.html', form = form)
+    #except:
+    #    flash('The password reset link is invalid or has expired.', 'error')
+    #    return redirect(url_for('login'))
 
 #route to go customer's settings 
 @app.route('/customerSettings', methods=['GET', 'POST'])

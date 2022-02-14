@@ -67,18 +67,16 @@ def RetrieveTopSellingProductCategory(month,year):
 
     return top_cat
 
-def updatePassword(email, password):
+def updatePassword(id, password):
     #declaration of variables
     purchase_hist = []
 
     #code to execute SQL code for Customer's email & password
     cursor = conn.cursor()
 
-    query = "UPDATE Customer SET Password = '"+password+"' WHERE EmailAddr = '"+email+"'"
+    query = "UPDATE Customer SET Password = '"+password+"' WHERE CustomerID = '"+str(id)+"'"
     cursor.execute(query)
     conn.commit()
-
-    return ""+password+" "+email+""
 
 def CustDetails(customerID):
     #code to execute SQL code for Customer's email & password
@@ -94,10 +92,24 @@ def CustDetails(customerID):
 
     return custDetails
 
-def CustPwSalt(email):
+def CustPwSalt_byEmail(email):
     #code to execute SQL code for Customer's email & password
     cursor = conn.cursor()
     query = "SELECT PasswordSalt from Customer WHERE EmailAddr = '{}'".format(email)
+    cursor.execute(query)
+
+    #code to fetch result of the SQL code output for Customer's email
+    cursor_data = cursor.fetchall()
+    custDetails = []
+    for i in cursor_data:
+        custDetails.append(i)
+
+    return custDetails[0][0]
+
+def CustPwSalt_byID(id):
+    #code to execute SQL code for Customer's email & password
+    cursor = conn.cursor()
+    query = "SELECT PasswordSalt from Customer WHERE CustomerID = '{}'".format(id)
     cursor.execute(query)
 
     #code to fetch result of the SQL code output for Customer's email
@@ -122,12 +134,12 @@ def getCustId(email):
 
     return custDetails[0][0]
 
-def send_password_reset_link(user_email,id, salt, app):
+def send_password_reset_link(user_email,id, salt, app, cust_id):
     expires = datetime.timedelta(hours=24)
     reset_token = create_access_token(str(id), expires_delta=expires)
     html = render_template(
         'forgetPassword/password_reset.html',
-        token=reset_token)
+        token=reset_token, uid = cust_id)
     msg = Message('Password Reset Requested', sender = app.config['MAIL_USERNAME'],recipients = [user_email])
     mail = Mail(app)
     msg.body = html
@@ -245,6 +257,5 @@ def validated_Cust_Exists(email):
 
 now = datetime.datetime.now()
 
-# convert to string
 date_time_str = now.strftime("%d-%b-%y %H:%M:%S")
 print(date_time_str)
