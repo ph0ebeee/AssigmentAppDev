@@ -574,7 +574,7 @@ def predict():
 # retrieve for receipt - phoebe
 
 
-@app.route('/ReceiptDetails', methods =['POST'])
+@app.route('/ReceiptDetails', methods =['GET','POST'])
 def receiptDetails():
     try:
         conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
@@ -590,7 +590,9 @@ def receiptDetails():
         if request.method == 'POST':
             price = request.form['totalprice']
             send_receipt_details('3',price, current_time,order_id)
+            session.pop('cart_item')
             return redirect(url_for(retrieve_database_receipt))
+
     except Exception as e:
         print('prob is',e)
         return redirect(url_for('.login'))
@@ -630,7 +632,9 @@ def open_cart():
     if (role == 'Staff'):
         navbar = "base_s.html"
     elif (role == 'Customer'):
-        navbar = "base_customer.html"
+        navbar = "base_nobot.html"
+    # else:
+    #     return redirect(url_for(login))
     conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
                           'Server=(localdb)\MSSQLLocalDB;'
                           'Database=EcoDen;'
@@ -644,6 +648,13 @@ def open_cart():
 
 @app.route('/add', methods = ['POST'])
 def add_product():
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
+    else:
+        return redirect(url_for('login'))
     try:
         _quantity = int(request.form['quantity'])
         _code = request.form['code']
@@ -678,6 +689,7 @@ def add_product():
                     all_total_quantity = all_total_quantity + individual_quantity
                     all_total_price = all_total_price + individual_price
 
+
             else:
                 session['cart_item'] = selectedItem
                 all_total_quantity = all_total_quantity + _quantity
@@ -694,6 +706,7 @@ def add_product():
             except:
                 print("Error in retrieving shopping cart from ShoppingCart.db")
 
+            all_total_price = "{:.2f}".format(all_total_price)
             itemsSelect = cart_items(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPicture, cursor_data.ProductPrice, all_total_price,'','')
             shopping_cart_dict[itemsSelect.get_product_id()] = itemsSelect
             db['ShoppingCart'] = shopping_cart_dict
@@ -729,14 +742,16 @@ def delete_product(code):
                         db = shelve.open('ShoppingCart.db', 'w')
                         shopping_cart_dict = db['ShoppingCart']
                         shopping_cart_dict.pop(int(code))
+                        price = cart_items(int(code),'','','',all_total_price,'','')
+                        shopping_cart_dict[price.get_product_id()] = price
 
-                        dictionary = shopping_cart_dict
-                        new_total = dictionary.get_price()
+                        # dictionary = shopping_cart_dict
+                        # new_total = dictionary.get_price()
 
                         for key,value in shopping_cart_dict.items():
                             print(key,value)
 
-                        print(new_total)
+                        # print(new_total)
                         # shopping_cart_dict.update(new_total)
 
                         db['ShoppingCart'] = shopping_cart_dict
@@ -787,7 +802,7 @@ def credit_card_form():
     if (role == 'Staff'):
         navbar = "base_s.html"
     elif (role == 'Customer'):
-        navbar = "base_customer.html"
+        navbar = "base_nobot.html"
     CreditCard = CreditCardForm(request.form)
     shopping_list = []
     shopping_cart_dict = {}

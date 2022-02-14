@@ -4,7 +4,7 @@ class CustomerInfo(Users.Users):
     count_id = 0
 
     def __init__(self,name, email, address, card_no,expiry,cvv):
-        super().__init__( None, name, email,None, None, None, address)
+        super().__init__( None, name, email,None, None, address)
         CustomerInfo.count_id += 1
         self.__id = None
         self.__password = None
