@@ -14,11 +14,18 @@ Library Loan System - HomeDen
 			</ul>
 		  {% endif %}
 		{% endwith %}
-	</div>
-
+</div>
+<style>
+	th,td{
+padding:10px;
+}
+</style>
 	<div id="shopping-cart">
 		<h1><div class="txt-heading" style="text-align: center">Cart</div></h1>
+		<button type = "button" style="margin:0; position: absolute; top: 20%; left: 46% " ><a href ="/ShopCategories">BACK TO SHOP</a></button>
+		<br><br>
 		{% if 'cart_item' in session %}
+
 			<a id="btnEmpty" href="{{ url_for('.empty_cart') }}">Empty Cart</a>
 		<table class="tbl-cart" cellpadding="10" cellspacing="1">
 			<tbody>

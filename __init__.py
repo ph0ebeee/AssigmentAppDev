@@ -155,9 +155,9 @@ def sendForgetEmail():
         if form.validate():
             email = form.email.data
             if validated_Cust_Exists(email) == True:
-                salt = CustPwSalt(email)
+                salt = CustPwSalt_byEmail(email)
                 cust_id = getCustId(email)
-                send_password_reset_link(email,cust_id, salt, app)
+                send_password_reset_link(email,cust_id, salt, app, cust_id)
                 message = "Email has been sent! Please check your Gmail Inbox"
                 return render_template('forgetPassword/send_resetLink_form.html', form = emailForm, message = message)
             else:
@@ -168,28 +168,30 @@ def sendForgetEmail():
 
     return render_template('forgetPassword/send_resetLink_form.html', form = emailForm)
 
-@app.route("/reset_password/<token>", methods=['GET','POST'])
-def reset_token(token):
-    try:
-        password_reset_serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-        email = password_reset_serializer.loads(token, salt='password-reset-salt', max_age=3600)
-    except:
-        flash('The password reset link is invalid or has expired.', 'error')
-        return redirect(url_for('Login'))
-
+@app.route("/reset_password/<token>/<int:user_id>", methods=['GET','POST'])
+def reset_token(token, user_id):
     form = forms.passwordForm()
+    #try:
+    reset_token = token
+    user_id = user_id
 
-    if form.validate():
-        salt = CustPwSalt(email)
-        passwordEncode = form.password.data.encode("utf-8")
+    if request.method == 'POST':
+        Passwordform = forms.passwordForm(request.form)
+        salt = CustPwSalt_byID(user_id)
+        passwordEncode = Passwordform.password.data.encode("utf-8")
         passwordSalt = salt.encode("utf-8")
         hashedPw = bcrypt.hashpw(passwordEncode, passwordSalt)
         hashedPw = hashedPw.decode('UTF-8')
-        updatePassword(email, hashedPw)
+        updatePassword(user_id, hashedPw)
         flash('Your password has been updated!', 'success')
-        return redirect(url_for('Login'))
+        return redirect(url_for('login'))
+    else:
+        return render_template('forgetPassword/reset_password_form.html', form=form)
 
-    return render_template('forgetPassword/reset_password_form.html',token=token, form=form)
+    return render_template('forgetPassword/reset_password_form.html', form = form)
+    #except:
+    #    flash('The password reset link is invalid or has expired.', 'error')
+    #    return redirect(url_for('login'))
 
 #route to go customer's settings 
 @app.route('/customerSettings', methods=['GET', 'POST'])
@@ -574,7 +576,7 @@ def predict():
 # retrieve for receipt - phoebe
 
 
-@app.route('/ReceiptDetails', methods =['POST'])
+@app.route('/ReceiptDetails', methods =['GET','POST'])
 def receiptDetails():
     try:
         conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
@@ -590,7 +592,9 @@ def receiptDetails():
         if request.method == 'POST':
             price = request.form['totalprice']
             send_receipt_details('3',price, current_time,order_id)
+            session.pop('cart_item')
             return redirect(url_for(retrieve_database_receipt))
+
     except Exception as e:
         print('prob is',e)
         return redirect(url_for('.login'))
@@ -625,25 +629,34 @@ def retrieve_database_receipt():
 
 @app.route('/ShoppingCart', methods = ['GET','POST'])           #product for testing
 def open_cart():
-    navbar ="base.html"
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_nobot.html"
+        conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
+                              'Server=(localdb)\MSSQLLocalDB;'
+                              'Database=EcoDen;'
+                              'Trusted_Connection=yes;')
+        cursor = conn.cursor()
+        cursor.execute('SELECT ProductID,ProductName,ProductPrice from Product')
+        cursor_data = cursor.fetchall()
+
+        return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data, navbar = navbar)
+    return render_template('errorpage.html', navbar = navbar)
+
+
+
+@app.route('/add', methods = ['POST'])
+def add_product():
     role = session.get('role')
     if (role == 'Staff'):
         navbar = "base_s.html"
     elif (role == 'Customer'):
         navbar = "base_customer.html"
-    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
-                          'Server=(localdb)\MSSQLLocalDB;'
-                          'Database=EcoDen;'
-                          'Trusted_Connection=yes;')
-    cursor = conn.cursor()
-    cursor.execute('SELECT ProductID,ProductName,ProductPrice from Product')
-    cursor_data = cursor.fetchall()
-
-    return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data, navbar = navbar)
-
-
-@app.route('/add', methods = ['POST'])
-def add_product():
+    else:
+        return redirect(url_for('login'))
     try:
         _quantity = int(request.form['quantity'])
         _code = request.form['code']
@@ -678,6 +691,7 @@ def add_product():
                     all_total_quantity = all_total_quantity + individual_quantity
                     all_total_price = all_total_price + individual_price
 
+
             else:
                 session['cart_item'] = selectedItem
                 all_total_quantity = all_total_quantity + _quantity
@@ -694,6 +708,7 @@ def add_product():
             except:
                 print("Error in retrieving shopping cart from ShoppingCart.db")
 
+            all_total_price = "{:.2f}".format(all_total_price)
             itemsSelect = cart_items(cursor_data.ProductID, cursor_data.ProductName, cursor_data.ProductPicture, cursor_data.ProductPrice, all_total_price,'','')
             shopping_cart_dict[itemsSelect.get_product_id()] = itemsSelect
             db['ShoppingCart'] = shopping_cart_dict
@@ -705,6 +720,7 @@ def add_product():
             return 'Error while adding item to cart'
     except Exception as e:
         print(e)
+        return render_template('errorpage')
     finally:
         return redirect(url_for('open_cart'))
 
@@ -729,14 +745,16 @@ def delete_product(code):
                         db = shelve.open('ShoppingCart.db', 'w')
                         shopping_cart_dict = db['ShoppingCart']
                         shopping_cart_dict.pop(int(code))
+                        price = cart_items(int(code),'','','',all_total_price,'','')
+                        shopping_cart_dict[price.get_product_id()] = price
 
-                        dictionary = shopping_cart_dict
-                        new_total = dictionary.get_price()
+                        # dictionary = shopping_cart_dict
+                        # new_total = dictionary.get_price()
 
                         for key,value in shopping_cart_dict.items():
                             print(key,value)
 
-                        print(new_total)
+                        # print(new_total)
                         # shopping_cart_dict.update(new_total)
 
                         db['ShoppingCart'] = shopping_cart_dict
@@ -787,7 +805,7 @@ def credit_card_form():
     if (role == 'Staff'):
         navbar = "base_s.html"
     elif (role == 'Customer'):
-        navbar = "base_customer.html"
+        navbar = "base_nobot.html"
     CreditCard = CreditCardForm(request.form)
     shopping_list = []
     shopping_cart_dict = {}
