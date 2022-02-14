@@ -1,0 +1,52 @@
+{% extends "base_s.html" %}
+{% block title %}Library Loan System - Create Product{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/createstaff.css') }}">
+</head>
+
+<div class="container-fluid h-100">
+
+               <div class="section-title">
+                   <h2>Create Product</h2>
+               </div>
+
+<div class="form-style-9">
+<form method="POST" action="">
+   <div class="form-group">
+    {{ render_field(form.product_Name, class="form-control") }}
+  </div>
+
+    <div class="form-group">
+    {{ render_field(form.product_Category, class="form-control") }}
+  </div>
+    <div class="form-group">
+    {{ render_field(form.product_Price, class="form-control") }}
+  </div>
+    <div class="form-group">
+    {{ render_field(form.product_Desc, class="form-control") }}
+  </div>
+    <div class="form-group">
+    {{ render_field(form.product_Stock, class="form-control") }}
+  </div>
+    <div class="form-group">
+    {{ render_field(form.product_Discount, class="form-control") }}
+  </div>
+    <div class="form-group">
+    {{ render_field(form.product_Date, class="form-control") }}
+  </div>
+    <div class="form-group">
+    {{ render_field(form.product_Picture, class="form-control") }}
+  </div>
+
+    <br/>
+  <input type="submit" value="Submit" class="btn btn-primary"/>
+</form>
+</div>
+</div>
+{% endblock %}
+

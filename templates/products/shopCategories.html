@@ -6,13 +6,11 @@
     <link rel="stylesheet" type="text/css" href="shopCategories.css"/>
 </head>
   <style>
-
         td{
-            padding: 100px;
+            padding: 90px;
             padding-top: 130px;
             text-align : center;
         }
-
             </style>
 <body>
 
@@ -24,29 +22,32 @@
     <div class="spacing"></div>
     <div class="content">
         <td>
-        <div class="grains">
+        <div class="grains" id="grains">
                 <a href="/Grains"><img src="{{url_for('static', filename='Assets/images/rice_noodles.jpeg')}}" align="'middle" style="width: 300px; height:250px"/></a>
             <div class="grains_txt">
+                <br>
                 <p>Grains, Cooking Ingredients</p>
         </div>
         </div>
         </td>
         <td>
-        <div class="frozen">
+        <div class="frozen" id="frozen">
             <div class="frozen_img">
-                <a href="/Frozen"><img src="{{url_for('static', filename='Assets/images/frozen_products.jpeg')}}" style="width: 250px; height:200px"/></a>
+                <a href="/Frozen"><img src="{{url_for('static', filename='Assets/images/frozen_products.jpeg')}}" style="width: 300px; height:250px"/></a>
             </div>
             <div class="frozen_txt">
+                <br>
                 <p>Frozen</p>
             </div>
         </div>
         </td>
         <td>
-        <div class="household">
+        <div class="household" id="household">
             <div class="household_img">
-                <a href="/Household"><img src="{{url_for('static', filename='Assets/images/household_products.jpeg')}}"style="width: 250px; height:200px"></a>
+                <a href="/Household"><img src="{{url_for('static', filename='Assets/images/household_products.jpeg')}}" style="width: 300px; height:250px"></a>
             </div>
             <div class="household_txt">
+                <br>
                 <p>Household</p>
             </div>
         </div>

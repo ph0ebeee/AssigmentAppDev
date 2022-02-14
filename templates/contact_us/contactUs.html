@@ -4,10 +4,21 @@
 {% from "includes/_formHelper.html" import render_field %}
 
 {% block content %}
-<h1 class="display-4">Contact Us </h1>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/createstaff.css') }}">
+</head>
+
+<div class="container-fluid h-100">
+
+               <div class="section-title">
+                   <h2>Contact Us</h2>
+               </div>
 
 <h5>Mail us at <a href="mailto:homeden@gmail.com">homeden@gmail.com</a> for further queries !</h5>
 <form method="POST" action="">
+
     <div class="form-group">
         {{ render_field(form.cust_name, class="form-control") }}
     </div>

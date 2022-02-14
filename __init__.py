@@ -2,16 +2,16 @@
 # from flask_login import current_user, login_required
 import Feedback_class as Feedbacks
 from templates.products.SQLtoPython import discounted_products, topselling_products, newlyrestocked_products, \
-    household_products, frozen_products, grains_products
+    household_products, frozen_products, grains_products, create_products, update_products, ProductDetails, \
+    all_products, delete_products
 #from flask_bcrypt import Bcrypt
 from flask import Flask, render_template, request, session, jsonify
 # from flask_session import Session
 #from products.SQLtoPython import products
 from forms import forms
 #from flask_bcrypt import Bcrypt
-from forms.forms import updateCust, updateStaff,CreditCardForm, feedbackForm, createStaff
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, \
-    deletestaff, deletecust, createstaff, addpoints
+from forms.forms import updateCust, updateStaff, CreditCardForm, feedbackForm, createStaff, createProduct, updateProduct
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, updatestaff, updatecust, updatestaffsettings, deletestaff, deletecust, createstaff, addpoints
 from userAuthentication.loginValidation import *
 from userAuthentication.signupValidation import *
 from script import *
@@ -195,6 +195,63 @@ def retrieve_contact_us():
 
     return render_template('contact_us/RetrieveContact.html', count=len(contact_list), contact_list=contact_list)
 
+@app.route('/CreateProducts', methods=['GET', 'POST'])
+def create_product():
+    create_product_form = createProduct(request.form)
+    if request.method == 'POST' and create_product_form.validate():
+
+        create_products(create_product_form.product_Category.data,
+                    create_product_form.product_Picture.data,
+                    create_product_form.product_Name.data,
+                    create_product_form.product_Desc.data,
+                    float(create_product_form.product_Price.data), # float 2dp
+                    int(create_product_form.product_Stock.data),
+                    float(create_product_form.product_Discount.data),
+                    create_product_form.product_Date.data)
+
+    return render_template('products/createProduct.html', form=create_product_form)
+
+@app.route('/UpdateProducts/<int:id>/', methods=['GET', 'POST'])
+def update_product(id):
+    update_product_form = updateProduct(request.form)
+    if request.method == 'POST' and update_product_form.validate():
+
+        update_products(update_product_form.product_Category.data,
+                    update_product_form.product_Picture.data,
+                    update_product_form.product_Name.data,
+                    update_product_form.product_Desc.data,
+                    float(update_product_form.product_Price.data),
+                    int(update_product_form.product_Stock.data),
+                    float(update_product_form.product_Discount.data),
+                    update_product_form.product_Date.data,id)
+
+        return redirect(url_for('retrieve_product'))
+
+    else:
+            ProductList = ProductDetails(id)
+
+            for i in ProductList:
+                update_product_form.product_Category.data = ProductList[0][2]
+                update_product_form.product_Picture.data = ProductList[0][1]
+                update_product_form.product_Name.data = ProductList[0][3]
+                update_product_form.product_Desc.data = ProductList[0][4]
+                update_product_form.product_Price.data = ProductList[0][5]
+                update_product_form.product_Stock.data = ProductList[0][6]
+                update_product_form.product_Discount.data = ProductList[0][7]
+                update_product_form.product_Date.data = ProductList[0][8]
+
+
+    return render_template('products/updateProduct.html', form=update_product_form)
+
+@app.route('/RetrieveProducts', methods=['GET', 'POST'])
+def retrieve_product():
+    ProductList = all_products()
+    return render_template('products/retrieveProduct.html', ProductList = ProductList)
+
+@app.route('/DeleteProducts/<int:id>', methods=['GET'])
+def delete_productt(id):    # mis-spelled on purpose
+    delete_products(id)
+    return redirect(url_for('retrieve_product'))
 
 @app.route('/Grains')
 def grains_cat():
@@ -227,7 +284,6 @@ def ShopCategories():
 @app.route('/DiscountedItems', methods=['GET', 'POST'])   # added but havent push
 def DiscountedItems():
     to_send = discounted_products()
-    # to_send = to_send[:5]
     return render_template('products/discountedItems.html', to_send=to_send)
 
 @app.route('/TopSellingItems', methods=['GET', 'POST'])   # added but havent push
@@ -436,7 +492,7 @@ def open_cart():
     return render_template("shoppingcart/shopping_cart.html", to_send= cursor_data)
 
 
-@app.route('/ShoppingCart/add', methods = ['POST'])
+@app.route('/add', methods = ['POST'])
 def add_product():
     cursor = None
     try:
