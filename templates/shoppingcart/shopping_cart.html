@@ -4,7 +4,7 @@ Library Loan System - HomeDen
 {% endblock %}
 
  {% block content %}
-<!--<div>
+<div>
 		{% with messages = get_flashed_messages() %}
 		  {% if messages %}
 			<ul class=flashes>
@@ -14,53 +14,56 @@ Library Loan System - HomeDen
 			</ul>
 		  {% endif %}
 		{% endwith %}
-</div>-->
-<style>
-	th, td {
-		padding: 10px;
-	}
-</style>
-<div id="shopping-cart">
-	<h1><div class="txt-heading" style="text-align: center">Cart</div></h1>
-	<button type="button" style="margin:0; position: absolute; top: 20%; left: 46% "><a href="/ShopCategories">BACK TO SHOP</a></button>
-	<br><br>
-	{% if 'cart_item' in session %}
-
-	<a id="btnEmpty" href="{{ url_for('.empty_cart') }}">Empty Cart</a>
-	<table class="tbl-cart" cellpadding="10" cellspacing="1">
-		<tbody>
-			<tr>
-				<th style="text-align:left;">Name</th>
-				<th style="text-align:right;" width="5%">Quantity</th>
-				<th style="text-align:right;" width="10%">Price</th>
-			</tr>
-			{% for key, val in session['cart_item'].items() %}
-			{% print("11111") %}
-			{% set quantity = session['cart_item'][key]['quantity'] %}
-			{{print("12222")}}
-			{% set price = session['cart_item'][key]['price'] %}
-			{% set item_price = session['cart_item'][key]['total_price'] %}
-			<tr>
-				<td><img src="{{ session['cart_item'][key]['image'] }}" style="width:15%" class="cart-item-image" />{{ session['cart_item'][key]['name'] }}</td>
-				<td style="text-align:right;">{{ quantity }}</td>
-				<td style="text-align:right;">  {{ item_price }} </td>
-				<td style="text-align:center;">
-					<a href="{{ url_for('.delete_product', code=session['cart_item'][key]['code']) }}" class="btnRemoveAction">
-						<input type="submit" value="REMOVE" />
-					</a>
-				</td>
-			</tr>
-			{% endfor %}
-			<tr>
-				<td colspan="2" align="right">Total:</td>
-				<td align="right" colspan="2"><bold> {{ session['all_total_price'] }} SGD</bold></td>
-				<td></td>
-			</tr>
-		</tbody>
-	</table>
-	<button id="myBtn" class="btn-checkout" type="button"><a href="/PaymentCreditCard">CHECKOUT</a></button>
-	{% else: %}
-	<div class="no-records" style="text-align: center">Your Cart is Empty</div>
-	{% endif %}
 </div>
+<style>
+	th,td{
+padding:10px;
+}
+</style>
+	<div id="shopping-cart">
+		<h1><div class="txt-heading" style="text-align: center">Cart</div></h1>
+		<button type = "button" style="margin:0; position: absolute; top: 20%; left: 46% " ><a href ="/ShopCategories">BACK TO SHOP</a></button>
+		<br><br>
+		{% if 'cart_item' in session %}
+
+			<a id="btnEmpty" href="{{ url_for('.empty_cart') }}">Empty Cart</a>
+		<table class="tbl-cart" cellpadding="10" cellspacing="1">
+			<tbody>
+				<tr>
+					<th style="text-align:left;">Name</th>
+					<th style="text-align:right;" width="5%">Quantity</th>
+					<th style="text-align:right;" width="10%">Price</th>
+				</tr>
+				{% for key, val in session['cart_item'].items() %}
+					{% set quantity = session['cart_item'][key]['quantity'] %}
+					{% set price = session['cart_item'][key]['price'] %}
+					{% set item_price = session['cart_item'][key]['total_price'] %}
+					<tr>
+						<td><img src="{{ session['cart_item'][key]['image'] }}" style="width:15%" class="cart-item-image" />{{ session['cart_item'][key]['name'] }}</td>
+						<td style="text-align:right;">{{ quantity }}</td>
+						<td  style="text-align:right;">  {{ item_price }} </td>
+						<td style="text-align:center;">
+						<a href="{{ url_for('.delete_product', code=session['cart_item'][key]['code']) }}" class="btnRemoveAction">
+							<input type="submit" value="REMOVE"/>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+				<tr>
+					<td colspan="2" align="right">Total:</td>
+					<td align="right" colspan="2" ><bold> {{ session['all_total_price'] }} SGD</bold></td>
+					<td></td>
+				</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td><button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/PaymentCreditCard">CHECKOUT</a></button></td>
+			</tr>
+			</tbody>
+			</table>
+
+		{% else: %}
+			<div class="no-records" style="text-align: center">Your Cart is Empty</div>
+		{% endif %}
+	</div>
 	{% endblock %}

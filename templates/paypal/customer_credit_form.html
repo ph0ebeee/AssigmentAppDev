@@ -74,21 +74,31 @@ padding:10px;
 <body>
     <button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/ShoppingCart">BACK</a></button>
     <h1><div class="txt-heading" style="text-align:center">Cart Overview</div></h1>
-		<table class="tbl-cart" cellpadding="10" cellspacing="1" style="width:80%">
+		<table class="tbl-cart" cellpadding="10" cellspacing="1" style="width:95%">
 				<tr>
-					<th style="text-align:left;width: 70%">Name</th>
-					<th style="text-align:right;width: 5%" >Price</th>
+					<th style="text-align:left;width: 50%">Name</th>
+                    <th style="text-align:left;width: 20%">Quantity</th>
+					<th style="text-align:right;width: 15%" >Price</th>
 					<th style="text-align:right; width:10%"></th>
 				</tr>
             {% for cart in shopping_list %}
                 <tr>
                     <td><img style="text-align:left;width:15%" src="{{cart.get_product_image()}}">{{ cart.get_product_name()}}</td>
-                    <td style="text-align:right;width: 10%"> {{ cart.get_product_price() }}</td>
+                    <td style="text-align:left;width: 20%">{{cart.get_product_quantity()}}</td>
+                    <td style="text-align:right;width: 15%"> {{ cart.get_product_price() }}</td>
                     <td></td>
                 </tr>
             {%endfor%}
             {%for cart in shopping_list[-1:]%}
                 <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Total Quantity</td>
+                    <td id="quantity" align="right"><bold>  {{ cart.get_product_total_quantity() }} </bold></td>
+
+                </tr>
+                <tr>
+                    <td></td>
                     <td></td>
                     <td>Total Price</td>
                     <td id="total_price" name = "totalprice" align="right"><bold>  {{ cart.get_price() }} </bold></td>
@@ -96,6 +106,7 @@ padding:10px;
                 </tr>
           {% endfor %}
                 <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td><button class="popupbuttons" onclick="togglePopup('payment')" >CONFIRM</button></td>
@@ -212,9 +223,6 @@ padding:10px;
         }
         });
      }
-
-
-     alert("hu")
 
 
    </script>
