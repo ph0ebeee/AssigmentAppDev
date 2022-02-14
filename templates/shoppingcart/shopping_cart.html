@@ -54,9 +54,14 @@ padding:10px;
 					<td align="right" colspan="2" ><bold> {{ session['all_total_price'] }} SGD</bold></td>
 					<td></td>
 				</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td><button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/PaymentCreditCard">CHECKOUT</a></button></td>
+			</tr>
 			</tbody>
 			</table>
-				<button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/PaymentCreditCard">CHECKOUT</a></button>
+
 		{% else: %}
 			<div class="no-records" style="text-align: center">Your Cart is Empty</div>
 		{% endif %}
