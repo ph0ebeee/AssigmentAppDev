@@ -36,29 +36,19 @@ Library Loan System - Login
         </div>
 
 
-    <div class="modal">
-      <div class="modal-dialog">
-        <div class="modal-content">
+<div>
+		{% with messages = get_flashed_messages() %}
+		  {% if messages %}
+			<ul class=flashes>
+			{% for message in messages %}
+                <script>alert( "Error do sign in and try again")</script>
+			{% endfor %}
+			</ul>
+		  {% endif %}
+		{% endwith %}
+</div>
 
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">Sign in</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
 
-          <!-- Modal body -->
-          <div class="modal-body">
-            Error do sign in and try again
-          </div>
-
-          <!-- Modal footer -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Signin</button>
-          </div>
-
-        </div>
-      </div>
-    </div>
 
 
 
