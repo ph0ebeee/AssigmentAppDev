@@ -1,4 +1,4 @@
-{% extends "base_customer.html" %}
+{% extends navbar %}
 {% block title %}
 Library Loan System - HomeDen
 {% endblock %}
@@ -6,7 +6,7 @@ Library Loan System - HomeDen
 {% block content %}
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='Assets/css/style.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='chatbot/stylingChat.css') }}">
   <meta charset="utf-8"/>
 
   <!-- Optimal rendering on mobile devices. -->
@@ -64,34 +64,47 @@ function togglePopup(idname){
   transform:translate(-50%,-50%) scale(1);
 }
 
+th,td{
+padding:10px;
+}
 
   </style>
 </head>
 <body>
     <button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/ShoppingCart">BACK</a></button>
-    <h1><div class="txt-heading">Cart Overview</div></h1>
+    <h1><div class="txt-heading" style="text-align:center">Cart Overview</div></h1>
 		<table class="tbl-cart" cellpadding="10" cellspacing="1" style="width:80%">
 				<tr>
-					<th style="text-align:left;">Name</th>
-					<th style="text-align:right;" width="10%">Quantity</th>
-					<th style="text-align:right;" width="10%">Price</th>
+					<th style="text-align:left;width: 70%">Name</th>
+					<th style="text-align:right;width: 5%" >Price</th>
+					<th style="text-align:right; width:10%"></th>
 				</tr>
+            {% for cart in shopping_list %}
+                <tr>
+                    <td><img style="text-align:left;width:15%" src="{{cart.get_product_image()}}">{{ cart.get_product_name()}}</td>
+                    <td style="text-align:right;width: 10%"> {{ cart.get_product_price() }}</td>
+                    <td></td>
+                </tr>
+            {%endfor%}
+            {%for cart in shopping_list[-1:]%}
+                <tr>
+                    <td></td>
+                    <td>Total Price</td>
+                    <td id="total_price" name = "totalprice" align="right"><bold> {{ cart.get_price() }}</bold></td>
+
+                </tr>
+          {% endfor %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><button class="popupbuttons" onclick="togglePopup('payment')" >CONFIRM</button></td>
+
+                </tr>
+
         </table>
- {% for cart in shopping_list %}
-    <table class="tbl-cart" cellpadding="10" cellspacing="1" style="width:80%">
-					<tr>
-						<td style="text-align:left;">{{ cart.get_product_name()}}</td>
-						<td  style="text-align:right;"> {{ cart.get_product_price() }}</td>
-					</tr>
 
-				<tr>
-					<td colspan="2" align="right">Total:</td>
-					<td align="right"><bold> {{ cart.get_price() }}</bold></td>
-				</tr>
-			</table>
-  {% endfor %}
 
-    <button class="popupbuttons" onclick="togglePopup('payment')" >CONFIRM</button>
+
 
 
   <script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&client-id=AfRIwzrYKNDDjzhwa6wx4MAuoKf-7j0t76lAYyH-OEAC_XwtpxZmWX_VQ7M4INH10LUrIsESHWDFcUmm" data-client-token= "eyJicmFpbnRyZWUiOnsiYXV0aG9yaXphdGlvbkZpbmdlcnByaW50IjoiZTcwYWNjYmYxYzg5MmUyODhiYTk2NGI0MzY4OThkMDVlNWE0YzU2ZWFhNmFlMjIxMzRjMDExMGZmNTc5NGI3ZXxtZXJjaGFudF9pZD1yd3dua3FnMnhnNTZobTJuJnB1YmxpY19rZXk9NjNrdm4zN3Z0MjlxYjRkZiZjcmVhdGVkX2F0PTIwMjItMDEtMThUMDg6MjY6MDUuODEwWiIsInZlcnNpb24iOiIzLXBheXBhbCJ9LCJwYXlwYWwiOnsiaWRUb2tlbiI6ImV5SnJhV1FpT2lKbE5EQTJOakE0WWpVMFlUazBORGd4WWprMVl6YzFOREkwT0dOak1USXpaaUlzSW5SNWNDSTZJa3BYVkNJc0ltRnNaeUk2SWxKVE1qVTJJbjAuZXlKcGMzTWlPaUpvZEhSd2N6b3ZMMkZ3YVM1ellXNWtZbTk0TG5CaGVYQmhiQzVqYjIwaUxDSmhZM0lpT2xzaVkyeHBaVzUwSWwwc0ltRjFaQ0k2SWtGbVVrbDNlbkpaUzA1RVJHcDZhSGRoTm5kNE5FMUJkVzlMWmkwM2FqQjBOelpzUVZsNVNDMVBSVUZEWDFoM2RIQjRXbTFYV0Y5V1VUZE5ORWxPU0RFd1RGVnlTWE5GVTBoWFJFWmpWVzF0SWl3aWNtOXNaU0k2SWsxRlVrTklRVTVVSWl3aVlYVjBhRjkwYVcxbElqb3hOalF5TkRrME16WTJMQ0poZWlJNkltZGpjQzV6YkdNaUxDSnpZMjl3WlhNaU9sc2lRbkpoYVc1MGNtVmxPbFpoZFd4MElsMHNJbVY0Y0NJNk1UWTBNalE1TlRJMk5pd2ljMlZ6YzJsdmJsOXBibVJsZUNJNklrRnlVbFJQTFdWdVdtRlpTSE5QV0hWTVJHTmljelpIVEc1NWJTSXNJbWxoZENJNk1UWTBNalE1TkRNMk5pd2lhblJwSWpvaVZUSkJRVXRuWTBobVpHbzNhVXR0YXpGR1gyRm1aR2s1UjI5eGJrWkhVbk4wUjJkMFQwY3hZWEYyT0RRdGNYUTJVREZKWWxoT2Eza3pTVUkwZDA4ek1FOVlSa1Z5UWw5TWVYbHZOV2N5TlhOU05IWmZXV0owVFU1dGVWOXVPRzVTWjFkRlNrbHVVM0JZVDB0RWNWOWtVRUZGVFRsaloxVktUV0pPWDB4Q09WRWlMQ0pqYkdsbGJuUmZhV1FpT2lKQlpsSkpkM3B5V1V0T1JFUnFlbWgzWVRaM2VEUk5RWFZ2UzJZdE4yb3dkRGMyYkVGWmVVZ3RUMFZCUTE5WWQzUndlRnB0VjFoZlZsRTNUVFJKVGtneE1FeFZja2x6UlZOSVYwUkdZMVZ0YlNKOS5KZVVpNGRUMEFPdHVwa0ttaWVRZHJYZ3lLRlVkVkhzVC1CVXdzSzVrNkJNVl9wMlZiZU9EeHUwRm1NMUhudlJzSlFNSWJ2dDEtYkVwZ0FTbDdGX0NXcjVieUpqemRWdGRZUk90VW1sVGExR2w5dUVqYkpTYjU4NnhoWlloSGFxNTBGUDR2Z3JMSERiWEU4eDlfV1hzR0FFanBBcnRZNXBuNnQtY2FLUGVMSjdBbEFGcGRrcDJCSGE2S3JaYngxUUhJelZucURCc3prS2FmeV93RGNrZVNZcXdBRGx3NjNDcXl6MHNsb05zZTVYWlgxNFZMS3g2MENhS3pTaTRLemFLbVdNVTFMTEpTRG0wdmk1ZzhlX0pvam96TDJfbXdObFBFeGpYWHIxVkM3UmpXUFhRMW5COG00WGY2WU13emdwdVNfa2I0QlN4WllCcXZzTURPV1NubVEiLCJhY2Nlc3NUb2tlbiI6IkEyMUFBS05Sd0dfcXN6QWtaX3hTX3JpTURNcEszUGg5TXVsSWhiVXJIaWdfLVpfMDJnZVJHUHFYMUtYSHZsWjdWLS1Hb1dCN0N1dnR2cGFSYkpIeGdITVNPc0M0RFVEX1EifX0="></script>
@@ -99,15 +112,15 @@ function togglePopup(idname){
         <div class = "overlay"></div>
         <div class = "content">
           <div class="close-btn" onclick="togglePopup('payment')">&times;</div>
-     <table border="0" align="center"  bgcolor="#FFFFFF" style="width: 39%">
+     <table border="0" style="margin:0; position: absolute; top: 40%; left: 40% "  >
        <tr>
          <td colspan="2">
            <div id="paypal-button-container"></div>
          </td>
        </tr>
-       <tr><td colspan="2">&nbsp;</td></tr>
+       <tr><td colspan="2"><button class="popupbuttons" onclick="togglePopup('creditcard')">Credit Card/ Debit Card</button>
+</td></tr>
      </table>
-    <button class="popupbuttons" onclick="togglePopup('creditcard')">Credit Card/ Debit Card</button>
         </div>
       </div>
 
@@ -162,19 +175,30 @@ function togglePopup(idname){
            return actions.order.create({
              purchase_units: [{
                amount: {
-                 value: "1.00"
+                 value: document.getElementById('total_price').innerText
                }
              }]
            });
          },
          onApprove: function(data, actions) {
           return actions.order.capture().then(function(orderData) {
-            // Successful capture! For dev/demo purposes:
-                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                var transaction = orderData.purchase_units[0].payments.captures[0];
-                alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+            var overallprice = document.getElementById('total_price').innerText
+            $.ajax({
+              url: "/ReceiptDetails",
+              type: "POST",
+              data: {'totalprice' : overallprice},
+              success: function( result ) {
+                window.location.href = '/SuccessReceipt'
+              }
+            });
 
-             window.location.href = '/SuccessReceipt';
+
+            // Successful capture! For dev/demo purposes:
+<!--                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));-->
+<!--                var transaction = orderData.purchase_units[0].payments.captures[0];-->
+<!--                alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');-->
+
+<!--             window.location.href = '/SuccessReceipt';-->
            });
          }
      }).render("#paypal-button-container");

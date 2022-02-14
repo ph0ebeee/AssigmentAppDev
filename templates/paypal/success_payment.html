@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_nobot.html" %}
 {% block title %}
 Library Loan System - HomeDen
 {% endblock %}
@@ -10,7 +10,7 @@ div{
 text-align: center;
 }
 </style>
-{%for i in to_send[0:1]%}
+{%for i in to_send[-1:]%}
     <div class="receipt">
         <h1>PAYMENT SUCCESSFUL</h1>
         <p id ="trans_num"> Order ID: {{i.OrderID}}</p>

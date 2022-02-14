@@ -1,11 +1,10 @@
 class Users:
     count_id = 0
 
-    def __init__(self, id, name, email, password, membership, gender, address):
+    def __init__(self, id, name, email, password, membership, address):
         Users.count_id += 1
         self.__id = id
         self.__name = name
-        self.__gender = gender
         self.__email = email
         self.__password = password
         self.__membership = membership
@@ -17,9 +16,6 @@ class Users:
 
     def get_name(self):
         return self.__name
-
-    def get_gender(self):
-        return self.__gender
 
     def get_email(self):
         return self.__email
@@ -43,9 +39,6 @@ class Users:
 
     def set_name(self, name):
         self.__name = name
-
-    def set_gender(self,gender):
-        self.__gender = gender
 
     def set_email(self, email):
         self.__email = email

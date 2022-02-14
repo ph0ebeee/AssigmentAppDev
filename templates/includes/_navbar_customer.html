@@ -31,7 +31,7 @@
       <nav id="navbar" class="navbar">
         <ul>
           <li><a class="nav-link scrollto active" href="/custHome">Home</a></li>
-           <li class="dropdown"><a href="#"><span>Shop</span> <i class="bi bi-chevron-down"></i></a>
+           <li class="dropdown"><a href="/ShopCategories"><span>Shop</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
               <li><a href="/ShopCategories">Categories</a></li>
               <li><a href="/DiscountedItems">Discounted Items</a></li>
@@ -49,6 +49,38 @@
       </nav><!-- .navbar -->
     </div>
   </header><!-- End Header -->
+
+<link rel="stylesheet" href="././static/chatbot/stylingChat.css">
+<div class="container">
+    <div class="chatbox">
+        <div class="chatbox__support">
+            <div class="chatbox__header">
+                <div class="chatbox__image--header">
+                    <img src="{{ url_for('static', filename='chatbot/chaat robot.png') }}" style="width:50px; height: 50px" alt="image">
+                </div>
+                <div class="chatbox__content--header">
+                    <h4 class="chatbox__heading--header">Chat support</h4>
+                    <p class="chatbox__description--header">Hi I'm Joshua. How can I help you? </p>
+                </div>
+            </div>
+            <div class="chatbox__messages">
+                <div></div>
+            </div>
+            <div class="chatbox__footer">
+                <input type="text" placeholder="Type your message...">
+                <button class="chatbox__send--footer send__button">Send</button>
+            </div>
+        </div>
+        <div class="chatbox__button">
+            <button><img src="{{ url_for('static', filename='chatbot/chaat robot.png') }}" onclick="togglePopup('container')" style="width:50px; height: 50px"/> ></button>
+        </div>
+    </div>
+</div>
+
+    <script>
+        $SCRIPT_ROOT = {{ request.script_root|tojson }};
+    </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='chatbot/functionChat.js') }}"></script>
 
 </body>
 

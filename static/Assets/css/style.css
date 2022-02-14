@@ -13,16 +13,6 @@ body {
   color: #444444;
 }
 
-a {
-  text-decoration: none;
-  color: #5cb874;
-}
-
-a:hover {
-  color: #80c792;
-  text-decoration: none;
-}
-
 h1, h2, h3, h4, h5, h6 {
   font-family: "Raleway", sans-serif;
 }
@@ -80,9 +70,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 #header .logo a {
   color: #5cb874;
-}
-#header .logo img {
-  max-height: 40px;
+  text-decoration: none;
+  margin-left:-70px;
 }
 
 .scrolled-offset {

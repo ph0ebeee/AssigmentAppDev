@@ -1,25 +1,31 @@
-{% extends "base_customer.html" %}
+{% extends navbar %}
 {% block title %}
 Library Loan System - HomeDen
 {% endblock %}
 
  {% block content %}
-
 <div>
 		{% with messages = get_flashed_messages() %}
 		  {% if messages %}
 			<ul class=flashes>
 			{% for message in messages %}
-			  <li>{{ message }}</li>
+			  <li >{{ message }}</li>
 			{% endfor %}
 			</ul>
 		  {% endif %}
 		{% endwith %}
-	</div>
-
+</div>
+<style>
+	th,td{
+padding:10px;
+}
+</style>
 	<div id="shopping-cart">
-		<h1><div class="txt-heading">Cart</div></h1>
+		<h1><div class="txt-heading" style="text-align: center">Cart</div></h1>
+		<button type = "button" style="margin:0; position: absolute; top: 20%; left: 46% " ><a href ="/ShopCategories">BACK TO SHOP</a></button>
+		<br><br>
 		{% if 'cart_item' in session %}
+
 			<a id="btnEmpty" href="{{ url_for('.empty_cart') }}">Empty Cart</a>
 		<table class="tbl-cart" cellpadding="10" cellspacing="1">
 			<tbody>
@@ -33,8 +39,7 @@ Library Loan System - HomeDen
 					{% set price = session['cart_item'][key]['price'] %}
 					{% set item_price = session['cart_item'][key]['total_price'] %}
 					<tr>
-<!--						<td><img src="/static/images/{{ session['cart_item'][key]['image'] }}" class="cart-item-image" />{{ session['cart_item'][key]['name'] }}</td>-->
-						<td>{{ session['cart_item'][key]['name'] }}</td>
+						<td><img src="{{ session['cart_item'][key]['image'] }}" style="width:15%" class="cart-item-image" />{{ session['cart_item'][key]['name'] }}</td>
 						<td style="text-align:right;">{{ quantity }}</td>
 						<td  style="text-align:right;"> {{ item_price }}</td>
 						<td style="text-align:center;">
@@ -52,30 +57,9 @@ Library Loan System - HomeDen
 			</tbody>
 			</table>
 				<button class = "btn-voucher" type = "button">VOUCHERS</button>
-				<button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/ShoppingCart/PaymentCreditCard">CHECKOUT</a></button>
+				<button id="myBtn" class = "btn-checkout" type = "button" ><a href ="/PaymentCreditCard">CHECKOUT</a></button>
 		{% else: %}
-			<div class="no-records">Your Cart is Empty</div>
+			<div class="no-records" style="text-align: center">Your Cart is Empty</div>
 		{% endif %}
 	</div>
-
-	<div id="product-grid">
-		<div class="txt-heading">Products</div>
-
-		{% for i in to_send %}
-
-			<div class="product-item">
-				<form method="post" action="/ShoppingCart/add">
-					<div class="product-tile-footer">
-						<div class="product-title">{{i[1]}}</div>
-						<div class="product-price"> {{i[2]}}</div>
-						<div class="cart-action">
-							<input type="text" class="product-quantity" name="quantity" value="1" size="2" />
-							<input type="hidden" name="code" value="{{i.ProductID}}"/>
-							<input type="submit" value="Add to Cart" class="btnAddAction" />
-						</div>
-					</div>
-				</form>
-			</div>
-	</div>
-	{% endfor %}
 	{% endblock %}
