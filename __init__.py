@@ -650,7 +650,8 @@ def receiptDetails():
         if request.method == 'POST':
             price = request.form['totalprice']
             send_receipt_details('3',price, current_time,order_id)
-            session.pop('cart_item')
+            if 'cart_item' in session:
+                session.pop('cart_item')
             return redirect(url_for(retrieve_database_receipt))
 
     except Exception as e:
@@ -673,10 +674,11 @@ def retrieve_database_receipt():
         shopping_cart_dict = db['ShoppingCart']
 
         shopping_cart_dict.clear()
-
         db['ShoppingCart'] = shopping_cart_dict
         db.close()
-        session.pop('cart_item')
+        if 'cart_item' in session:
+            session.pop('cart_item')
+
         return render_template("paypal/success_payment.html", to_send= cursor_data)
     except Exception as e:
         print(e)
@@ -829,7 +831,8 @@ def delete_product(code):
 
             db['ShoppingCart'] = shopping_cart_dict
             db.close()
-            session.pop('cart_item')
+            if 'cart_item' in session:
+                session.pop('cart_item')
         else:
             session['all_total_quantity'] = all_total_quantity
             session['all_total_price'] = all_total_price
@@ -850,7 +853,8 @@ def empty_cart():
 
         db['ShoppingCart'] = shopping_cart_dict
         db.close()
-        session.pop('cart_item')
+        if 'cart_item' in session:
+            session.pop('cart_item')
         return redirect(url_for('.open_cart'))
     except Exception as e:
         print(e)
