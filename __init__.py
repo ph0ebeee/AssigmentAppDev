@@ -13,8 +13,9 @@ import jwt
 #from flask_bcrypt import Bcrypt
 from forms.forms import updateCust, updateStaff, CreditCardForm, feedbackForm, createStaff, updateStaffaccount, \
     createProduct, updateProduct
-from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, checkOrder, checkProduct, checkManager, checkIntern, checkAss, updatestaff, updatecust, updatestaffsettings, \
-    deletestaff, deletecust, createstaff, addpoints
+from templates.staff.staffcust import StaffDetails, checkCust, checkStaff, checkOrder, checkProduct, checkManager, \
+    checkIntern, checkAss, updatestaff, updatecust, updatestaffsettings, \
+    deletestaff, deletecust, createstaff, addpoints, deductpoints
 from userAuthentication.loginValidation import *
 from userAuthentication.signupValidation import *
 from script import *

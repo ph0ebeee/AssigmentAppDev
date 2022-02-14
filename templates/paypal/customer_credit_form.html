@@ -186,7 +186,7 @@ padding:10px;
              }]
            });
          },
-        onApprove: function(data, actions) {
+         onApprove: function(data, actions) {
           return actions.order.capture().then(function(orderData) {
             var overallprice = document.getElementById('total_price').innerText
             $.ajax({
