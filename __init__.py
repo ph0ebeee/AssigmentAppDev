@@ -2,7 +2,8 @@
 # from flask_login import current_user, login_required
 import Feedback_class as Feedbacks
 from templates.products.SQLtoPython import discounted_products, topselling_products, newlyrestocked_products, \
-    household_products, frozen_products, grains_products
+    household_products, frozen_products, grains_products, create_products, update_products, ProductDetails, \
+    all_products, delete_products
 #from flask_bcrypt import Bcrypt
 from flask import Flask, render_template, request, session, jsonify, flash
 # from flask_session import Session
@@ -77,7 +78,7 @@ def staffhome():
 
 #route for login form to be seen on loginPage.html  - viona
 
-# start of Viona's code 
+# start of Viona's code
 #route for login form to be seen on loginPage.html
 @app.route('/Login', methods=['GET', 'POST'])
 def login():
@@ -137,14 +138,14 @@ def registerCust():
     return render_template('usersLogin/signupPage.html',form=signupPage)
 
 #route for users to do change their password
-@app.route('/ForgetPassword',methods=['GET','POST']) 
+@app.route('/ForgetPassword',methods=['GET','POST'])
 def ForgetPassword():
     emailForm = forms.emailForm(csrf_enabled=False)
     message = "Email will only be sent if you have an account!"
     return render_template('forgetPassword/send_resetLink_form.html', form = emailForm,message = message)
 
 #route for users to do change their password
-@app.route('/reset_password',methods=['GET','POST']) 
+@app.route('/reset_password',methods=['GET','POST'])
 def sendForgetEmail():
     emailForm = forms.emailForm(csrf_enabled=False)
     if request.method == 'POST':
@@ -259,7 +260,7 @@ def inventoryStats():
     #to plot graph
     MonthlyRevenuelabel = [row[0] for row in revenue]
     MonthlyRevenuevalues = [float(row[1]) for row in revenue]
-    
+
     topCatlabel = [row[0] for row in topCategories]
     topCatvalues = [float(row[1]) for row in topCategories]
     return render_template('staff/inventory.html', oosList = oosList, topProductList = topProductList, topCustList = topCustList,monthList=monthList,yearList=yearList,MonthlyRevenuelabel=MonthlyRevenuelabel, MonthlyRevenuevalues=MonthlyRevenuevalues, topCatlabel=topCatlabel, topCatvalues=topCatvalues,revenue_year=revenue_year,cat_year=cat_year,cat_month=cat_month)
@@ -322,6 +323,63 @@ def retrieve_contact_us():
 
     return render_template('contact_us/RetrieveContact.html', count=len(contact_list), contact_list=contact_list)
 
+@app.route('/CreateProducts', methods=['GET', 'POST'])
+def create_product():
+    create_product_form = createProduct(request.form)
+    if request.method == 'POST' and create_product_form.validate():
+
+        create_products(create_product_form.product_Category.data,
+                    create_product_form.product_Picture.data,
+                    create_product_form.product_Name.data,
+                    create_product_form.product_Desc.data,
+                    float(create_product_form.product_Price.data), # float 2dp
+                    int(create_product_form.product_Stock.data),
+                    float(create_product_form.product_Discount.data),
+                    create_product_form.product_Date.data)
+
+    return render_template('products/createProduct.html', form=create_product_form)
+
+@app.route('/UpdateProducts/<int:id>/', methods=['GET', 'POST'])
+def update_product(id):
+    update_product_form = updateProduct(request.form)
+    if request.method == 'POST' and update_product_form.validate():
+
+        update_products(update_product_form.product_Category.data,
+                    update_product_form.product_Picture.data,
+                    update_product_form.product_Name.data,
+                    update_product_form.product_Desc.data,
+                    float(update_product_form.product_Price.data),
+                    int(update_product_form.product_Stock.data),
+                    float(update_product_form.product_Discount.data),
+                    update_product_form.product_Date.data,id)
+
+        return redirect(url_for('retrieve_product'))
+
+    else:
+            ProductList = ProductDetails(id)
+
+            for i in ProductList:
+                update_product_form.product_Category.data = ProductList[0][2]
+                update_product_form.product_Picture.data = ProductList[0][1]
+                update_product_form.product_Name.data = ProductList[0][3]
+                update_product_form.product_Desc.data = ProductList[0][4]
+                update_product_form.product_Price.data = ProductList[0][5]
+                update_product_form.product_Stock.data = ProductList[0][6]
+                update_product_form.product_Discount.data = ProductList[0][7]
+                update_product_form.product_Date.data = ProductList[0][8]
+
+
+    return render_template('products/updateProduct.html', form=update_product_form)
+
+@app.route('/RetrieveProducts', methods=['GET', 'POST'])
+def retrieve_product():
+    ProductList = all_products()
+    return render_template('products/retrieveProduct.html', ProductList = ProductList)
+
+@app.route('/DeleteProducts/<int:id>', methods=['GET'])
+def delete_productt(id):    # mis-spelled on purpose
+    delete_products(id)
+    return redirect(url_for('retrieve_product'))
 
 @app.route('/Grains')
 def grains_cat():
@@ -528,6 +586,7 @@ def update_staff_account(id):
 
         updatestaffsettings(update_staff_account_form.name.data,
                     update_staff_account_form.email.data,
+                    #update_staff_account_form.password.data,
                     id)
 
         return redirect(url_for('StaffSettings'))
@@ -559,6 +618,7 @@ def claimpoints():
 #render template for proof of victory and membership points earned
 def redeem():
     return render_template('game2/Reedem.html')
+
 
 
 # chatbot done by Phoebe

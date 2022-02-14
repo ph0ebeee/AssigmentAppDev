@@ -24,7 +24,7 @@ def discounted_products():
 
     # organizing it into rows but idk if its even needed ?
     for i in cursor_data:
-        product = P.Product(i[0], i[1], i[2], i[3], i[3] * i[5], i[4], i[6], i[7])
+        product = P.Product(i[0], i[1], i[2], i[3], float(i[3] * i[5]), i[4], i[6], i[7])
         # print(i[4], i[6], product.get_discounted_price())
         product_dict.append(product)  # ask mr bobby what is this for -> key to reference in somewhere else
 
@@ -156,3 +156,86 @@ def household_products():
     return product_dict
 
 # SELECT * FROM Product WHERE ProductCategory = 'Ice Cream'
+
+def create_products(ProductCategory,ProductPicture,ProductName,ProductDesc,ProductPrice,StockCount,ProductDiscount,CreatedDate):
+    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                          'Server=(localdb)\MSSQLLocalDB;'
+                          'Database=EcoDen;'
+                          'Trusted_Connection=yes;')
+
+    form = createProduct(csrf_enabled=False)
+    cursor = conn.cursor()
+    query = "INSERT INTO Product (ProductCategory,ProductPicture,ProductName,ProductDesc,ProductPrice,StockCount,ProductDiscount,CreatedDate) " \
+            "VALUES ('{}','{}','{}','{}','{}','{}','{}','{}')".format(ProductCategory,ProductPicture,ProductName,ProductDesc,ProductPrice,StockCount,ProductDiscount,CreatedDate)
+    cursor.execute(query)
+    conn.commit()
+    conn.close()
+
+def ProductDetails(ProductID):
+    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                          'Server=(localdb)\MSSQLLocalDB;'
+                          'Database=EcoDen;'
+                          'Trusted_Connection=yes;')
+
+    cursor = conn.cursor()
+    query = "SELECT * from Product WHERE ProductID = '{}'".format(ProductID)
+    cursor.execute(query)
+
+    cursor_data = cursor.fetchall()
+    ProductList = []
+    for i in cursor_data:
+        ProductList.append(i)
+
+    return ProductList
+
+def update_products(ProductCategory,ProductPicture,ProductName,ProductDesc,ProductPrice,StockCount,ProductDiscount,CreatedDate,ProductID):
+    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                          'Server=(localdb)\MSSQLLocalDB;'
+                          'Database=EcoDen;'
+                          'Trusted_Connection=yes;')
+
+    cursor = conn.cursor()
+    query = "UPDATE Product SET ProductCategory = '{}', ProductPicture = '{}', ProductName = '{}', ProductDesc = '{}', ProductPrice = '{}', " \
+            "StockCount = '{}', ProductDiscount = '{}', CreatedDate = '{}' " \
+            "WHERE ProductID = '{}'".format(ProductCategory,ProductPicture,ProductName,ProductDesc,ProductPrice,StockCount,ProductDiscount,CreatedDate,ProductID)
+    cursor.execute(query)
+    conn.commit()
+    conn.close()
+
+def delete_products(ProductID):
+    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                          'Server=(localdb)\MSSQLLocalDB;'
+                          'Database=EcoDen;'
+                          'Trusted_Connection=yes;')
+
+    cursor = conn.cursor()
+    query = "DELETE FROM Product WHERE ProductID = '{}'".format(ProductID)
+    cursor.execute(query)
+    conn.commit()
+    conn.close()
+
+
+def all_products():
+    conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                          'Server=(localdb)\MSSQLLocalDB;'
+                          'Database=EcoDen;'
+                          'Trusted_Connection=yes;')
+
+    ProductList = []
+
+    cursor = conn.cursor()
+    query = "SELECT * from Product"
+    cursor.execute(query)
+
+    cursor_data = cursor.fetchall()
+
+    for i in cursor_data:
+        ProductList.append(i)
+
+    return ProductList
+
+# def delete_products(ProductID):
+#    cursor = conn.cursor()
+#    query = "DELETE FROM Product WHERE ProductID = '{}'".format(ProductID)
+#    cursor.execute(query)
+#    conn.commit()

@@ -2,25 +2,45 @@
 {% block title %} Library Loan System - Discounted Items  {% endblock %}}
 
 {% block content %}
+<style>
+    #meowmeow {
+  background: #F2F2F2;
+  box-shadow: 0 .1rem 1rem rgba(0, 0, 0, 0.4);
+}
+
+    #lola{
+   border-radius: 15px;
+    }
+</style>
 
 <body>
-    <div class="discounts">
+    <div class="discounts" id="meowmeow">
         <h3>Discounted Items</h3>
-        {% for i in to_send %}
-        <div class="product-item" >
-            <form method="post" action="/add">
-                <p>{{i.get_product_Name()}}</p>
-                <img src="{{i.get_product_Image()}}" width="200px" height="225px"/>
-                <p>{{i.get_product_Price()}}</p>
-                <p>{{i.get_discounted_Price()}}</p>
-                <div class="cart-action">
+        <br>
+        <div class="row col-12">
+            {% for i in to_send %}
+            <div class="col-3">
+                <br>
+                <br>
+                <form method="post" action="/add">
+                <div class="card" style="width: 18rem;" id="lola">
+                  <center><img src="{{i.get_product_Image()}}" width="150px" height="200px"></center>
+                  <div class="card-body">
+                    <h5 class="card-title">{{i.get_product_Name()}}</h5>
+                    <p class="card-text">Price: ${{i.get_product_Price()}}<br>Discounted Price: ${{i.get_discounted_Price()}}</p>
+                    <div class="cart-action">
                     <input type="text" class="product-quantity" name="quantity" value="1" size="2" />
                     <input type="hidden" name="code" value="{{i.get_product_Id() }}"/>
                     <input type="submit" value="Add to Cart"  class="btn btn-primary" />
+                    </div>
+                  </div>
                 </div>
-            </form>
-        </div>
+                </form>
+            </div>
         {% endfor %}
+        </div>
     </div>
 </body>
 {% endblock %}
+
+

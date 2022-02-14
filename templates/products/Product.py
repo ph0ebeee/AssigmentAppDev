@@ -1,8 +1,10 @@
 import templates.products.Base as Base
 
 class Product(Base.Base):
+    count_product_Id = 0
     def __init__(self, product_Id, product_Image, product_Name, product_Price, discounted_Price, product_Stock, created_date, product_Category):
         super().__init__(created_date)
+        Product.count_product_Id += 1
         self.__product_Id = product_Id
         self.__product_Image = product_Image
         self.__product_Name = product_Name
