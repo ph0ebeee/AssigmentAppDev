@@ -475,7 +475,7 @@ def NewlyRestockedItems():
     return render_template('products/newlyRestockedItems.html', to_send=to_send, navbar = navbar)
 
 
-#logout
+#staff done by anna
 @app.route('/logout')
 def logout():
     session.clear()
@@ -484,104 +484,143 @@ def logout():
 @app.route('/StaffSettings', methods=['GET', 'POST'])
 #staff account display - anna
 def StaffSettings():
-    if (session['role'] == "Staff"):
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
         staff_details = StaffDetails(session['staffID'])
-        return render_template('staff/staff_account.html', staff_details = staff_details)
+        return render_template('staff/staff_account.html', staff_details = staff_details, navbar = navbar)
     else:
-        return render_template('usersLogin/loginPage.html')
+        navbar = "base.html"
+        return render_template('errorpage.html',navbar = navbar)
 
 
 @app.route('/MainPage')
 #staff home page return template - anna
 def MainPage():
-    return render_template('staff.html')
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+        return render_template('staff.html',navbar = navbar)
+    else:
+        navbar = "base.html"
+        return render_template('errorpage.html', navbar=navbar)
 
 
 @app.route('/retrieveCustomers', methods=['GET', 'POST'])
 #customer management retrieval - anna
 def retrieve_customers():
-    custList = checkCust()
-    OrderList = checkOrder()
-    productList = checkProduct()
-    return render_template('staff/staff_cust.html', custList = custList, OrderList = OrderList, productList = productList)
+    role = session.get('role')
+    if (role != 'Staff'):
+        navbar = "base.html"
+        return render_template('errorpage.html',navbar = navbar)
+    else:
+        navbar = "base_s.html"
+        custList = checkCust()
+        OrderList = checkOrder()
+        productList = checkProduct()
+        return render_template('staff/staff_cust.html', custList = custList, OrderList = OrderList, productList = productList,navbar=navbar)
 
 
 @app.route('/retrieveStaff', methods=['GET', 'POST'])
 #staff management retrieval - anna
 def retrieve_staff():
-    StaffList = checkStaff()
-    ManagerList = checkManager()
-    InternList = checkIntern()
-    AssList = checkAss()
-    return render_template('staff/retrieveStaff.html', StaffList = StaffList, ManagerList = ManagerList, InternList = InternList, AssList = AssList)
+    role = session.get('role')
+    if (role != 'Staff'):
+        navbar = "base.html"
+        return render_template('errorpage.html',navbar = navbar)
+    else:
+        navbar = "base_s.html"
+        StaffList = checkStaff()
+        ManagerList = checkManager()
+        InternList = checkIntern()
+        AssList = checkAss()
+        return render_template('staff/retrieveStaff.html', StaffList = StaffList, ManagerList = ManagerList, InternList = InternList, AssList = AssList,navbar=navbar)
 
 
 @app.route('/createStaff', methods=['GET', 'POST'])
 #create staff, forms included - anna
 def create_staff():
-    create_staff_form = createStaff(request.form)
-    if request.method == 'POST' and create_staff_form.validate():
+    role = session.get('role')
+    if (role != 'Staff'):
+        navbar = "base.html"
+        return render_template('errorpage.html',navbar = navbar)
+    else:
+        navbar = "base_s.html"
+        create_staff_form = createStaff(request.form)
+        if request.method == 'POST' and create_staff_form.validate():
 
-        createstaff(create_staff_form.name.data,
-                    create_staff_form.email.data,
-                    create_staff_form.password.data,
-                    create_staff_form.remarks.data)
+            createstaff(create_staff_form.name.data,
+                        create_staff_form.email.data,
+                        create_staff_form.password.data,
+                        create_staff_form.remarks.data)
 
-        return redirect(url_for('retrieve_staff'))
+            return redirect(url_for('retrieve_staff'))
 
-    return render_template('staff/createStaff.html', form=create_staff_form)
+        return render_template('staff/createStaff.html', form=create_staff_form, navbar=navbar)
 
 
 @app.route('/updateStaff/<int:id>/', methods=['GET', 'POST'])
 #update staff, forms included - anna
 def update_staff(id):
-    update_staff_form = updateStaff(request.form)
-    if request.method == 'POST' and update_staff_form.validate():
-
-        updatestaff(update_staff_form.name.data,
-                    update_staff_form.email.data,
-                    update_staff_form.remarks.data,
-                    id)
-        return redirect(url_for('retrieve_staff'))
-
+    role = session.get('role')
+    if (role != 'Staff'):
+        navbar = "base.html"
+        return render_template('errorpage.html',navbar = navbar)
     else:
-        StaffList = StaffDetails(id)
+        navbar = "base_s.html"
+        update_staff_form = updateStaff(request.form)
+        if request.method == 'POST' and update_staff_form.validate():
 
-        for i in StaffList:
-            update_staff_form.name.data = StaffList[0][1]
-            update_staff_form.email.data = StaffList[0][2]
-            update_staff_form.remarks.data = StaffList[0][5]
+            updatestaff(update_staff_form.name.data,
+                        update_staff_form.email.data,
+                        update_staff_form.remarks.data,
+                        id)
+            return redirect(url_for('retrieve_staff'))
+
+        else:
+            StaffList = StaffDetails(id)
+
+            for i in StaffList:
+                update_staff_form.name.data = StaffList[0][1]
+                update_staff_form.email.data = StaffList[0][2]
+                update_staff_form.remarks.data = StaffList[0][5]
 
 
-        return render_template('staff/updateStaff.html', form=update_staff_form)
+            return render_template('staff/updateStaff.html', form=update_staff_form,navbar=navbar)
 
 
 @app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
 #update customer details, forms included - anna
 def update_user(id):
-    update_user_form = updateCust(request.form)
-    if request.method == 'POST' and update_user_form.validate():
-
-        updatecust(update_user_form.name.data,
-                    update_user_form.email.data,
-                    update_user_form.membership.data,
-                    update_user_form.contactNum.data,
-                    update_user_form.address.data,
-                    id)
-        return redirect(url_for('retrieve_customers'))
-
+    role = session.get('role')
+    if (role != 'Staff'):
+        navbar = "base.html"
+        return render_template('errorpage.html',navbar = navbar)
     else:
-        CustDetail = CustDetails(id)
+        navbar = "base_s.html"
+        update_user_form = updateCust(request.form)
+        if request.method == 'POST' and update_user_form.validate():
 
-        for i in CustDetail:
-            update_user_form.name.data = CustDetail[0][1]
-            update_user_form.email.data = CustDetail[0][3]
-            update_user_form.membership.data = CustDetail[0][2]
-            update_user_form.contactNum.data = CustDetail[0][6]
-            update_user_form.address.data = CustDetail[0][7]
+            updatecust(update_user_form.name.data,
+                        update_user_form.email.data,
+                        update_user_form.membership.data,
+                        update_user_form.contactNum.data,
+                        update_user_form.address.data,
+                        id)
+            return redirect(url_for('retrieve_customers'))
+
+        else:
+            CustDetail = CustDetails(id)
+
+            for i in CustDetail:
+                update_user_form.name.data = CustDetail[0][1]
+                update_user_form.email.data = CustDetail[0][3]
+                update_user_form.membership.data = CustDetail[0][2]
+                update_user_form.contactNum.data = CustDetail[0][6]
+                update_user_form.address.data = CustDetail[0][7]
 
 
-        return render_template('staff/updateUsers.html', form=update_user_form)
+            return render_template('staff/updateUsers.html', form=update_user_form,navbar=navbar)
 
 
 @app.route('/deleteUser/<int:id>', methods=['GET'])
@@ -601,30 +640,41 @@ def delete_staff(id):
 @app.route('/updateStaffaccount/<int:id>/', methods=['GET', 'POST'])
 #update staff account - username, email, password - anna
 def update_staff_account(id):
-    update_staff_account_form = updateStaffaccount(request.form)
-    if request.method == 'POST' and update_staff_account_form.validate():
-
-        updatestaffsettings(update_staff_account_form.name.data,
-                    update_staff_account_form.email.data,
-                    #update_staff_account_form.password.data,
-                    id)
-
-        return redirect(url_for('StaffSettings'))
-
+    role = session.get('role')
+    if (role != 'Staff'):
+        navbar = "base.html"
+        return render_template('errorpage.html',navbar = navbar)
     else:
-        StaffList = StaffDetails(id)
+        navbar = "base_s.html"
+        update_staff_account_form = updateStaffaccount(request.form)
+        if request.method == 'POST' and update_staff_account_form.validate():
 
-        for i in StaffList:
-            update_staff_account_form.name.data = StaffList[0][1]
-            update_staff_account_form.email.data = StaffList[0][2]
+            updatestaffsettings(update_staff_account_form.name.data,
+                        update_staff_account_form.email.data,
+                        #update_staff_account_form.password.data,
+                        id)
 
-        return render_template('staff/updatesetting.html', form=update_staff_account_form)
+            return redirect(url_for('StaffSettings'))
 
+        else:
+            StaffList = StaffDetails(id)
 
+            for i in StaffList:
+                update_staff_account_form.name.data = StaffList[0][1]
+                update_staff_account_form.email.data = StaffList[0][2]
+
+            return render_template('staff/updatesetting.html', form=update_staff_account_form,navbar=navbar)
+
+#game done by anna
 @app.route('/game2')
 #game 2 app route
 def game2():
-    return render_template('game2/game2.html')
+    role = session.get('role')
+    if (role != 'Customer' or role!= 'Staff'):
+        navbar = "base.html"
+        return render_template('errorpage.html',navbar = navbar)
+    else:
+        return render_template('game2/game2.html')
 
 
 @app.route('/aftergame2',methods=['POST'])
@@ -637,12 +687,14 @@ def claimpoints():
 @app.route('/game2/redeem')
 #render template for proof of victory and membership points earned
 def redeem():
-    return render_template('game2/Reedem.html')
-
-
+    role = session.get('role')
+    if (role != 'Customer' or role!= 'Staff'):
+        navbar = "base.html"
+        return render_template('errorpage.html',navbar = navbar)
+    else:
+        return render_template('game2/Reedem.html')
 
 # chatbot done by Phoebe
-
 
 @app.route('/chatbot',methods=['POST'])
 def predict():
@@ -652,7 +704,6 @@ def predict():
     return jsonify(message)
 
 # retrieve for receipt - phoebe
-
 
 @app.route('/ReceiptDetails', methods =['GET','POST'])
 def receiptDetails():

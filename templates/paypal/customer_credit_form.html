@@ -92,19 +92,18 @@ padding:10px;
               {%for cart in shopping_list[-1:]%}
                 <tr>
                     <td></td>
-                    <td></td>
                     <td>Total Quantity</td>
-                    <td id="quantity" align="right"><b>  {{ cart.get_product_total_quantity() }} </b></td>
+                    <td id="quantity" align="right"><b> {{ cart.get_product_total_quantity() }} </b></td>
 
-                </tr>
+                </tr><br/>
                 <tr>
                     <td></td>
                     <td>SubTotal</td>
-                    <td id="total_price1" name = "totalprice1" align="right"><bold> {{ cart.get_price() }}</bold></td>
+                    <td id="total_price1" name = "totalprice1" align="right"><b>{{ cart.get_price() }}</b></td>
                     {% for i in cust_details %}
                 <tr>
                 <td></td><br/>
-                <td>Points Deducted: <b>{{i[2]}}</b></td>
+                <td>Points Left: <b>{{i[2]}}</b></td>
                 <tr>
                     <td></td>
                     <td>Total Price</td>
