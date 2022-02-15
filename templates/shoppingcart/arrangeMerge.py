@@ -1,3 +1,5 @@
+# Shopping Cart by Wong Jun Yu Phoebe 210527H
+
 def array_merge( first_array , second_array ):
 	if isinstance( first_array , list ) and isinstance( second_array , list ):
 		return first_array + second_array

@@ -1,3 +1,5 @@
+# Shopping Cart by Wong Jun Yu Phoebe 210527H
+
 class cart_items:
     count_id = 0
     def __init__(self, product_id,product_name,product_image, product_price, total_price, product_quantity, total_quantity):
