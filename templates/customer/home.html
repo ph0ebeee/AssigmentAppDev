@@ -6,7 +6,7 @@ Library Loan System - HomeDen
 {% block content %}
 <!-- Image Carousel -->
 <div id="imageCarousel" class="carouselSlide" data-ride="carousel">
-    <div class="carousel-inner" >
+    <div class="carousel-inner">
         <div class="carousel-item active">
             <img class="d-block w-100" src="{{image1}}" alt=" Worker working and welcome">
         </div>
@@ -30,29 +30,30 @@ Library Loan System - HomeDen
         <span class="sr-only">Next</span>
     </a>
 </div>
+<br>
+<br>
+ <h1 style="text-align:center;color: green">EVENTS</h1><br><br>
+<div style="display: flex; flex-wrap: wrap; justify-content: center;">
+    <div id="senior citizens'day" style="text-align: center; padding: 20px; width: 60%">
+        <h1>SENIOR CITIZEN'S DAY</h1>
+        <p>To salute and appreciate our Senior Citizens above 60 years old, we have prepared a small token of appreciation for you every Monday and Friday. Simply present your identification and enjoy a 3% discount off your purchase !</p>
+    </div>
+    <div>
+        <img style="padding:20px; height: 250px;" src="./static/Assets/images/senior-citizen.jpg" />
+    </div>
     <br><br>
-    <h1 style="text-align:center;color: green">EVENTS</h1><br><br>
-        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-            <div id="senior citizens'day" style="text-align: center; padding: 20px; width: 60%">
-                <h1>SENIOR CITIZEN'S DAY</h1>
-                <p>To salute and appreciate our Senior Citizens above 60 years old, we have prepared a small token of appreciation for you every Monday and Friday. Simply present your identification and enjoy a 3% discount off your purchase !</p>
-            </div>
-            <div>
-                <img style="padding:20px; height: 250px;" src="./static/Assets/images/senior-citizen.jpg" />
-            </div>
-            <br><br>
-            <div id="angbao" style="text-align:center; width:60%;padding: 20px">
-                <h1>2022 CNY ANGBAO COUPON</h1>
-                <p>Get $6 off your next purchase when you spend a minimum of $38 from 11 to 20 Feb 2022.</p>
-            </div>
-            <img style=" padding:20px; height: 250px;" src="./static/Assets/images/tigerr.jfif" />
-            <br><br>
-            <div id="advertisment" style="text-align:center; width:60%;padding: 20px">
-                <h1>ADVERTISED OFFERS</h1>
-                <p>Get your weekly promotion items now ! Our store offers promotion deals for all to enjoy every week.</p>
-            </div>
-            <img style=" padding:20px; height: 250px;" src="./static/Assets/images/nainai.jpeg" />
-        </div>
+    <div id="angbao" style="text-align:center; width:60%;padding: 20px">
+        <h1>2022 CNY ANGBAO COUPON</h1>
+        <p>Get $6 off your next purchase when you spend a minimum of $38 from 11 to 20 Feb 2022.</p>
+    </div>
+    <img style=" padding:20px; height: 250px;" src="./static/Assets/images/tigerr.jfif" />
+    <br><br>
+    <div id="advertisment" style="text-align:center; width:60%;padding: 20px">
+        <h1>ADVERTISED OFFERS</h1>
+        <p>Get your weekly promotion items now ! Our store offers promotion deals for all to enjoy every week.</p>
+    </div>
+    <img style=" padding:20px; height: 250px;" src="./static/Assets/images/nainai.jpeg" />
+</div>
 <script>
     var slideIndex = 1;
     showSlides(slideIndex);
