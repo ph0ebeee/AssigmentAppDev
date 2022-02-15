@@ -51,8 +51,7 @@
             <div class="mainContent" style="display:inline-block; margin-left:10px;">
                 <h2 style="font-weight: bold;">Account</h2>
                 <form method="post" action="/CustomerSettings" style="background-color:white;" class='customerParticulars'>
-                <input type="submit" value="edit" class="submitBtn btn-primary" name="custSettingsbtn" style="background-color: #5cb874" />
-                <div>
+                <div style="font-size:16px;"
                 {% for i in cust_details%}
                 <p>Username: {{i[1]}}</p>
                 <p>Membership Points: {{i[2]}}</p>
