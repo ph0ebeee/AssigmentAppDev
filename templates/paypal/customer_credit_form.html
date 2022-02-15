@@ -1,7 +1,5 @@
+
 {% extends navbar %}
-{% block title %}
-Library Loan System - HomeDen
-{% endblock %}
 
 {% block content %}
 <head>
@@ -89,37 +87,29 @@ padding:10px;
                     <td></td>
                 </tr>
             {%endfor%}
-              {%for cart in shopping_list[-1:]%}
+            {%for cart in shopping_list[-1:]%}
                 <tr>
+                    <td></td>
                     <td></td>
                     <td>Total Quantity</td>
-                    <td id="quantity" align="right"><b> {{ cart.get_product_total_quantity() }} </b></td>
+                    <td id="quantity" align="right"><bold>  {{ cart.get_product_total_quantity() }} </bold></td>
 
-                </tr><br/>
+                </tr>
                 <tr>
                     <td></td>
-                    <td>SubTotal</td>
-                    <td id="total_price1" name = "totalprice1" align="right"><b>{{ cart.get_price() }}</b></td>
-                    {% for i in cust_details %}
-                <tr>
-                <td></td><br/>
-                <td>Points Left: <b>{{i[2]}}</b></td>
-                <tr>
                     <td></td>
-                    <td>Total Price</td>
-                    <td id="total_price" name = "totalprice" align="right"><b> {{ (cart.get_price() | float * 100 - i[2] | int) / 100}}</b></td>
-
-                </tr></br>
-
-                <tr>
-                    <td></td><br/>
-                    <td></td>
-                    <td><a href="/removepoints" class="btn btn-primary" >CLAIMED POINTS</a></td>
-                    <td><button class="btn btn-primary" onclick="togglePopup('payment')">CONFIRM</button></td>
+                    <td>Total Price (SGD)</td>
+                    <td id="total_price" name = "totalprice" align="right"><bold>  {{ cart.get_price() }} </bold></td>
 
                 </tr>
           {% endfor %}
-          {% endfor %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><button class="popupbuttons" onclick="togglePopup('payment')" >CONFIRM</button></td>
+
+                </tr>
 
         </table>
 
@@ -132,7 +122,7 @@ padding:10px;
         <div class = "overlay"></div>
         <div class = "content">
           <div class="close-btn" onclick="togglePopup('payment')">&times;</div>
-     <table border="0" style="margin:0; position: absolute; top: 40%; left: 40% "  >
+     <table border="0" style="margin:0; position: absolute; top: 40%; left: 37% "  >
        <tr>
          <td colspan="2">
            <div id="paypal-button-container"></div>
@@ -200,7 +190,7 @@ padding:10px;
            return actions.order.create({
              purchase_units: [{
                amount: {
-                 value: document.getElementById('total_price').innerText
+                 value: document.getElementById('total_price').innerText,
                }
              }]
            });
