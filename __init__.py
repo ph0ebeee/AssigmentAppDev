@@ -72,6 +72,18 @@ def custhome():
     return render_template('customer/home.html',image1=image1,image2=image2,image4=image4,image5=image5)
 
 
+@app.route('/Error', methods =['GET','POST'])
+def errorPage():
+    navbar ="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
+
+    return render_template('errorpage.html',navbar = navbar)
+
+
 @app.route('/staffHome')
 #render staff.html template - anna
 def staffhome():
@@ -475,10 +487,18 @@ def NewlyRestockedItems():
     return render_template('products/newlyRestockedItems.html', to_send=to_send, navbar = navbar)
 
 
-#staff done by anna
+#staff done by Yong Ying Jia Anna 212428Y
 @app.route('/logout')
 def logout():
     session.clear()
+    shopping_cart_dict = {}
+    db = shelve.open('ShoppingCart.db', 'w')
+    shopping_cart_dict = db['ShoppingCart']
+
+    shopping_cart_dict.clear()
+
+    db['ShoppingCart'] = shopping_cart_dict
+    db.close()
     return redirect(url_for('home'))
 
 @app.route('/StaffSettings', methods=['GET', 'POST'])
@@ -665,7 +685,7 @@ def update_staff_account(id):
 
             return render_template('staff/updatesetting.html', form=update_staff_account_form,navbar=navbar)
 
-#game done by anna
+#game done by Yong Ying Jia Anna 212428Y
 @app.route('/game2')
 #game 2 app route
 def game2():
@@ -694,8 +714,8 @@ def redeem():
     else:
         return render_template('game2/Reedem.html')
 
-# chatbot done by Phoebe
 
+# ChatBot done by Wong Jun Yu Phoebe 210527H
 @app.route('/chatbot',methods=['POST'])
 def predict():
     text = request.get_json().get('message')
@@ -703,7 +723,7 @@ def predict():
     message = {"answer": response}
     return jsonify(message)
 
-# retrieve for receipt - phoebe
+# Updating and Retrieving of receipt done by Wong Jun Yu Phoebe 210527H
 
 @app.route('/ReceiptDetails', methods =['GET','POST'])
 def receiptDetails():
@@ -732,32 +752,40 @@ def receiptDetails():
 
 @app.route('/SuccessReceipt', methods =['GET','POST'])
 def retrieve_database_receipt():
-    try:
-        conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
-                              'Server=(localdb)\MSSQLLocalDB;'
-                              'Database=EcoDen;'
-                              'Trusted_Connection=yes;')
-        cursor = conn.cursor()
-        cursor.execute('SELECT OrderID,TotalPrice,POSDate from CustOrder')
-        cursor_data = cursor.fetchall()
-        shopping_cart_dict = {}
-        db = shelve.open('ShoppingCart.db', 'w')
-        shopping_cart_dict = db['ShoppingCart']
+    navbar="base.html"
+    role = session.get('role')
+    if (role == 'Staff'):
+        navbar = "base_s.html"
+        return redirect(url_for('.errorPage'))
+    elif (role == 'Customer'):
+        navbar = "base_customer.html"
+        try:
+            conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
+                                  'Server=(localdb)\MSSQLLocalDB;'
+                                  'Database=EcoDen;'
+                                  'Trusted_Connection=yes;')
+            cursor = conn.cursor()
+            cursor.execute('SELECT OrderID,TotalPrice,POSDate from CustOrder')
+            cursor_data = cursor.fetchall()
+            shopping_cart_dict = {}
+            db = shelve.open('ShoppingCart.db', 'w')
+            shopping_cart_dict = db['ShoppingCart']
 
-        shopping_cart_dict.clear()
-        db['ShoppingCart'] = shopping_cart_dict
-        db.close()
-        if 'cart_item' in session:
-            session.pop('cart_item')
+            shopping_cart_dict.clear()
+            db['ShoppingCart'] = shopping_cart_dict
+            db.close()
+            if 'cart_item' in session:
+                session.pop('cart_item')
 
-        return render_template("paypal/success_payment.html", to_send= cursor_data)
-    except Exception as e:
-        print(e)
-        return render_template('errorpage.html')
+            return render_template("paypal/success_payment.html", to_send= cursor_data)
+        except Exception as e:
+            print(e)
+            return redirect(url_for('.errorPage'))
+    else:
+        return redirect(url_for('.errorPage'))
 
 
-
-# shopping cart - phoebe
+#Shopping Cart done by Wong Jun Yu Phoebe
 
 
 @app.route('/ShoppingCart', methods = ['GET','POST'])           #product for testing
@@ -766,6 +794,7 @@ def open_cart():
     role = session.get('role')
     if (role == 'Staff'):
         navbar = "base_s.html"
+        return redirect(url_for('.errorPage'))
     elif (role == 'Customer'):
         navbar = "base_nobot.html"
         conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'     
@@ -780,12 +809,12 @@ def open_cart():
     return render_template('errorpage.html', navbar = navbar)
 
 
-
-@app.route('/add', methods = ['POST'])
+@app.route('/add', methods = ['GET','POST'])
 def add_product():
     role = session.get('role')
     if (role == 'Staff'):
         navbar = "base_s.html"
+        return redirect(url_for('.errorPage'))
     elif (role == 'Customer'):
         navbar = "base_customer.html"
     else:
@@ -857,7 +886,7 @@ def add_product():
             return 'Error while adding item to cart'
     except Exception as e:
         print(e)
-        return render_template('errorpage.html')
+        return redirect(url_for('.errorPage'))
     finally:
         return redirect(url_for('open_cart'))
 
@@ -909,6 +938,7 @@ def delete_product(code):
 
     except Exception as e:
         print(e)
+        return redirect(url_for('.errorPage'))
 
 
 @app.route('/ShoppingCart/empty')
@@ -926,7 +956,9 @@ def empty_cart():
         return redirect(url_for('.open_cart'))
     except Exception as e:
         print(e)
-        return render_template('errorpage.html')
+        return redirect(url_for('.errorPage'))
+
+#Payment Credit Form done by Wong Jun Yu Phoebe 210527H
 
 @app.route('/removepoints')
 def removepoints():
@@ -944,35 +976,36 @@ def credit_card_form():
     role = session.get('role')
     if (role == 'Staff'):
         navbar = "base_s.html"
+        return redirect(url_for('.errorPage'))
     elif (role == 'Customer'):
         navbar = "base_nobot.html"
-    CreditCard = CreditCardForm(request.form)
-    shopping_list = []
-    shopping_cart_dict = {}
-    db = shelve.open('ShoppingCart.db', 'r')
-    shopping_cart_dict = db['ShoppingCart']
-    db.close()
-    for key in shopping_cart_dict:
-        cart = shopping_cart_dict.get(key)
-        shopping_list.append(cart)
-
-    if request.method == 'POST' and CreditCard.validate():
-        customers_info_dict = {}
-        db = shelve.open('customerInfo.db', 'c')
-
-        try:
-            customers_info_dict = db['CustomersInfo']
-        except:
-            print("Error in retrieving Customers Information from customerInfo.db.")
-
-        customerInfo = CustomerInfo(CreditCard.name.data, CreditCard.email.data,  CreditCard.address.data, CreditCard.card_no.data, CreditCard.expiry.data, CreditCard.expiry_month.data, CreditCard.cvv.data)
-        customers_info_dict[customerInfo.get_customer_id()] = customerInfo
-        db['CustomersInfo'] = customers_info_dict
-
+        CreditCard = CreditCardForm(request.form)
+        shopping_list = []
+        shopping_cart_dict = {}
+        db = shelve.open('ShoppingCart.db', 'r')
+        shopping_cart_dict = db['ShoppingCart']
         db.close()
+        for key in shopping_cart_dict:
+            cart = shopping_cart_dict.get(key)
+            shopping_list.append(cart)
+        if request.method == 'POST' and CreditCard.validate():
+            customers_info_dict = {}
+            db = shelve.open('customerInfo.db', 'c')
 
-        return redirect(url_for('retrieve_database_receipt'))
-    return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list = shopping_list,navbar = navbar, cust_details=cust_details)
+            try:
+                customers_info_dict = db['CustomersInfo']
+            except:
+                print("Error in retrieving Customers Information from customerInfo.db.")
+
+            customerInfo = CustomerInfo(CreditCard.name.data, CreditCard.email.data,  CreditCard.address.data, CreditCard.card_no.data, CreditCard.expiry.data, CreditCard.expiry_month.data, CreditCard.cvv.data)
+            customers_info_dict[customerInfo.get_customer_id()] = customerInfo
+            db['CustomersInfo'] = customers_info_dict
+
+            db.close()
+
+            return redirect(url_for('retrieve_database_receipt'))
+        return render_template('paypal/customer_credit_form.html', form=CreditCard, shopping_list=shopping_list, navbar=navbar)
+    return redirect(url_for('errorPage'))
 
 
 if __name__ == '__main__':

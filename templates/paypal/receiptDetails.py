@@ -1,3 +1,6 @@
+# Updating SQL by Wong Jun Yu Phoebe 210527H
+
+
 import pyodbc
 conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
                       'Server=(localdb)\MSSQLLocalDB;'
