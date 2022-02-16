@@ -689,12 +689,7 @@ def update_staff_account(id):
 @app.route('/game2')
 #game 2 app route
 def game2():
-    role = session.get('role')
-    if (role != 'Customer' or role!= 'Staff'):
-        navbar = "base.html"
-        return render_template('errorpage.html',navbar = navbar)
-    else:
-        return render_template('game2/game2.html')
+    return render_template('game2/game2.html')
 
 
 @app.route('/aftergame2',methods=['POST'])
@@ -707,12 +702,7 @@ def claimpoints():
 @app.route('/game2/redeem')
 #render template for proof of victory and membership points earned
 def redeem():
-    role = session.get('role')
-    if (role != 'Customer' or role!= 'Staff'):
-        navbar = "base.html"
-        return render_template('errorpage.html',navbar = navbar)
-    else:
-        return render_template('game2/Reedem.html')
+    return render_template('game2/Reedem.html')
 
 
 # ChatBot done by Wong Jun Yu Phoebe 210527H
