@@ -283,9 +283,7 @@ def inventoryStats():
 def AboutUs():
     navbar="base.html"
     role = session.get('role')
-    if (role == 'Staff'):
-        navbar = "base_s.html"
-    elif (role == 'Customer'):
+    if (role == 'Customer'):
         navbar = "base_customer.html"
     return render_template('about_us/aboutUs.html', navbar = navbar)
 
@@ -399,9 +397,7 @@ def delete_productt(id):    # mis-spelled on purpose
 def grains_cat():
     navbar="base.html"
     role = session.get('role')
-    if (role == 'Staff'):
-        navbar = "base_s.html"
-    elif (role == 'Customer'):
+    if (role == 'Customer'):
         navbar = "base_customer.html"
     to_send = grains_products() # loop
     # insert if else here using '.pop'
@@ -413,9 +409,7 @@ def grains_cat():
 def frozen_cat():
     navbar="base.html"
     role = session.get('role')
-    if (role == 'Staff'):
-        navbar = "base_s.html"
-    elif (role == 'Customer'):
+    if (role == 'Customer'):
         navbar = "base_customer.html"
     to_send = frozen_products() # loop
     # insert if else here using '.pop'
@@ -427,9 +421,7 @@ def frozen_cat():
 def household_cat():
     navbar="base.html"
     role = session.get('role')
-    if (role == 'Staff'):
-        navbar = "base_s.html"
-    elif (role == 'Customer'):
+    if (role == 'Customer'):
         navbar = "base_customer.html"
     to_send = household_products() # loop
     # insert if else here using '.pop'
@@ -452,9 +444,7 @@ def ShopCategories():
 def DiscountedItems():
     navbar="base.html"
     role = session.get('role')
-    if (role == 'Staff'):
-        navbar = "base_s.html"
-    elif (role == 'Customer'):
+    if (role == 'Customer'):
         navbar = "base_customer.html"
     to_send = discounted_products()
     # to_send = to_send[:5]
@@ -465,9 +455,7 @@ def DiscountedItems():
 def TopSellingItems():
     navbar="base.html"
     role = session.get('role')
-    if (role == 'Staff'):
-        navbar = "base_s.html"
-    elif (role == 'Customer'):
+    if (role == 'Customer'):
         navbar = "base_customer.html"
     to_send = topselling_products()
     return render_template('products/topSellingItems.html', to_send=to_send, navbar = navbar)
@@ -477,9 +465,7 @@ def TopSellingItems():
 def NewlyRestockedItems():
     navbar="base.html"
     role = session.get('role')
-    if (role == 'Staff'):
-        navbar = "base_s.html"
-    elif (role == 'Customer'):
+    if (role == 'Customer'):
         navbar = "base_customer.html"
     to_send = newlyrestocked_products() # loop
     # insert if else here using '.pop'
